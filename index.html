@@ -99,15 +99,6 @@
         font-size: 12px;
       }
 
-      .nav {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .nav a,
       .pill-button {
         display: inline-flex;
         align-items: center;
@@ -603,12 +594,6 @@
             <span>Know. Balance. Thrive.</span>
           </div>
         </div>
-        <nav class="nav" aria-label="Page sections">
-          <a href="#pipeline">Source Input</a>
-          <a href="#pipeline">Pipeline</a>
-          <a href="#runtime">When it runs</a>
-          <button class="pill-button primary" type="button" id="open-trace">Trace view</button>
-        </nav>
       </header>
 
       <section class="hero">
@@ -925,10 +910,6 @@
         selected = 0;
         renderStages();
         renderDetail();
-      });
-
-      document.getElementById("open-trace").addEventListener("click", () => {
-        document.getElementById("detail-panel").scrollIntoView({ behavior: "smooth", block: "center" });
       });
 
       renderStages();
