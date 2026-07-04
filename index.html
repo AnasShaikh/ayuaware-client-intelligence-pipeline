@@ -226,7 +226,7 @@
 
       .pipeline-grid {
         display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 10px;
       }
 
@@ -636,8 +636,9 @@
           <div>
             <h2>Pipeline at a glance</h2>
             <p>
-              Start with Source Input to see every lane and input format. Then follow
-              how each source becomes traceable evidence, scores, plans, and UI.
+              Start with Source Input to see every lane, input format, and
+              normalization step. Then follow how each source becomes meaning,
+              scores, plans, and UI.
             </p>
           </div>
           <button class="pill-button" type="button" id="reset-stage">Reset view</button>
@@ -704,11 +705,11 @@
         {
           id: "input-source",
           title: "Source Input",
-          short: "Three input types enter one backend pipeline.",
-          status: "3 types",
+          short: "Inputs enter and become rule-readable parameters.",
+          status: "18 lanes",
           type: "input-source",
           summary:
-            "AyuAware first receives and classifies incoming data by source type. Internally, the backend saves traceable evidence, but the client-facing model can understand this as one source-input step.",
+            "AyuAware receives each input lane, keeps its source and format trace, then normalizes it into typed parameters the intelligence rules can read.",
           laneGroups: [
             {
               label: "W",
@@ -750,17 +751,6 @@
               ]
             }
           ]
-        },
-        {
-          id: "params",
-          title: "Raw Params",
-          short: "Normalizes data into typed parameters rules can read.",
-          status: "Mapped",
-          summary:
-            "Text, scan output, wearable metrics, and exposure context become consistent parameter codes.",
-          reads: ["Traceable source payload", "Provider metrics", "Scan fields", "Semantic app fields"],
-          writes: ["RawParam codes", "Standardized values", "Param groups"],
-          user: "A tongue photo, HRV sync, meal note, or AQI snapshot can now enter the same pipeline."
         },
         {
           id: "interpretation",
@@ -859,8 +849,9 @@
           <aside class="trace-card">
             <strong>What this means</strong>
             <p>
-              The user, device, or environment can all start the same pipeline.
-              Each lane keeps source labels and trace refs before rules read it.
+              The input and normalization steps are shown together here.
+              Each lane keeps source labels, input format, trace refs, and
+              normalized parameter values before rules read it.
             </p>
             <ul>
               <li>Wearables are passive and trend-oriented.</li>
@@ -926,8 +917,8 @@
           <aside class="trace-card">
             <strong>Trace example</strong>
             <p>
-              Source Input -> Raw Params -> Interpretation Hit -> current state
-              -> score/Project/read model.
+              Source Input -> Interpretation Hit -> current state ->
+              score/Project/read model.
               If nothing changes, the trace should still explain the no-op.
             </p>
             <ul>
