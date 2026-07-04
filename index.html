@@ -196,24 +196,6 @@
         line-height: 1.48;
       }
 
-      .lanes {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .lane {
-        display: grid;
-        grid-template-columns: 54px 1fr;
-        gap: 14px;
-        min-height: 150px;
-        padding: 18px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: var(--surface);
-        box-shadow: 0 12px 40px rgba(16, 21, 47, 0.06);
-      }
-
       .lane-icon,
       .stage-num,
       .time-icon {
@@ -230,22 +212,22 @@
         color: var(--teal);
       }
 
-      .lane:nth-child(2) .lane-icon {
+      .input-source-box:nth-child(2) .lane-icon {
         background: var(--orange-soft);
         color: var(--orange);
       }
 
-      .lane:nth-child(3) .lane-icon {
+      .input-source-box:nth-child(3) .lane-icon {
         background: var(--blue-soft);
         color: var(--blue);
       }
 
-      .lane h3 {
+      .input-source-box h4 {
         margin: 0;
         font-size: 21px;
       }
 
-      .lane p {
+      .input-source-box p {
         margin: 7px 0 0;
         color: var(--muted);
         line-height: 1.43;
@@ -253,7 +235,7 @@
 
       .pipeline-grid {
         display: grid;
-        grid-template-columns: repeat(8, minmax(0, 1fr));
+        grid-template-columns: repeat(9, minmax(0, 1fr));
         gap: 10px;
       }
 
@@ -382,6 +364,35 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
         margin-top: 20px;
+      }
+
+      .input-source-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .input-source-box {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 13px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--soft);
+      }
+
+      .input-source-box ul {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .input-source-box li {
+        margin-top: 7px;
+        color: var(--muted);
+        line-height: 1.38;
       }
 
       .mini-box {
@@ -536,11 +547,12 @@
         }
 
         .pipeline-grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        .stage:nth-child(4)::after,
-        .stage:nth-child(8)::after {
+        .stage:nth-child(3)::after,
+        .stage:nth-child(6)::after,
+        .stage:nth-child(9)::after {
           display: none;
         }
       }
@@ -564,7 +576,7 @@
           font-size: clamp(40px, 12vw, 62px);
         }
 
-        .lanes,
+        .input-source-grid,
         .detail-lists,
         .timeline {
           grid-template-columns: 1fr;
@@ -592,7 +604,7 @@
           </div>
         </div>
         <nav class="nav" aria-label="Page sections">
-          <a href="#lanes">Inputs</a>
+          <a href="#pipeline">Input Source</a>
           <a href="#pipeline">Pipeline</a>
           <a href="#runtime">When it runs</a>
           <button class="pill-button primary" type="button" id="open-trace">Trace view</button>
@@ -611,48 +623,13 @@
         </div>
       </section>
 
-      <section class="section" id="lanes">
-        <div class="section-head">
-          <div>
-            <h2>Inputs start in three lanes</h2>
-            <p>
-              This is the simple model for clients. Underneath, each lane still
-              has to prove freshness and traceability before it can influence the app.
-            </p>
-          </div>
-        </div>
-        <div class="lanes">
-          <article class="lane">
-            <div class="lane-icon">W</div>
-            <div>
-              <h3>Wearable</h3>
-              <p>Sleep, HRV, resting heart rate, recovery, activity, SpO2, and device sync trends.</p>
-            </div>
-          </article>
-          <article class="lane">
-            <div class="lane-icon">U</div>
-            <div>
-              <h3>User-fed</h3>
-              <p>Onboarding, daily check-ins, tongue scans, meals, symptoms, labs, supplements, and NSL feedback.</p>
-            </div>
-          </article>
-          <article class="lane">
-            <div class="lane-icon">E</div>
-            <div>
-              <h3>Exposure</h3>
-              <p>Weather, AQI, humidity, season, lunar, and astro/Panchang context acting on the Twin.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <section class="section" id="pipeline">
         <div class="section-head">
           <div>
             <h2>Pipeline at a glance</h2>
             <p>
-              The main page stays intentionally light. Details move into the
-              trace panel so the system feels readable before it feels technical.
+              Start with Input Source to see the three input types. Then follow
+              how each source becomes traceable evidence, scores, plans, and UI.
             </p>
           </div>
           <button class="pill-button" type="button" id="reset-stage">Reset view</button>
@@ -717,30 +694,74 @@
     <script>
       const stages = [
         {
+          id: "input-source",
+          title: "Input Source",
+          short: "Three input types feed one backend pipeline.",
+          status: "3 lanes",
+          type: "input-source",
+          summary:
+            "AyuAware first classifies incoming data by source type so every later step knows where the signal came from and how it should be traced.",
+          laneGroups: [
+            {
+              label: "W",
+              title: "Wearable",
+              body: "Passive device data from connected health accounts.",
+              items: [
+                "Fitbit, Whoop, Apple Health, and similar syncs",
+                "sleep, HRV, resting heart rate, recovery",
+                "steps, activity, SpO2, respiratory rate",
+                "baseline and trend deviations"
+              ]
+            },
+            {
+              label: "U",
+              title: "User-fed",
+              body: "Inputs the user gives directly inside the app.",
+              items: [
+                "onboarding and questionnaires",
+                "daily check-ins, symptoms, meals",
+                "tongue scans, supplements, labs, reports",
+                "NSL actions, markers, and feedback"
+              ]
+            },
+            {
+              label: "E",
+              title: "Exposure",
+              body: "Context from the user's environment and timing.",
+              items: [
+                "weather, temperature, humidity",
+                "AQI and environmental stress",
+                "seasonal and lunar context",
+                "astro and Panchang context"
+              ]
+            }
+          ]
+        },
+        {
           id: "source",
           title: "Source artifact",
           short: "First durable proof that something was received.",
           status: "Saved",
           summary:
             "A source artifact is the record that proves the user, device, or environment contributed something real.",
-          reads: ["Wearable sync run", "Daily log entry", "Questionnaire answer", "Scan or report"],
+          reads: ["Input source classification", "Provider or app payload", "Timestamp", "User or context ref"],
           writes: ["Source row", "Processing receipt", "Artifact id"],
           user: "The app can say saved, queued, processing, completed, or no-op instead of staying silent."
         },
         {
           id: "evidence",
-          title: "RawEvidence",
+          title: "Raw Evidence",
           short: "Makes the source artifact available to intelligence.",
           status: "Fresh",
           summary:
-            "The backend converts the artifact into canonical evidence with source type, refs, payload hash, and freshness metadata.",
+            "The backend converts the artifact into canonical RawEvidence with source type, refs, payload hash, and freshness metadata.",
           reads: ["Source payload", "Timestamp", "Provider or app source"],
           writes: ["RawEvidence", "Freshness state", "Trace refs"],
           user: "This prevents stale or hidden data from pretending to be today's evidence."
         },
         {
           id: "params",
-          title: "Raw params",
+          title: "Raw Params",
           short: "Normalizes data into typed parameters rules can read.",
           status: "Mapped",
           summary:
@@ -751,11 +772,11 @@
         },
         {
           id: "interpretation",
-          title: "InterpretationHit",
+          title: "Interpretation Hit",
           short: "Maps parameters to source-backed meanings.",
           status: "IC3",
           summary:
-            "The system checks whether a parameter matches a Pillar Matrix / IC3 / rule row and stores the lineage.",
+            "The system checks whether a parameter matches a Pillar Matrix / IC3 / rule row, then stores an InterpretationHit with lineage.",
           reads: ["Raw params", "Mapping rows", "Thresholds", "Source type"],
           writes: ["InterpretationHit", "Matched row", "Pillar/state implication"],
           user: "This is where stored data becomes a health interpretation rather than just a log."
@@ -814,6 +835,46 @@
         return items.map((item) => `<li>${item}</li>`).join("");
       }
 
+      function inputSourceDetail(stage) {
+        return `
+          <div>
+            <div class="detail-title">
+              <span>${selected + 1}</span>
+              <h3>${stage.title}</h3>
+            </div>
+            <p class="detail-summary">${stage.summary}</p>
+            <div class="input-source-grid">
+              ${stage.laneGroups
+                .map(
+                  (group) => `
+                    <article class="input-source-box">
+                      <div class="lane-icon">${group.label}</div>
+                      <div>
+                        <h4>${group.title}</h4>
+                        <p>${group.body}</p>
+                        <ul>${list(group.items)}</ul>
+                      </div>
+                    </article>
+                  `
+                )
+                .join("")}
+            </div>
+          </div>
+          <aside class="trace-card">
+            <strong>What this means</strong>
+            <p>
+              The user, device, or environment can all start the same pipeline,
+              but each lane keeps its source label and trace refs.
+            </p>
+            <ul>
+              <li>Wearables are passive and trend-oriented.</li>
+              <li>User-fed inputs are explicit and context-rich.</li>
+              <li>Exposure is environmental context acting on the Twin.</li>
+            </ul>
+          </aside>
+        `;
+      }
+
       function renderStages() {
         grid.innerHTML = stages
           .map((stage, index) => {
@@ -839,6 +900,11 @@
 
       function renderDetail() {
         const stage = stages[selected];
+        if (stage.type === "input-source") {
+          detail.innerHTML = inputSourceDetail(stage);
+          return;
+        }
+
         detail.innerHTML = `
           <div>
             <div class="detail-title">
@@ -864,9 +930,9 @@
           <aside class="trace-card">
             <strong>Trace example</strong>
             <p>
-              Source -> RawEvidence -> RawParam -> InterpretationHit -> current state
-              -> score/Project/read model. If nothing changes, the trace should still
-              explain the no-op.
+              Input Source -> Source artifact -> RawEvidence -> RawParam ->
+              InterpretationHit -> current state -> score/Project/read model.
+              If nothing changes, the trace should still explain the no-op.
             </p>
             <ul>
               <li>Fresh evidence is preferred over stale evidence.</li>
