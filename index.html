@@ -381,9 +381,32 @@
       }
 
       .input-source-box li {
-        margin-top: 7px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: start;
+        margin-top: 9px;
         color: var(--muted);
         line-height: 1.38;
+      }
+
+      .input-source-box li span {
+        color: var(--ink);
+        font-weight: 750;
+      }
+
+      .input-source-box li small {
+        display: inline-flex;
+        justify-self: end;
+        max-width: 138px;
+        padding: 4px 7px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.2;
+        text-align: right;
       }
 
       .mini-box {
@@ -692,10 +715,11 @@
               title: "Wearable",
               body: "Passive device data from connected health accounts.",
               items: [
-                "Fitbit, Whoop, Apple Health, and similar syncs",
-                "sleep, HRV, resting heart rate, recovery",
-                "steps, activity, SpO2, respiratory rate",
-                "baseline and trend deviations"
+                { name: "Provider sync", format: "account metadata" },
+                { name: "Sleep", format: "device metrics" },
+                { name: "HRV, RHR, recovery", format: "device metrics" },
+                { name: "Steps and activity", format: "device metrics" },
+                { name: "SpO2 and respiratory rate", format: "device metrics" }
               ]
             },
             {
@@ -703,10 +727,14 @@
               title: "User-fed",
               body: "Inputs the user gives directly inside the app.",
               items: [
-                "onboarding and questionnaires",
-                "daily check-ins, symptoms, meals",
-                "tongue scans, supplements, labs, reports",
-                "NSL actions, markers, and feedback"
+                { name: "Onboarding questionnaires", format: "text/select" },
+                { name: "Daily meal log", format: "text/image" },
+                { name: "Daily tongue scan", format: "image" },
+                { name: "Symptoms and feelings", format: "text/select" },
+                { name: "Supplements", format: "text/select" },
+                { name: "Lifestyle or practice", format: "text/select/timer" },
+                { name: "Lab or report upload", format: "file/image/PDF" },
+                { name: "NSL actions and markers", format: "tap/text" }
               ]
             },
             {
@@ -714,10 +742,11 @@
               title: "Exposure",
               body: "Context from the user's environment and timing.",
               items: [
-                "weather, temperature, humidity",
-                "AQI and environmental stress",
-                "seasonal and lunar context",
-                "astro and Panchang context"
+                { name: "Location context", format: "permission/coordinates" },
+                { name: "Weather and climate", format: "API metrics" },
+                { name: "AQI and environmental stress", format: "API metrics" },
+                { name: "Seasonal and lunar context", format: "computed context" },
+                { name: "Astro and Panchang", format: "computed/API context" }
               ]
             }
           ]
@@ -798,6 +827,10 @@
         return items.map((item) => `<li>${item}</li>`).join("");
       }
 
+      function laneList(items) {
+        return items.map((item) => `<li><span>${item.name}</span><small>${item.format}</small></li>`).join("");
+      }
+
       function inputSourceDetail(stage) {
         return `
           <div>
@@ -815,7 +848,7 @@
                       <div>
                         <h4>${group.title}</h4>
                         <p>${group.body}</p>
-                        <ul>${list(group.items)}</ul>
+                        <ul>${laneList(group.items)}</ul>
                       </div>
                     </article>
                   `
