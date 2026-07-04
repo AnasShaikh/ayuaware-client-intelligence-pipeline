@@ -235,7 +235,7 @@
 
       .pipeline-grid {
         display: grid;
-        grid-template-columns: repeat(9, minmax(0, 1fr));
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 10px;
       }
 
@@ -604,7 +604,7 @@
           </div>
         </div>
         <nav class="nav" aria-label="Page sections">
-          <a href="#pipeline">Input Source</a>
+          <a href="#pipeline">Source Input</a>
           <a href="#pipeline">Pipeline</a>
           <a href="#runtime">When it runs</a>
           <button class="pill-button primary" type="button" id="open-trace">Trace view</button>
@@ -628,7 +628,7 @@
           <div>
             <h2>Pipeline at a glance</h2>
             <p>
-              Start with Input Source to see the three input types. Then follow
+              Start with Source Input to see the three input types. Then follow
               how each source becomes traceable evidence, scores, plans, and UI.
             </p>
           </div>
@@ -695,12 +695,12 @@
       const stages = [
         {
           id: "input-source",
-          title: "Input Source",
-          short: "Three input types feed one backend pipeline.",
-          status: "3 lanes",
+          title: "Source Input",
+          short: "Three input types enter one backend pipeline.",
+          status: "3 types",
           type: "input-source",
           summary:
-            "AyuAware first classifies incoming data by source type so every later step knows where the signal came from and how it should be traced.",
+            "AyuAware first receives and classifies incoming data by source type. Internally, the backend saves traceable evidence, but the client-facing model can understand this as one source-input step.",
           laneGroups: [
             {
               label: "W",
@@ -738,35 +738,13 @@
           ]
         },
         {
-          id: "source",
-          title: "Source artifact",
-          short: "First durable proof that something was received.",
-          status: "Saved",
-          summary:
-            "A source artifact is the record that proves the user, device, or environment contributed something real.",
-          reads: ["Input source classification", "Provider or app payload", "Timestamp", "User or context ref"],
-          writes: ["Source row", "Processing receipt", "Artifact id"],
-          user: "The app can say saved, queued, processing, completed, or no-op instead of staying silent."
-        },
-        {
-          id: "evidence",
-          title: "Raw Evidence",
-          short: "Makes the source artifact available to intelligence.",
-          status: "Fresh",
-          summary:
-            "The backend converts the artifact into canonical RawEvidence with source type, refs, payload hash, and freshness metadata.",
-          reads: ["Source payload", "Timestamp", "Provider or app source"],
-          writes: ["RawEvidence", "Freshness state", "Trace refs"],
-          user: "This prevents stale or hidden data from pretending to be today's evidence."
-        },
-        {
           id: "params",
           title: "Raw Params",
           short: "Normalizes data into typed parameters rules can read.",
           status: "Mapped",
           summary:
             "Text, scan output, wearable metrics, and exposure context become consistent parameter codes.",
-          reads: ["RawEvidence payload", "Provider metrics", "Scan fields", "Semantic app fields"],
+          reads: ["Traceable source payload", "Provider metrics", "Scan fields", "Semantic app fields"],
           writes: ["RawParam codes", "Standardized values", "Param groups"],
           user: "A tongue photo, HRV sync, meal note, or AQI snapshot can now enter the same pipeline."
         },
@@ -863,8 +841,8 @@
           <aside class="trace-card">
             <strong>What this means</strong>
             <p>
-              The user, device, or environment can all start the same pipeline,
-              but each lane keeps its source label and trace refs.
+              The user, device, or environment can all start the same pipeline.
+              Each lane keeps source labels and trace refs before rules read it.
             </p>
             <ul>
               <li>Wearables are passive and trend-oriented.</li>
@@ -930,8 +908,8 @@
           <aside class="trace-card">
             <strong>Trace example</strong>
             <p>
-              Input Source -> Source artifact -> RawEvidence -> RawParam ->
-              InterpretationHit -> current state -> score/Project/read model.
+              Source Input -> Raw Params -> Interpretation Hit -> current state
+              -> score/Project/read model.
               If nothing changes, the trace should still explain the no-op.
             </p>
             <ul>
