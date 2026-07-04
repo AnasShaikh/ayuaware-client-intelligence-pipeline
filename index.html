@@ -131,10 +131,6 @@
       }
 
       .hero {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 360px;
-        gap: 28px;
-        align-items: end;
         padding: 34px 0 30px;
       }
 
@@ -173,53 +169,6 @@
         color: var(--muted);
         font-size: clamp(18px, 1.7vw, 23px);
         line-height: 1.5;
-      }
-
-      .summary-card {
-        padding: 22px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
-      }
-
-      .summary-card strong {
-        display: block;
-        font-size: 18px;
-      }
-
-      .summary-card p {
-        margin: 8px 0 18px;
-        color: var(--muted);
-        font-size: 14px;
-        line-height: 1.45;
-      }
-
-      .status-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .status {
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background: var(--soft);
-      }
-
-      .status span {
-        display: block;
-        color: var(--quiet);
-        font-size: 11px;
-        font-weight: 850;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .status strong {
-        margin-top: 5px;
-        font-size: 22px;
       }
 
       .section {
@@ -581,7 +530,6 @@
           --wrap: min(100vw - 32px, 980px);
         }
 
-        .hero,
         .detail-panel,
         .runtime {
           grid-template-columns: 1fr;
@@ -661,23 +609,6 @@
             timely nudges.
           </p>
         </div>
-        <aside class="summary-card" aria-label="Page summary">
-          <strong>One chain of trust</strong>
-          <p>
-            Every visible value should have a source, a decision, and a clear
-            explanation. Click any stage below to inspect the evidence path.
-          </p>
-          <div class="status-grid">
-            <div class="status">
-              <span>Input lanes</span>
-              <strong>3</strong>
-            </div>
-            <div class="status">
-              <span>Pipeline stages</span>
-              <strong>8</strong>
-            </div>
-          </div>
-        </aside>
       </section>
 
       <section class="section" id="lanes">
