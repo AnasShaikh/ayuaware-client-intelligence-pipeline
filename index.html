@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>How AyuAware Intelligence Works</title>
+    <style>
+      :root {
+        --bg: #fbfaf7;
+        --shell: #f2f6f0;
+        --panel: #ffffff;
+        --panel-soft: #fbfaf7;
+        --ink: #10152f;
+        --muted: #667085;
+        --quiet: #98a2b3;
+        --line: #e4e7ec;
+        --line-dark: #d0d5dd;
+        --teal: #0f766e;
+        --teal-soft: #e6f4ee;
+        --green: #2e9f75;
+        --green-soft: #e8f7ef;
+        --blue: #315fd8;
+        --blue-soft: #e9efff;
+        --violet: #6852c5;
+        --violet-soft: #f0ecff;
+        --orange: #e7832c;
+        --orange-soft: #fff1e3;
+        --red: #c24141;
+        --shadow: 0 18px 45px rgba(16, 21, 47, 0.08);
+        --radius: 8px;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr) 260px;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100vh;
+        padding: 24px 12px;
+        border-right: 1px solid var(--line);
+        background: linear-gradient(180deg, #fffdf8, #f3f8f4);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 8px 18px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border: 2px solid #cf8e35;
+        border-radius: 50%;
+        color: #a56214;
+        font-weight: 900;
+      }
+
+      .brand strong {
+        display: block;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .nav {
+        display: grid;
+        gap: 7px;
+      }
+
+      .nav a,
+      .profile,
+      .privacy {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 11px 10px;
+        border-radius: var(--radius);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .nav a.active {
+        background: var(--teal-soft);
+        color: #075e58;
+      }
+
+      .nav-icon {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border: 1px solid var(--line-dark);
+        border-radius: 7px;
+        color: inherit;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .sidebar-spacer {
+        flex: 1;
+      }
+
+      .profile,
+      .privacy {
+        align-items: flex-start;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .avatar {
+        display: grid;
+        flex: 0 0 auto;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 50%;
+        background: #0c6b60;
+        color: white;
+        font-weight: 850;
+      }
+
+      .profile small,
+      .privacy small {
+        display: block;
+        margin-top: 3px;
+        color: var(--teal);
+        font-weight: 650;
+      }
+
+      .main {
+        min-width: 0;
+        padding: 32px 18px 42px;
+      }
+
+      .topline {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(38px, 4vw, 58px);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        max-width: 720px;
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .top-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 44px;
+        padding: 10px 18px;
+        border: 1px solid var(--line-dark);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--ink);
+        cursor: pointer;
+        font-weight: 750;
+      }
+
+      .pill-button.active {
+        border-color: rgba(15, 118, 110, 0.35);
+        background: var(--teal-soft);
+        color: var(--teal);
+      }
+
+      .pipeline-wrap {
+        margin-top: 38px;
+        overflow-x: auto;
+        padding: 0 0 18px;
+      }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(130px, 1fr));
+        gap: 8px;
+        min-width: 1104px;
+      }
+
+      .stage {
+        position: relative;
+        min-height: 548px;
+        border: 1px solid var(--line-dark);
+        border-radius: 10px;
+        background: var(--panel);
+        box-shadow: 0 10px 26px rgba(16, 21, 47, 0.06);
+      }
+
+      .stage::after {
+        content: "";
+        position: absolute;
+        top: 30px;
+        right: -12px;
+        width: 14px;
+        border-top: 2px solid rgba(15, 118, 110, 0.6);
+      }
+
+      .stage:last-child::after {
+        display: none;
+      }
+
+      .stage-button {
+        display: block;
+        width: 100%;
+        min-height: 138px;
+        padding: 18px 12px 12px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .stage.selected {
+        border-color: rgba(15, 118, 110, 0.78);
+        box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.08), var(--shadow);
+      }
+
+      .stage-num {
+        display: inline-grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--teal);
+        color: white;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .stage:nth-child(2) .stage-num {
+        background: var(--blue);
+      }
+
+      .stage:nth-child(3) .stage-num {
+        background: var(--violet);
+      }
+
+      .stage:nth-child(4) .stage-num,
+      .stage:nth-child(7) .stage-num,
+      .stage:nth-child(8) .stage-num {
+        background: var(--orange);
+      }
+
+      .stage h2 {
+        margin: 14px 0 0;
+        font-size: 16px;
+        line-height: 1.2;
+      }
+
+      .stage p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .stage-body {
+        padding: 12px;
+      }
+
+      .mini-table {
+        display: grid;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .mini-head,
+      .mini-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 3px;
+        min-height: 42px;
+        align-items: center;
+        padding: 8px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .mini-head {
+        background: var(--panel-soft);
+        color: var(--ink);
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .mini-head span:nth-child(2) {
+        display: none;
+      }
+
+      .mini-row:last-child {
+        border-bottom: 0;
+      }
+
+      .mini-row span {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .mini-row strong {
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .source-list {
+        display: grid;
+        gap: 9px;
+      }
+
+      .source-item {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+        min-height: 50px;
+        padding: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .source-item.active {
+        border-color: rgba(15, 118, 110, 0.6);
+        background: #fbfffd;
+      }
+
+      .source-icon {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--panel-soft);
+        color: var(--teal);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .source-item .badge {
+        grid-column: 2;
+        width: fit-content;
+      }
+
+      .source-item strong {
+        display: block;
+        font-size: 12px;
+      }
+
+      .source-item small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 22px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .badge.orange {
+        background: var(--orange-soft);
+        color: var(--orange);
+      }
+
+      .badge.violet {
+        background: var(--violet-soft);
+        color: var(--violet);
+      }
+
+      .stage-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 12px;
+        padding: 10px 2px 0;
+        border-top: 1px solid var(--line);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .runtime {
+        display: grid;
+        grid-template-columns: 1fr 230px;
+        gap: 18px;
+        margin: 34px 14px 0;
+        padding: 22px;
+        border: 1px solid var(--line-dark);
+        border-radius: 10px;
+        background: var(--panel);
+        box-shadow: 0 12px 34px rgba(16, 21, 47, 0.06);
+      }
+
+      .runtime h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .runtime p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .time-step {
+        position: relative;
+        display: grid;
+        gap: 8px;
+        min-height: 120px;
+        align-content: start;
+      }
+
+      .time-step::before {
+        content: "";
+        position: absolute;
+        top: 23px;
+        left: 38px;
+        right: -20px;
+        border-top: 2px solid rgba(15, 118, 110, 0.35);
+      }
+
+      .time-step:last-child::before {
+        display: none;
+      }
+
+      .time-icon {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-weight: 850;
+      }
+
+      .time-step strong {
+        font-size: 13px;
+      }
+
+      .time-step small {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .last-run {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-soft);
+      }
+
+      .last-run strong {
+        display: block;
+        margin-bottom: 12px;
+      }
+
+      .last-run div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .trace-panel {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-left: 1px solid var(--line);
+        background: #fffdf8;
+      }
+
+      .trace-head {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 22px 20px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 253, 248, 0.94);
+        backdrop-filter: blur(12px);
+      }
+
+      .trace-head h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .trace-body {
+        padding: 18px;
+      }
+
+      .selected-item {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid var(--line-dark);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .selected-icon {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 2px solid var(--red);
+        border-radius: 50%;
+        color: var(--red);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .selected-item strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .selected-item small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .trace-stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .trace-card {
+        position: relative;
+        padding: 14px 14px 14px 18px;
+        border: 1px solid var(--line-dark);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .trace-card::before {
+        content: attr(data-step);
+        position: absolute;
+        top: 14px;
+        left: -12px;
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--teal);
+        color: white;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .trace-card h3 {
+        margin: 0 0 8px 8px;
+        font-size: 14px;
+      }
+
+      .trace-card p {
+        margin: 0 0 0 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.48;
+      }
+
+      .trace-card a {
+        display: inline-block;
+        margin: 12px 0 0 8px;
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 750;
+        text-decoration: none;
+      }
+
+      .footer-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        padding: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 1180px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar,
+        .trace-panel {
+          position: static;
+          height: auto;
+        }
+
+        .sidebar {
+          padding: 16px;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .nav {
+          grid-template-columns: repeat(4, minmax(130px, 1fr));
+        }
+
+        .sidebar-spacer,
+        .privacy {
+          display: none;
+        }
+
+        .profile {
+          width: fit-content;
+        }
+
+        .runtime {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .main {
+          padding: 24px 14px;
+        }
+
+        .topline {
+          flex-direction: column;
+        }
+
+        .nav {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .timeline {
+          grid-template-columns: 1fr;
+        }
+
+        .time-step::before {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" aria-label="AyuAware sections">
+        <div class="brand">
+          <div class="brand-mark">A</div>
+          <div>
+            <strong>AyuAware</strong>
+            <span>Know. Balance. Thrive.</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <a class="active" href="#pipeline"><span class="nav-icon">P</span>How it works</a>
+          <a href="#health"><span class="nav-icon">H</span>My Health</a>
+          <a href="#project"><span class="nav-icon">N</span>Project &amp; NSL</a>
+          <a href="#runtime"><span class="nav-icon">D</span>Daily Check-in</a>
+          <a href="#runtime"><span class="nav-icon">T</span>Trends &amp; Reports</a>
+          <a href="#notifications"><span class="nav-icon">B</span>Notifications</a>
+          <a href="#pipeline"><span class="nav-icon">S</span>Devices &amp; Sync</a>
+          <a href="#sources"><span class="nav-icon">G</span>Settings</a>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="profile">
+          <span class="avatar">AU</span>
+          <div>AyuAware user <small>View profile</small></div>
+        </div>
+        <div class="privacy">
+          <span class="nav-icon">L</span>
+          <div>Your data is private and secure <small>Learn how we protect it</small></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="topline">
+          <div>
+            <h1>How AyuAware Intelligence Works</h1>
+            <p class="subtitle">
+              Our intelligence pipeline continuously turns your inputs into trusted
+              insights, personalized guidance, and timely nudges. Every step is
+              source-backed and traceable.
+            </p>
+          </div>
+          <div class="top-actions">
+            <button class="pill-button active" type="button" data-focus="pipeline">Pipeline map</button>
+            <button class="pill-button" type="button" data-focus="legend">Legend</button>
+          </div>
+        </section>
+
+        <section id="pipeline" class="pipeline-wrap" aria-label="Pipeline map">
+          <div class="pipeline">
+            <article class="stage selected" data-stage="inputs">
+              <button class="stage-button" type="button">
+                <span class="stage-num">1</span>
+                <h2>Inputs</h2>
+                <p>Raw evidence from three lanes: wearable, user-fed, and exposure.</p>
+              </button>
+              <div class="stage-body">
+                <div class="source-list">
+                  <div class="source-item">
+                    <span class="source-icon">W</span>
+                    <div><strong>Wearable</strong><small>Fitbit, Whoop, Apple Health, sleep, HRV, RHR</small></div>
+                    <span class="badge">Live</span>
+                  </div>
+                  <div class="source-item active">
+                    <span class="source-icon">U</span>
+                    <div><strong>User-fed</strong><small>Onboarding, daily log, tongue, meals, symptoms, labs</small></div>
+                    <span class="badge">7:10 PM</span>
+                  </div>
+                  <div class="source-item">
+                    <span class="source-icon">E</span>
+                    <div><strong>Exposure</strong><small>Weather, AQI, lunar, season, astro/Panchang</small></div>
+                    <span class="badge">Daily</span>
+                  </div>
+                </div>
+                <div class="stage-link">+ each lane must prove freshness <span>open</span></div>
+              </div>
+            </article>
+
+            <article class="stage" data-stage="standardization">
+              <button class="stage-button" type="button">
+                <span class="stage-num">2</span>
+                <h2>Standardization</h2>
+                <p>Map raw evidence to canonical parameters the rules can read.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Raw input</span><span>Mapped parameter</span></div>
+                  <div class="mini-row"><strong>Resting HR</strong><span>wearable.rhr</span></div>
+                  <div class="mini-row"><strong>HRV</strong><span>wearable.hrv</span></div>
+                  <div class="mini-row"><strong>Tongue coating</strong><span>tongue_scan.coating</span></div>
+                  <div class="mini-row"><strong>Meal items</strong><span>daily_log.meal.items</span></div>
+                  <div class="mini-row"><strong>AQI</strong><span>exposure.aqi</span></div>
+                </div>
+                <div class="stage-link">+ RawEvidence and RawParam receipts <span>open</span></div>
+              </div>
+            </article>
+
+            <article class="stage" data-stage="interpretations">
+              <button class="stage-button" type="button">
+                <span class="stage-num">3</span>
+                <h2>Interpretations</h2>
+                <p>IC3 and mapping libraries generate meaningful hits.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Interpretation hit</span><span>Source</span></div>
+                  <div class="mini-row"><strong>Agni: Mandagni</strong><span>Daily check-in</span></div>
+                  <div class="mini-row"><strong>Ama: Moderate</strong><span>Tongue scan</span></div>
+                  <div class="mini-row"><strong>Sleep: Disturbed</strong><span>Wearable</span></div>
+                  <div class="mini-row"><strong>Stress: Elevated</strong><span>Whoop/Fitbit</span></div>
+                  <div class="mini-row"><strong>Weather stress</strong><span>Exposure</span></div>
+                </div>
+                <div class="stage-link">+ InterpretationHit lineage stays traceable <span>open</span></div>
+              </div>
+            </article>
+
+            <article class="stage" data-stage="triangulation">
+              <button class="stage-button" type="button">
+                <span class="stage-num">4</span>
+                <h2>Triangulation</h2>
+                <p>Source-backed rules reconcile findings into reliable signals.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Signal</span><span>Evidence rule</span></div>
+                  <div class="mini-row"><strong>Agni low</strong><span>R1, R4, R7</span></div>
+                  <div class="mini-row"><strong>Ama moderate</strong><span>R2, R5</span></div>
+                  <div class="mini-row"><strong>Vata elevated</strong><span>R3, R8</span></div>
+                  <div class="mini-row"><strong>Pitta steady</strong><span>R6</span></div>
+                  <div class="mini-row"><strong>Conflict</strong><span>surface, do not hide</span></div>
+                </div>
+                <div class="stage-link">Ruleset: Ayurvedic IC3 v2.1 <span>open</span></div>
+              </div>
+            </article>
+
+            <article class="stage" data-stage="twin">
+              <button class="stage-button" type="button">
+                <span class="stage-num">5</span>
+                <h2>My Twin Current State</h2>
+                <p>Unified state with confidence, freshness, and trace.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Key inference</span><span>Confidence</span></div>
+                  <div class="mini-row"><strong>Agni</strong><span><span class="badge">Low 68%</span></span></div>
+                  <div class="mini-row"><strong>Ama</strong><span><span class="badge orange">Moderate 72%</span></span></div>
+                  <div class="mini-row"><strong>Vata</strong><span><span class="badge orange">Elevated 63%</span></span></div>
+                  <div class="mini-row"><strong>Pitta</strong><span><span class="badge">Balanced 71%</span></span></div>
+                  <div class="mini-row"><strong>Kapha</strong><span><span class="badge violet">Slight up 61%</span></span></div>
+                </div>
+                <div class="stage-link">View full state snapshot <span>open</span></div>
+              </div>
+            </article>
+
+            <article id="health" class="stage" data-stage="scores">
+              <button class="stage-button" type="button">
+                <span class="stage-num">6</span>
+                <h2>Pillar Scores</h2>
+                <p>Health pillars calculated 0-100 with coverage and evidence.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Pillar</span><span>Score / trend</span></div>
+                  <div class="mini-row"><strong>Agni</strong><span>25 down</span></div>
+                  <div class="mini-row"><strong>Vikriti</strong><span>41 steady</span></div>
+                  <div class="mini-row"><strong>Manas</strong><span>38 down</span></div>
+                  <div class="mini-row"><strong>Nidra</strong><span>62 up</span></div>
+                  <div class="mini-row"><strong>Overall</strong><span>58 / 100</span></div>
+                </div>
+                <div class="stage-link">How it is calculated <span>open</span></div>
+              </div>
+            </article>
+
+            <article id="project" class="stage" data-stage="project">
+              <button class="stage-button" type="button">
+                <span class="stage-num">7</span>
+                <h2>Project + NSL Plan</h2>
+                <p>Personalized Project and daily NSL actions are generated or updated.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Active Project</span><span>Status</span></div>
+                  <div class="mini-row"><strong>Restore Agni</strong><span>Day 6 of 30</span></div>
+                  <div class="mini-row"><strong>Today's NSL</strong><span>2 / 3 complete</span></div>
+                  <div class="mini-row"><strong>Nutrition</strong><span>Warm cooked meal</span></div>
+                  <div class="mini-row"><strong>Lifestyle</strong><span>Mindful eating</span></div>
+                  <div class="mini-row"><strong>Markers</strong><span>Energy, appetite, bloating</span></div>
+                </div>
+                <div class="stage-link">Plan logic and history <span>open</span></div>
+              </div>
+            </article>
+
+            <article id="notifications" class="stage" data-stage="notifications">
+              <button class="stage-button" type="button">
+                <span class="stage-num">8</span>
+                <h2>Notifications + UI</h2>
+                <p>Timely nudges and clear updates, delivered through read models.</p>
+              </button>
+              <div class="stage-body">
+                <div class="mini-table">
+                  <div class="mini-head"><span>Recent notification</span><span>Delivery</span></div>
+                  <div class="mini-row"><strong>Morning insight</strong><span>Delivered</span></div>
+                  <div class="mini-row"><strong>Check-in reminder</strong><span>Queued</span></div>
+                  <div class="mini-row"><strong>Push ticket</strong><span>Sent</span></div>
+                  <div class="mini-row"><strong>Expo receipt</strong><span>OK</span></div>
+                  <div class="mini-row"><strong>iOS display</strong><span>Device-controlled</span></div>
+                </div>
+                <div class="stage-link">View notification trace <span>open</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="runtime" class="runtime" aria-label="Pipeline runtime">
+          <div>
+            <h2>When does this pipeline run?</h2>
+            <p>Different triggers keep the Twin current without hiding what changed.</p>
+            <div class="timeline">
+              <div class="time-step">
+                <span class="time-icon">1</span>
+                <strong>Onboarding</strong>
+                <small>Builds baseline from questionnaire answers and initial checks.</small>
+              </div>
+              <div class="time-step">
+                <span class="time-icon">2</span>
+                <strong>Daily check-in</strong>
+                <small>User inputs refresh interpretations, scores, and Project context.</small>
+              </div>
+              <div class="time-step">
+                <span class="time-icon">3</span>
+                <strong>Wearable sync</strong>
+                <small>New provider data flows in and updates evidence.</small>
+              </div>
+              <div class="time-step">
+                <span class="time-icon">4</span>
+                <strong>New scan / report</strong>
+                <small>Tongue, labs, meals, symptoms, and supplements are analyzed.</small>
+              </div>
+              <div class="time-step">
+                <span class="time-icon">5</span>
+                <strong>Plan window</strong>
+                <small>Project and NSL are kept, modified, or regenerated when rules require it.</small>
+              </div>
+            </div>
+          </div>
+          <aside class="last-run">
+            <strong>Last pipeline run</strong>
+            <div><span>Today, 7:18 PM</span><span class="badge">Completed</span></div>
+            <div><span>Next run</span><span>tonight</span></div>
+            <div><span>Traceability</span><span>source-backed</span></div>
+          </aside>
+        </section>
+
+        <footer id="sources" class="footer-note">
+          <span>Always source-backed</span>
+          <span>Your privacy is protected</span>
+          <span>You are in control</span>
+          <span>Every visible value should have a trace</span>
+        </footer>
+      </main>
+
+      <aside class="trace-panel" aria-label="Trace details">
+        <div class="trace-head">
+          <h2>Trace Details</h2>
+          <button class="pill-button" type="button" data-focus="trace">Close</button>
+        </div>
+        <div class="trace-body">
+          <div class="selected-item">
+            <span class="selected-icon">A</span>
+            <div>
+              <strong id="trace-title">Agni: Mandagni (Low)</strong>
+              <small id="trace-subtitle">From Daily Check-in - 7:10 PM</small>
+            </div>
+          </div>
+
+          <div class="trace-stack" id="trace-stack"></div>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      const traces = {
+        inputs: {
+          title: "Input lane: User-fed",
+          subtitle: "Daily check-in, tongue, meals, reports, and NSL feedback",
+          steps: [
+            ["Source", "The app stores a durable source artifact such as DailyLogEntry, scan upload, questionnaire answer, or lab parse."],
+            ["Raw evidence", "The artifact is converted into RawEvidence with source type, source refs, payload hash, and freshness metadata."],
+            ["Output", "The UI can show saved, queued, processing, completed, or no-op instead of going blank."]
+          ]
+        },
+        standardization: {
+          title: "Standardized parameters",
+          subtitle: "Raw input becomes canonical codes",
+          steps: [
+            ["RawParam", "The backend emits typed params like tongue_scan.ama_level, wearable.hrv, daily_log.meal.items, or exposure.aqi."],
+            ["Freshness", "If an artifact changes, old params under that evidence row are cleaned so stale data does not survive."],
+            ["Output", "Downstream stages can read consistent parameter names across providers and app surfaces."]
+          ]
+        },
+        interpretations: {
+          title: "IC3 interpretation hit",
+          subtitle: "Source-backed mapping row matched",
+          steps: [
+            ["Rule", "Raw params are matched against IC3/Pillar Matrix/source-backed mappings where a mapping exists."],
+            ["Lineage", "The InterpretationHit stores matched row, source type, source artifact, and implication for pillar or state."],
+            ["Output", "The system now has an interpretation, not just a stored log."]
+          ]
+        },
+        triangulation: {
+          title: "Triangulated signal",
+          subtitle: "Multiple sources become a current-state belief",
+          steps: [
+            ["Evidence mix", "Corroborating sources strengthen confidence; stale, conflicting, or weak signals are surfaced rather than hidden."],
+            ["Current state", "The resolved belief updates MyTwin.currentState or records an explicit monitor/no-op."],
+            ["Output", "Scores, Project decisions, notifications, and Twin chat can cite the same state."]
+          ]
+        },
+        twin: {
+          title: "My Twin current state",
+          subtitle: "Unified state with confidence and trace",
+          steps: [
+            ["Compartments", "The Twin keeps profile, interpretations, current state, Project/NSL state, preferences, history, and traces separate."],
+            ["Use", "Downstream engines consume current state without collapsing it into scoring shortcuts."],
+            ["Output", "The app can explain why the Twin believes something today."]
+          ]
+        },
+        scores: {
+          title: "Pillar score / estimate",
+          subtitle: "Health reading with evidence and readiness",
+          steps: [
+            ["Projection", "Interpretation lineage and current-state context build PillarProjection records."],
+            ["Score", "Official scores publish when coverage and confidence gates pass; estimates can still keep the UI useful."],
+            ["Output", "Health screens show score, estimate, evidence, limitation, or next step."]
+          ]
+        },
+        project: {
+          title: "Project + NSL plan",
+          subtitle: "Plan creation, maintenance, and modification",
+          steps: [
+            ["Project", "The backend creates, keeps, modifies, or regenerates a Project based on rules and current context."],
+            ["NSL", "Nutrition, supplement, and lifestyle actions are generated as daily deliveries with markers and trace."],
+            ["Output", "The user sees today's plan and why it changed or stayed the same."]
+          ]
+        },
+        notifications: {
+          title: "Notification delivery trace",
+          subtitle: "Intent -> delivery -> provider -> device",
+          steps: [
+            ["Intent", "NotificationIntent stores the canonical message, payload, source refs, and dedupe key."],
+            ["Delivery", "NotificationDelivery stores push/in-app/WhatsApp rows and status."],
+            ["Provider", "Expo ticket means accepted; Expo receipt proves provider/APNS outcome."],
+            ["Device", "Visible iPhone display still depends on iOS permission, Focus, app settings, and foreground behavior."],
+            ["UI shown", "Home, Health, NSL, Exposure, Chat, and Transparency render backend-owned read models."]
+          ]
+        }
+      };
+
+      const stack = document.getElementById("trace-stack");
+      const title = document.getElementById("trace-title");
+      const subtitle = document.getElementById("trace-subtitle");
+
+      function renderTrace(key) {
+        const trace = traces[key] || traces.inputs;
+        title.textContent = trace.title;
+        subtitle.textContent = trace.subtitle;
+        stack.innerHTML = trace.steps
+          .map((step, index) => {
+            return `
+              <article class="trace-card" data-step="${index + 1}">
+                <h3>${step[0]}</h3>
+                <p>${step[1]}</p>
+                <a href="#sources">View source-backed docs</a>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      document.querySelectorAll(".stage").forEach((stage) => {
+        stage.addEventListener("click", () => {
+          document.querySelectorAll(".stage").forEach((item) => item.classList.remove("selected"));
+          stage.classList.add("selected");
+          renderTrace(stage.dataset.stage);
+        });
+      });
+
+      renderTrace("inputs");
+    </script>
+  </body>
+</html>
