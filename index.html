@@ -759,7 +759,7 @@
           status: "IC3",
           summary:
             "The system checks whether a parameter matches a Pillar Matrix / IC3 / rule row, then stores an InterpretationHit with lineage.",
-          reads: ["Raw params", "Mapping rows", "Thresholds", "Source type"],
+          reads: ["Normalized input parameters", "Mapping rows", "Thresholds", "Source type"],
           writes: ["InterpretationHit", "Matched row", "Pillar/state implication"],
           user: "This is where stored data becomes a health interpretation rather than just a log."
         },
