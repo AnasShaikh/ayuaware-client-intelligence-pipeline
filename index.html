@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>How AyuAware Intelligence Works</title>
+    <title>AyuAware Backend Architecture</title>
     <style>
       :root {
         color-scheme: light;
@@ -115,48 +115,28 @@
       }
 
       .hero {
-        padding: 34px 0 30px;
-      }
-
-      .kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 16px;
-        color: var(--teal);
-        font-size: 13px;
-        font-weight: 850;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .kicker::before {
-        content: "";
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        background: var(--teal);
+        padding: 16px 0 10px;
       }
 
       h1 {
-        max-width: 940px;
+        max-width: 100%;
         margin: 0;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(48px, 5.7vw, 82px);
-        line-height: 0.96;
+        font-size: clamp(34px, 3.5vw, 48px);
+        line-height: 1.04;
         letter-spacing: 0;
       }
 
       .hero p {
-        max-width: 850px;
-        margin: 20px 0 0;
+        max-width: 700px;
+        margin: 8px 0 0;
         color: var(--muted);
-        font-size: clamp(18px, 1.7vw, 23px);
-        line-height: 1.5;
+        font-size: clamp(16px, 1.2vw, 18px);
+        line-height: 1.45;
       }
 
       .section {
-        margin-top: 26px;
+        margin-top: 22px;
       }
 
       .section-head {
@@ -723,11 +703,11 @@
         }
 
         .hero {
-          padding-top: 18px;
+          padding-top: 12px;
         }
 
         h1 {
-          font-size: clamp(40px, 12vw, 62px);
+          font-size: clamp(32px, 9vw, 44px);
         }
 
         .input-source-grid,
@@ -761,13 +741,10 @@
 
       <section class="hero">
         <div>
-          <span class="kicker">Source-backed system map</span>
-          <h1>How AyuAware Intelligence Works</h1>
+          <h1>AyuAware Backend Architecture</h1>
           <p>
-            AyuAware turns wearable signals, user-fed inputs, and exposure context
-            into traceable health readings, Project decisions, NSL actions, and
-            timely nudges. This is written for the build owner: plain English on
-            top, source docs and live code beneath each claim.
+            A plain-English map of how source-backed inputs become health
+            readings, Project decisions, NSL actions, notifications, and UI states.
           </p>
         </div>
       </section>
