@@ -2911,70 +2911,208 @@
 ];
       // END code-derived inventory.
 
-      const triangulationLogic = {
-        thresholds: [
-          "Active finding floor: effectiveConfidence >= 0.15.",
-          "Composite confidence: 1 - product(1 - confidence_i * decay_i).",
-          "Write thresholds: dosha 0.60, sub_dosha 0.55, dhatu 0.60, srotas 0.55, agni 0.65, ama 0.70, ojas 0.65, manas 0.60.",
-          "Same-state rewrite delta: 0.15, while state or severity changes always rewrite."
-        ],
-        decay: [
-          "wearable 7/60 days, floor 0.30",
-          "blood_lab 90/270 days, floor 0.20",
-          "tongue 14/60 days, floor 0.15",
-          "questionnaire 60/180 days, floor 0.30",
-          "daily_checkin 7/30 days, floor 0.20",
-          "meal 3/14 days, floor 0.15",
-          "exposure 1/7 days, floor 0.10",
-          "lifestyle 14/60 days, floor 0.20",
-          "protocol_response 14/90 days, floor 0.20",
-          "chat_derived is evidence-only and never writes current state directly"
-        ],
-        patterns: [
-          "corroboration: multiple independent write-eligible source groups support the same attribution.",
-          "hierarchy_corroboration: child findings create parent-domain evidence.",
-          "complementation: different findings combine into a defined pattern.",
-          "conflict: opposing directions are recorded or resolved by authority rules.",
-          "solo: one source can remain evidence-only if below threshold or authority.",
-          "no_evidence: no active finding after decay, baseline, and replacement checks."
-        ],
-        authority: [
-          "Fresh evidence can resolve conflict by deprioritizing stale or decaying contradictory findings.",
-          "Ama conflict authority is tongue or blood_lab; systemic blood/inflammation Ama prefers blood_lab.",
-          "Agni conflict authority is tongue.",
-          "Prakriti/dosha constitutional findings can be questionnaire-only source authority.",
-          "Quantifiable dhatu authority is blood_lab; functional dhatu authority uses sustained daily_checkin/questionnaire patterns.",
-          "Sub-dosha authority can be wearable for prana/vyana/samana and daily_checkin for apana.",
-          "Ojas conflict authority is wearable; Manas conflict authority is daily_checkin with sustained recent pattern.",
-          "Safety-relevant findings are retained even when another source resolves the ordinary conflict."
-        ],
-        writeEligibility: [
-          "chat_derived is always evidence-only and never writes current state.",
-          "exposure writes through overlay/context paths, not direct current-state writes.",
-          "single or sparse meal evidence stays pattern-only until it qualifies as a sustained recent pattern.",
-          "two or more independent write-eligible source groups can write when confidence crosses the domain threshold.",
-          "solo writes are allowed only for documented source/domain authority pairs, such as tongue Agni/Ama, blood systemic Ama, wearable Vayu, questionnaire constitutional context, and supportive practice signals.",
-          "hierarchy findings and meta-pattern findings can write current state when their source rules qualify.",
-          "same-source replacement keeps the fresher or stronger finding and suppresses older duplicates."
-        ],
-        metaPatterns: [
-          "dhatu + srotas -> tissue_channel_pattern when roots match.",
-          "manda/vishama Agni + Ama -> digestive_insufficiency_pattern.",
-          "depleted Ojas + Agni + Ama -> ama_vyadhi_with_reserve_depletion.",
-          "rajasic/tamasic Manas + Prana Vayu -> nervous_system_disturbance_pattern."
-        ],
-        outputs: [
-          "activeAttributions",
-          "evidenceOnlyAttributions",
-          "conflicts",
-          "staleOrSuppressedFindings",
-          "activeContraindications",
-          "amaGate",
-          "sourceMaturity",
-          "sourceSummary",
-          "latestTriangulationEventRefs"
-        ]
-      };
+      const triangulationPlainEnglish = [
+        {
+          title: "Triangulation",
+          body: "The backend compares interpretation hits from different sources and decides whether they agree, disagree, are too old, or are only supporting evidence."
+        },
+        {
+          title: "Current state logic",
+          body: "Current state is the Twin's latest resolved belief: active attributions, evidence-only signals, conflicts, suppressed stale findings, safety flags, Ama gate, and source maturity."
+        },
+        {
+          title: "Write",
+          body: "A write means the backend persists a durable TriangulationEvent and updates MyTwinCurrentState. If evidence is below threshold or lacks authority, it is stored as evidence-only instead."
+        },
+        {
+          title: "Decay windows",
+          body: "Decay windows reduce old evidence by source type. Old evidence is not deleted; it simply contributes less, and anything below confidence * decay < 0.15 stops driving current state."
+        }
+      ];
+
+      const triangulationRuleGroups = [
+        {
+          title: "Engine boundary",
+          meta: "versioned deterministic layer",
+          items: [
+            {
+              label: "Engine version",
+              meta: "triangulation_engine_v2_nikhel_table_closure",
+              note: "The current backend version resolves findings after interpretation and before score/Project/NSL consumers read current state."
+            },
+            {
+              label: "Current-state version",
+              meta: "my_twin_current_state_v2_nikhel_table_closure",
+              note: "The state object stores active, evidence-only, conflict, stale/suppressed, source maturity, Ama gate, and event-ref fields."
+            },
+            {
+              label: "Limitations carried in trace",
+              meta: "2 flags",
+              note: "Chat-derived statements are evidence-only; downstream projection/score/NSL still read interpretation lineage until the next deeper consumption slice."
+            }
+          ]
+        },
+        {
+          title: "Finding activation and suppression",
+          meta: "pre-group filters",
+          items: [
+            {
+              label: "Active finding floor",
+              meta: "0.15",
+              note: "effectiveConfidence = confidence * decay. Findings below 0.15 are suppressed from active triangulation but remain in history."
+            },
+            {
+              label: "Wearable baseline gate",
+              meta: "pending/degraded blocked",
+              note: "Wearable findings do not become active if baseline status is pending or degraded. Missing wearable baseline status is trace-labeled as a source gap."
+            },
+            {
+              label: "Data completeness gate",
+              meta: "degraded blocked",
+              note: "Degraded data completeness suppresses the finding with reason data_completeness_degraded."
+            },
+            {
+              label: "Missing observedAt fallback",
+              meta: "decay 0.35",
+              note: "If observedAt is missing or invalid, the finding is treated as missing_observed_at with decay 0.35."
+            },
+            {
+              label: "Same-source replacement",
+              meta: "newer or stronger wins",
+              note: "For the same attribution/source/mapping/param key, the fresher finding wins; if timestamps tie, higher effective confidence wins."
+            }
+          ]
+        },
+        {
+          title: "Decay windows",
+          meta: "source freshness",
+          items: [
+            { label: "wearable", meta: "fresh 7d / stale 60d / floor 0.30", note: "Spec 02-defined linear decay after day 7." },
+            { label: "blood_lab", meta: "fresh 90d / stale 270d / floor 0.20", note: "Spec 02-defined linear decay after day 90." },
+            { label: "tongue", meta: "fresh 14d / stale 60d / floor 0.15", note: "Spec 02-defined linear decay after day 14." },
+            { label: "questionnaire", meta: "fresh 60d / stale 180d / floor 0.30", note: "Spec 02-defined linear decay after day 60." },
+            { label: "daily_checkin", meta: "fresh 7d / stale 30d / floor 0.20", note: "Nikhel-confirmed extension." },
+            { label: "meal", meta: "fresh 3d / stale 14d / floor 0.15", note: "Nikhel-confirmed extension; sparse meals are pattern-only." },
+            { label: "exposure", meta: "fresh 1d / stale 7d / floor 0.10", note: "Nikhel-confirmed extension; exposure is overlay/context, not direct current-state write." },
+            { label: "lifestyle", meta: "fresh 14d / stale 60d / floor 0.20", note: "Nikhel-confirmed extension for longitudinal practice signals." },
+            { label: "protocol_response", meta: "fresh 14d / stale 90d / floor 0.20", note: "Nikhel-confirmed extension for adherence and response signals." },
+            { label: "chat_derived", meta: "evidence-only", note: "No direct current-state write; trace key triangulation_source_evidence_only:chat_derived." },
+            { label: "unknown", meta: "fresh 21d / stale 90d / floor 0.35", note: "Engineering fallback; trace key triangulation_decay_window_source_gap:unknown." }
+          ]
+        },
+        {
+          title: "Confidence and write thresholds",
+          meta: "formula and gates",
+          items: [
+            {
+              label: "Composite confidence",
+              meta: "1 - product(1 - confidence_i * decay_i)",
+              note: "Independent supporting findings raise confidence by reducing remaining uncertainty."
+            },
+            { label: "Dosha", meta: "0.60", note: "Minimum composite confidence for a current-state write." },
+            { label: "Sub-Dosha", meta: "0.55", note: "Minimum composite confidence for a current-state write." },
+            { label: "Dhatu", meta: "0.60", note: "Minimum composite confidence for a current-state write." },
+            { label: "Srotas", meta: "0.55", note: "Minimum composite confidence for a current-state write." },
+            { label: "Agni", meta: "0.65", note: "Minimum composite confidence for a current-state write." },
+            { label: "Ama", meta: "0.70", note: "Higher threshold because Ama can trigger downstream safety gates." },
+            { label: "Ojas", meta: "0.65", note: "Minimum composite confidence for a current-state write." },
+            { label: "Manas", meta: "0.60", note: "Minimum composite confidence for a current-state write." },
+            { label: "Guna / unknown", meta: "0.60 fallback", note: "Default threshold when the attribution domain is not one of the explicit domains." },
+            { label: "Rewrite delta", meta: "0.15", note: "State or severity changes always rewrite; same state/severity only rewrites when confidence changes by more than 0.15." }
+          ]
+        },
+        {
+          title: "Pattern and action rules",
+          meta: "event classification",
+          items: [
+            { label: "corroboration", meta: ">=2 source groups", note: "Two or more independent write-eligible source groups support the same attribution." },
+            { label: "hierarchy_corroboration", meta: "parent evidence", note: "A child attribution creates supported parent-domain evidence." },
+            { label: "complementation", meta: "defined pattern", note: "Different findings combine into a documented pattern or meta-pattern." },
+            { label: "conflict", meta: "opposing directions", note: "Supportive vs excess/depletion/safety, or excess vs depletion, is recorded unless resolved by authority." },
+            { label: "solo", meta: "single source", note: "One source can write only when solo authority rules allow; otherwise it remains evidence-only." },
+            { label: "no_evidence", meta: "no active findings", note: "No active finding remains after decay, baseline, completeness, and replacement filters." },
+            { label: "write_current_state", meta: "action", note: "Fires when pattern is not conflict, confidence crosses the domain threshold, and write eligibility allows it." },
+            { label: "record_conflict", meta: "action", note: "Fires for unresolved conflict." },
+            { label: "evidence_only", meta: "action", note: "Fires when evidence exists but threshold or authority is not enough to write current state." },
+            { label: "no_op", meta: "action", note: "Fires for no-evidence or unusable cases." }
+          ]
+        },
+        {
+          title: "Source authority and conflict resolution",
+          meta: "Nikhel v3 tables",
+          items: [
+            { label: "Freshness resolves conflict", meta: "spec_02_freshness_resolves_conflict_v1", note: "Fresh findings can deprioritize stale or decaying contradictory findings when fresh directions no longer conflict." },
+            { label: "Ama", meta: "tongue or blood_lab", note: "Systemic blood/inflammation Ama prefers blood_lab; other Ama may use tongue or blood_lab." },
+            { label: "Agni", meta: "tongue", note: "Fresh tongue evidence can resolve Agni conflict." },
+            { label: "Dosha prakriti", meta: "questionnaire", note: "Constitutional/prakriti dosha evidence can be questionnaire-authoritative." },
+            { label: "Dhatu quantifiable", meta: "blood_lab", note: "Rasa, Rakta, and Meda-style quantifiable dhatu attributions use blood/lab authority." },
+            { label: "Dhatu functional", meta: "daily_checkin/questionnaire", note: "Mamsa, Asthi, Majja, and Shukra-style functional attributions require sustained pattern logic." },
+            { label: "Sub-Dosha Prana/Vyana/Samana", meta: "wearable", note: "Wearable authority is allowed for these Vayu patterns when baseline is stable." },
+            { label: "Sub-Dosha Apana", meta: "daily_checkin", note: "Daily check-in authority can resolve Apana Vayu conflict." },
+            { label: "Ojas", meta: "wearable", note: "Wearable authority can resolve Ojas conflict." },
+            { label: "Manas", meta: "daily_checkin 3 of 7", note: "Daily check-in authority requires a sustained recent pattern: at least 3 observed days in 7." },
+            { label: "Functional dhatu pattern", meta: "2 of 30", note: "Functional dhatu conflict authority requires at least 2 observed days in 30." },
+            { label: "Safety retention", meta: "always retained", note: "Safety-relevant findings stay in the conflict payload even when ordinary conflict is resolved." }
+          ]
+        },
+        {
+          title: "Solo write authority",
+          meta: "single-source writes",
+          items: [
+            { label: "Tongue -> Agni", meta: "fresh >=0.65", note: "Fresh structured tongue Agni evidence can write alone." },
+            { label: "Tongue -> Ama", meta: "fresh >=0.65 + coating present", note: "Fresh tongue Ama evidence can write alone if coating is at least present/not absent." },
+            { label: "Blood/Lab -> systemic Ama", meta: "fresh >=0.70 + CRP/ESR/inflammation marker", note: "Systemic Ama from inflammatory lab markers can write alone." },
+            { label: "Blood/Lab -> quantifiable Dhatu", meta: "fresh >=0.70", note: "Quantifiable dhatu markers such as rasa/rakta/meda can write alone." },
+            { label: "Wearable -> Prana/Vyana/Samana Vayu", meta: "fresh >=0.65 + stable baseline", note: "Stable-baseline wearable evidence can write these sub-dosha patterns alone." },
+            { label: "Questionnaire -> Prakriti/Dosha", meta: "constitutional", note: "Prakriti constitution can be questionnaire-only source authority." },
+            { label: "Questionnaire -> Manas Prakriti", meta: "constitutional", note: "Manas constitutional/path-C style context can be questionnaire-only source authority." },
+            { label: "Lifestyle practice -> Manas/Prana support", meta: ">=0.50", note: "Completed/supportive practice evidence can write supportive Manas or Prana patterns." },
+            { label: "Otherwise", meta: "no solo authority", note: "A single source remains evidence-only unless one of the above source/domain pairs applies." }
+          ]
+        },
+        {
+          title: "Write eligibility",
+          meta: "current-state gate",
+          items: [
+            { label: "Chat-derived lane", meta: "blocked", note: "Always evidence-only; never writes current state directly." },
+            { label: "Exposure lane", meta: "blocked", note: "Exposure/climate writes through overlay/context paths, not direct current-state write." },
+            { label: "Sparse meal lane", meta: "blocked", note: "Single or sparse meal evidence is pattern-only until sustained." },
+            { label: "Meal sustained pattern", meta: "3 of 5", note: "Meal-only evidence can write when at least 3 observed days occur in a 5-day window." },
+            { label: "Independent corroboration", meta: ">=2 groups", note: "Two or more independent write-eligible source groups can write when confidence crosses threshold." },
+            { label: "Authority resolution", meta: "conflict resolved", note: "A resolved conflict can write if the selected authoritative source qualifies." },
+            { label: "Hierarchy and meta-pattern", meta: "allowed", note: "Derived hierarchy and meta-pattern findings can write if their source rules qualify." }
+          ]
+        },
+        {
+          title: "Derived hierarchy and meta-patterns",
+          meta: "encoded derived rules",
+          items: [
+            { label: "Sub-Dosha -> Dosha", meta: "parent relation", note: "Pitta/Kapha/Vata/Vayu sub-dosha evidence creates parent dosha support." },
+            { label: "Agni/Ama location -> generic Ama", meta: "parent relation", note: "Agni or Ama findings with Ama tokens create generic Ama support." },
+            { label: "Ojas depth -> Ojas trajectory", meta: "parent relation", note: "Specific Ojas findings support the generic Ojas trajectory attribution." },
+            { label: "Dhatu + Srotas", meta: "meta_dhatu_srotas_pair", note: "Matching tissue/channel roots create tissue_channel_pattern; same-tongue exception is allowed." },
+            { label: "Agni + Ama", meta: "meta_agni_ama_axis", note: "Manda/Vishama Agni plus Ama creates digestive_insufficiency_pattern." },
+            { label: "Ojas + Agni + Ama", meta: "meta_ojas_agni_ama", note: "Depleted Ojas plus Agni insufficiency plus Ama creates ama_vyadhi_with_reserve_depletion and soft caution." },
+            { label: "Manas + Prana", meta: "meta_manas_prana", note: "Rajasic/tamasic Manas plus Prana Vayu creates nervous_system_disturbance_pattern." }
+          ]
+        },
+        {
+          title: "Write priority and current-state payload",
+          meta: "output object",
+          items: [
+            { label: "Write priority", meta: "Ama -> safety -> dosha/sub-dosha -> dhatu/srotas -> agni/ojas/manas -> other", note: "Events are ordered so safety-relevant state is available to downstream logic first." },
+            { label: "Action priority", meta: "write -> conflict -> evidence-only -> no-op", note: "Within the same priority band, actual writes sort before conflicts and evidence-only events." },
+            { label: "activeAttributions", meta: "currentState field", note: "Attributions that wrote current state." },
+            { label: "evidenceOnlyAttributions", meta: "currentState field", note: "Useful evidence that did not write the Twin belief." },
+            { label: "conflicts", meta: "currentState field", note: "Unresolved conflicting attributions." },
+            { label: "staleOrSuppressedFindings", meta: "currentState field", note: "Findings suppressed by decay, baseline, completeness, or replacement." },
+            { label: "activeContraindications", meta: "currentState field", note: "Safety or caution flags carried forward." },
+            { label: "amaGate", meta: "currentState field", note: "Moderate/severe Ama or Ama-gate contraindication activates downstream IC2 safety." },
+            { label: "sourceMaturity and sourceSummary", meta: "currentState fields", note: "Counts active/stale/suppressed evidence by source group and records policy versions." },
+            { label: "latestTriangulationEventRefs", meta: "currentState field", note: "Trace refs back to event pattern, action, confidence, and source snapshot hash." }
+          ]
+        }
+      ];
 
       const scoringFormulas = [
         "contributionValue = severity * pillarWeight * confidenceTierValue * freshness",
@@ -3137,11 +3275,11 @@
         },
         {
           id: "state",
-          title: "Current state",
-          short: "Triangulates interpretations into a Twin belief.",
+          title: "Triangulation",
+          short: "Resolves interpretations into current Twin state.",
           type: "state",
           summary:
-            "Corroborating evidence strengthens a signal; stale or conflicting evidence is surfaced, not hidden.",
+            "The backend reconciles interpretation hits into current state: corroborating evidence strengthens a signal; stale or conflicting evidence is surfaced, not hidden.",
           reads: ["Interpretation hits", "Confidence", "Recency", "Source group"],
           writes: ["MyTwin current state", "Conflicts", "No-op reasons"],
           user: "The app can explain why the Twin believes something now, or why it is cautious."
@@ -3239,7 +3377,7 @@
 
       function groupedInventory(groups) {
         return groups.map((group) => `
-          <details class="sub-drilldown">
+          <details class="sub-drilldown" ${group.open ? "open" : ""}>
             <summary>${escapeHtml(group.title)}<span>${escapeHtml(group.meta)}</span></summary>
             ${inventory(group.items)}
           </details>
@@ -3345,13 +3483,8 @@
           <div>
             ${detailHeader(stage)}
             <div class="detail-stack">
-              ${drilldown("Current-state write logic", "thresholds", formulaList(triangulationLogic.thresholds), true)}
-              ${drilldown("Recency decay windows", "source groups", inventory(triangulationLogic.decay.map((label) => ({ label, meta: "decay" }))))}
-              ${drilldown("Triangulation patterns", "all actions", inventory(triangulationLogic.patterns.map((label) => ({ label, meta: "pattern" }))))}
-              ${drilldown("Source authority and conflict resolution", "implemented tables", inventory(triangulationLogic.authority.map((label) => ({ label, meta: "authority" }))))}
-              ${drilldown("Derived meta-patterns", "implemented", inventory(triangulationLogic.metaPatterns.map((label) => ({ label, meta: "derived" }))))}
-              ${drilldown("State write eligibility", "current-state gate", inventory(triangulationLogic.writeEligibility.map((label) => ({ label, meta: "gate" }))))}
-              ${drilldown("MyTwin current-state payload", "written fields", inventory(triangulationLogic.outputs.map((label) => ({ label, meta: "field" }))))}
+              ${drilldown("Plain-English meaning", "triangulation/current state/write/decay", logicGrid(triangulationPlainEnglish), true)}
+              ${drilldown("All encoded triangulation rules", "grouped by backend function", groupedInventory(triangulationRuleGroups.map((group) => ({ ...group, open: true }))), true)}
             </div>
           </div>
           ${codeRefs(
