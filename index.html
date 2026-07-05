@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AyuAware Backend Architecture</title>
+    <title>AyuAware Architecture Guide</title>
     <style>
       :root {
         color-scheme: light;
@@ -62,34 +62,39 @@
       .topbar {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 20px;
         padding: 8px 0 26px;
       }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        min-width: 0;
+      .view-switcher {
+        display: inline-flex;
+        gap: 8px;
+        padding: 5px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 10px 30px rgba(16, 21, 47, 0.06);
       }
 
-      .brand-mark {
-        display: grid;
-        width: 42px;
-        height: 42px;
-        place-items: center;
-        border: 2px solid var(--gold);
-        border-radius: 50%;
-        color: #a56214;
-        font-weight: 900;
+      .view-tab {
+        min-height: 38px;
+        padding: 8px 16px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-weight: 850;
       }
 
-      .brand strong {
-        display: block;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 25px;
-        line-height: 1;
+      .view-tab[aria-selected="true"] {
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .view-shell[hidden] {
+        display: none;
       }
 
       .pill-button {
@@ -670,18 +675,281 @@
         font-size: 14px;
       }
 
+      .frontend-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+        gap: 24px;
+        align-items: end;
+        padding: 8px 0 10px;
+      }
+
+      .frontend-hero p {
+        max-width: 760px;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: clamp(16px, 1.2vw, 18px);
+        line-height: 1.45;
+      }
+
+      .frontend-meta {
+        display: grid;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+
+      .frontend-meta span,
+      .screen-chip {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 26px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: var(--teal-soft);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .frontend-meta p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.42;
+      }
+
+      .frontend-overview {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .frontend-overview article,
+      .frontend-screen,
+      .screenshot-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--surface);
+        box-shadow: 0 12px 34px rgba(16, 21, 47, 0.05);
+      }
+
+      .frontend-overview article {
+        padding: 16px;
+      }
+
+      .frontend-overview strong {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 17px;
+      }
+
+      .frontend-overview p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .frontend-layout {
+        display: grid;
+        grid-template-columns: 250px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .screen-index {
+        position: sticky;
+        top: 16px;
+        display: grid;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--soft);
+      }
+
+      .screen-index strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .screen-index a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .screen-index a:hover {
+        color: var(--teal);
+      }
+
+      .screen-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .frontend-screen {
+        overflow: hidden;
+      }
+
+      .frontend-screen summary {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .frontend-screen summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .frontend-screen summary b {
+        display: block;
+        color: var(--ink);
+        font-size: clamp(20px, 1.7vw, 26px);
+        line-height: 1.16;
+      }
+
+      .frontend-screen summary span {
+        color: var(--muted);
+        line-height: 1.35;
+      }
+
+      .frontend-screen summary em {
+        color: var(--quiet);
+        font-style: normal;
+        font-size: 13px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .screen-body {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 1.1fr);
+        gap: 18px;
+        padding: 0 18px 18px;
+      }
+
+      .screen-copy {
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+
+      .screen-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.48;
+      }
+
+      .screen-copy ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .screen-copy li {
+        display: grid;
+        grid-template-columns: 8px minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 9px;
+        color: var(--muted);
+        line-height: 1.38;
+      }
+
+      .screen-copy li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        margin-top: 7px;
+        border-radius: 50%;
+        background: var(--teal);
+      }
+
+      .screen-code {
+        display: grid;
+        gap: 6px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--soft);
+      }
+
+      .screen-code code {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .screen-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        align-items: start;
+      }
+
+      .screenshot-card {
+        padding: 10px;
+      }
+
+      .screenshot-card img {
+        display: block;
+        width: 100%;
+        max-height: 500px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        object-fit: contain;
+        object-position: top center;
+        background: #f2eee8;
+      }
+
+      .screenshot-card figcaption {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+
+      .frontend-note {
+        padding: 14px 16px;
+        border: 1px solid rgba(15, 118, 110, 0.22);
+        border-radius: 14px;
+        background: var(--teal-soft);
+        color: var(--teal);
+        line-height: 1.45;
+      }
+
       @media (max-width: 1180px) {
         :root {
           --wrap: min(100vw - 32px, 980px);
         }
 
         .detail-panel,
-        .runtime {
+        .runtime,
+        .frontend-hero,
+        .frontend-layout,
+        .screen-body {
           grid-template-columns: 1fr;
         }
 
         .pipeline-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .frontend-overview {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .screen-index {
+          position: static;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .stage:nth-child(3)::after,
@@ -725,20 +993,37 @@
         .time-step::before {
           display: none;
         }
+
+        .view-switcher {
+          width: 100%;
+        }
+
+        .view-tab {
+          flex: 1;
+        }
+
+        .frontend-overview,
+        .screen-gallery,
+        .screen-index {
+          grid-template-columns: 1fr;
+        }
+
+        .frontend-screen summary {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
   <body>
     <main class="shell">
       <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">A</div>
-          <div>
-            <strong>AyuAware</strong>
-          </div>
-        </div>
+        <nav class="view-switcher" aria-label="Architecture guide sections">
+          <button class="view-tab" type="button" data-view-button="backend" aria-selected="true">Backend</button>
+          <button class="view-tab" type="button" data-view-button="frontend" aria-selected="false">Frontend</button>
+        </nav>
       </header>
 
+      <section class="view-shell" id="backend-view" data-view-panel="backend">
       <section class="hero">
         <div>
           <h1>AyuAware Backend Architecture</h1>
@@ -815,6 +1100,398 @@
         <span>User-visible trace</span>
         <span>Backend-owned decisions</span>
       </footer>
+      </section>
+
+      <section class="view-shell frontend-view" id="frontend-view" data-view-panel="frontend" hidden>
+        <section class="frontend-hero">
+          <div>
+            <h1>AyuAware Frontend Walkthrough</h1>
+            <p>
+              A client-facing tour of the iOS app: what each screen does, what
+              the user sees, and which backend contract or app route powers it.
+            </p>
+          </div>
+          <aside class="frontend-meta">
+            <span>Representative app screens</span>
+            <p>
+              Screenshots are stored as documentation assets and describe the
+              implemented app surfaces, not a live user audit.
+            </p>
+          </aside>
+        </section>
+
+        <section class="section">
+          <div class="frontend-overview">
+            <article>
+              <strong>Start</strong>
+              <p>Sign in, consent, profile, and baseline questions get the user into the system.</p>
+            </article>
+            <article>
+              <strong>Understand</strong>
+              <p>Home and Health show the current read, pillar detail, and evidence context.</p>
+            </article>
+            <article>
+              <strong>Act</strong>
+              <p>NSL turns the backend Project into daily nutrition, supplement, and lifestyle actions.</p>
+            </article>
+            <article>
+              <strong>Update</strong>
+              <p>Daily logs, exposure, wearables, uploads, and chat keep the Twin current.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section frontend-layout">
+          <aside class="screen-index" aria-label="Frontend screen index">
+            <strong>Screens</strong>
+            <a href="#front-onboarding">Sign in and onboarding</a>
+            <a href="#front-home">Home and Today</a>
+            <a href="#front-health">Health and pillars</a>
+            <a href="#front-nsl">Project and NSL</a>
+            <a href="#front-daily-log">Daily Log</a>
+            <a href="#front-exposure">Exposure</a>
+            <a href="#front-chat">Twin chat</a>
+            <a href="#front-profile">Profile and settings</a>
+          </aside>
+
+          <div class="screen-stack">
+            <details class="frontend-screen" id="front-onboarding" open>
+              <summary>
+                <span>
+                  <b>Sign in and onboarding</b>
+                  Auth, profile, wearable choice, uploads, Prakriti, Vikriti, and first setup.
+                </span>
+                <em>Entry flow</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">User joins the pipeline</span>
+                  <p>
+                    This flow creates the user session and collects the first
+                    structured context the backend can safely use: identity,
+                    location, goals, optional wearable access, optional tongue
+                    or lab uploads, Prakriti baseline, and Vikriti current-state
+                    answers.
+                  </p>
+                  <ul>
+                    <li>Phone or Google sign-in establishes the authenticated app session.</li>
+                    <li>Welcome explains the three source families: wearable, user-fed, and exposure.</li>
+                    <li>Prakriti is stored as constitutional context; Vikriti starts the current-state picture.</li>
+                    <li>After completion, the backend prepares first Health, Project, and NSL context.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(auth)/phone.tsx</code>
+                    <code>apps/mobile/app/(onboarding)/welcome.tsx</code>
+                    <code>apps/mobile/app/(onboarding)/prakriti.tsx</code>
+                    <code>apps/mobile/app/(onboarding)/vikriti.tsx</code>
+                    <code>apps/mobile/src/api/contracts/onboarding.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/auth.png" alt="AyuAware phone sign-in screen" loading="lazy" />
+                    <figcaption>Phone/Google sign-in opens the authenticated mobile session.</figcaption>
+                  </figure>
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/onboarding.png" alt="AyuAware onboarding welcome screen" loading="lazy" />
+                    <figcaption>Onboarding tells the user what the Twin learns from before the questionnaires.</figcaption>
+                  </figure>
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/prakriti.png" alt="Prakriti result screen" loading="lazy" />
+                    <figcaption>Prakriti stays as baseline constitution, separate from changing health state.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-home">
+              <summary>
+                <span>
+                  <b>Home and Today</b>
+                  The user's daily command center for Health, Exposure, NSL, Daily Log, and chat.
+                </span>
+                <em>Main screen</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">One-page daily read</span>
+                  <p>
+                    Home is the compressed view of the backend read model. It
+                    shows a health read or estimate, exposure context, NSL state,
+                    daily-log progress, and a persistent Twin chat entry point.
+                  </p>
+                  <ul>
+                    <li>The Health card reflects score/readiness/estimate output from the backend.</li>
+                    <li>Exposure summarizes climate, lunar, and astro context for today.</li>
+                    <li>NSL previews whether the Project is active and how many actions are available.</li>
+                    <li>Daily Log tiles let the user add fresh evidence without leaving the main flow.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/index.tsx</code>
+                    <code>apps/mobile/src/api/contracts/today.ts</code>
+                    <code>apps/mobile/src/components/home/TodayInsightRow.tsx</code>
+                    <code>apps/mobile/src/components/home/DailyLogTile.tsx</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/home.png" alt="AyuAware Home Today screen" loading="lazy" />
+                    <figcaption>Home compresses Health, Exposure, NSL, and Daily Log into one scan-friendly surface.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-health">
+              <summary>
+                <span>
+                  <b>Health and pillar screens</b>
+                  Six dynamic pillars, score explanation, education, and evidence drilldown.
+                </span>
+                <em>Health read</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">Score plus explanation</span>
+                  <p>
+                    The Health tab lets the user move across Agni, Vikriti,
+                    Manas, Ojas, Nidra, and Prana. Each pillar page combines the
+                    current read, confidence/coverage status, educational copy,
+                    and links to how the reading was calculated.
+                  </p>
+                  <ul>
+                    <li>Pillar tabs map to backend score/readiness and pillar detail read models.</li>
+                    <li>How calculated and View evidence are transparency entry points.</li>
+                    <li>Prakriti is visible as context, but it is not treated as a dynamic scored pillar.</li>
+                    <li>If official score gates are not met, the UI can still show backend-authored estimate/status text.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/health.tsx</code>
+                    <code>apps/mobile/app/(tabs)/prakriti.tsx</code>
+                    <code>apps/mobile/src/components/health/PillarTabStrip.tsx</code>
+                    <code>apps/mobile/src/components/health/ScoreCalculationLedger.tsx</code>
+                    <code>apps/mobile/src/api/contracts/readiness.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/health.png" alt="AyuAware Health pillar screen" loading="lazy" />
+                    <figcaption>Pillar pages show the current reading, confidence, and explanatory education.</figcaption>
+                  </figure>
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/prakriti.png" alt="AyuAware Prakriti baseline screen" loading="lazy" />
+                    <figcaption>Prakriti is a stable baseline screen, not a daily score.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-nsl">
+              <summary>
+                <span>
+                  <b>Project and NSL</b>
+                  The 30-day Project, today's actions, personalization, and plan-decision status.
+                </span>
+                <em>Action layer</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">Backend plan, mobile experience</span>
+                  <p>
+                    The NSL tab renders the backend Project and daily plan as a
+                    user-facing routine. It also collects personalization answers
+                    so the backend can prefer realistic foods, supplements, and
+                    lifestyle actions.
+                  </p>
+                  <ul>
+                    <li>Project status, day, phase, actions, and markers come from the NSL read model.</li>
+                    <li>Personalization asks 21 preference/safety questions used to rebuild or adapt the plan.</li>
+                    <li>Plan decision cards explain keep, overlay, regenerate, pause, or no-op outcomes.</li>
+                    <li>Daily actions are grouped as Nutrition, Supplement, and Lifestyle supports.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/nsl.tsx</code>
+                    <code>apps/mobile/app/(tabs)/nsl-personalization.tsx</code>
+                    <code>apps/mobile/src/api/contracts/nsl.ts</code>
+                    <code>apps/mobile/src/api/endpoints/twinExperience.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/nsl.png" alt="AyuAware NSL Project screen" loading="lazy" />
+                    <figcaption>The Project page explains the active plan, phase, day, and today's actions.</figcaption>
+                  </figure>
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/nsl-personalization.png" alt="AyuAware NSL personalization screen" loading="lazy" />
+                    <figcaption>Personalization makes the plan more usable without moving decision ownership to the UI.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-daily-log">
+              <summary>
+                <span>
+                  <b>Daily Log</b>
+                  Tongue, meal, supplement, lifestyle, inner check, and symptom evidence.
+                </span>
+                <em>Fresh input</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">Each entry teaches the Twin</span>
+                  <p>
+                    Daily Log is the main user-fed input surface after onboarding.
+                    It captures text, image, voice, and quick-log signals, then
+                    shows processing receipts so the user can see that the
+                    backend pipeline has been queued.
+                  </p>
+                  <ul>
+                    <li>Tongue image feeds Agni, Ama, and Vikriti interpretation paths.</li>
+                    <li>Meal text, voice, or image feeds nutrition and Agni-related evidence.</li>
+                    <li>Supplement and lifestyle logs can drive adherence, Ojas, Prana, and Manas signals.</li>
+                    <li>Receipt panels show saved, queued, processing, completed, or no-op states.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/log.tsx</code>
+                    <code>apps/mobile/src/components/home/QuickLogSheet.tsx</code>
+                    <code>apps/mobile/src/api/contracts/dailyLog.ts</code>
+                    <code>apps/mobile/src/api/contracts/nutrition.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/daily-log.png" alt="AyuAware Daily Log screen" loading="lazy" />
+                    <figcaption>The Daily Log groups the main post-onboarding input lanes into one checklist.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-exposure">
+              <summary>
+                <span>
+                  <b>Exposure</b>
+                  Climate, lunar, and astro context that can influence the daily read.
+                </span>
+                <em>Environment</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">The world, acting on the Twin</span>
+                  <p>
+                    Exposure is not another questionnaire. It is a context layer
+                    that reads environmental data and presents the day's climate,
+                    lunar, and astro influences in app language.
+                  </p>
+                  <ul>
+                    <li>Today summarizes whether an exposure signal is leading.</li>
+                    <li>Climate shows weather, AQI, humidity, wind, and related guidance.</li>
+                    <li>Lunar and Astro tabs keep panchang or birth-context logic separate from Health scoring.</li>
+                    <li>The Home exposure card reuses this read model in a compressed form.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/exposure.tsx</code>
+                    <code>apps/mobile/src/api/contracts/exposure.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/exposure.png" alt="AyuAware Exposure screen" loading="lazy" />
+                    <figcaption>Exposure turns environmental context into timing and support guidance.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-chat">
+              <summary>
+                <span>
+                  <b>Twin chat</b>
+                  A conversational layer over Health, NSL, Exposure, Profile, and Daily Log context.
+                </span>
+                <em>Assistant layer</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">Ask from anywhere</span>
+                  <p>
+                    The Twin chat surface lets the user ask questions from the
+                    full-screen chat or the persistent chat bar. The mobile app
+                    sends source context so the answer can stay tied to the
+                    current screen or selected pillar.
+                  </p>
+                  <ul>
+                    <li>Starter chips route common questions about Health, NSL, Exposure, Daily Log, and Prakriti.</li>
+                    <li>The floating composer appears across pushed screens to keep questions available.</li>
+                    <li>Image and voice affordances support future or active multimodal entry points.</li>
+                    <li>Backend answers should stay grounded in the user's Twin/read-model context.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/chat.tsx</code>
+                    <code>apps/mobile/src/components/twin/PersistentTwinChatOverlay.tsx</code>
+                    <code>apps/mobile/src/hooks/useTwinChat.ts</code>
+                    <code>apps/mobile/src/api/contracts/twin.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/chat.png" alt="AyuAware Twin chat screen" loading="lazy" />
+                    <figcaption>Chat gives the user a plain-language way to ask about the current read or plan.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <details class="frontend-screen" id="front-profile">
+              <summary>
+                <span>
+                  <b>Profile, devices, uploads, and transparency</b>
+                  The user's account, baseline, wearable connection, uploads, and trace entry points.
+                </span>
+                <em>Control center</em>
+              </summary>
+              <div class="screen-body">
+                <div class="screen-copy">
+                  <span class="screen-chip">Manage the source context</span>
+                  <p>
+                    Profile is where the user can review identity, Prakriti,
+                    uploads, wearable connections, and transparency surfaces.
+                    It is less about daily action and more about controlling the
+                    source context feeding the rest of the app.
+                  </p>
+                  <ul>
+                    <li>Prakriti can be viewed or retaken from Profile.</li>
+                    <li>Tongue and lab uploads can add higher-signal evidence outside the Daily Log.</li>
+                    <li>Wearable settings connect Fitbit, Garmin, or Apple Health and show sync status.</li>
+                    <li>Transparency routes expose what the backend received and how it processed it.</li>
+                  </ul>
+                  <div class="screen-code">
+                    <code>apps/mobile/app/(tabs)/profile.tsx</code>
+                    <code>apps/mobile/app/(tabs)/transparency.tsx</code>
+                    <code>apps/mobile/app/wearables/callback.tsx</code>
+                    <code>apps/mobile/src/api/contracts/wearables.ts</code>
+                    <code>apps/mobile/src/api/contracts/transparency.ts</code>
+                  </div>
+                </div>
+                <div class="screen-gallery">
+                  <figure class="screenshot-card">
+                    <img src="assets/frontend/profile.png" alt="AyuAware Profile screen" loading="lazy" />
+                    <figcaption>Profile centralizes baseline, uploads, wearable access, and account controls.</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </details>
+
+            <div class="frontend-note">
+              Frontend responsibility is presentation and capture. Backend
+              responsibility is interpretation, scoring, Project/NSL decisions,
+              trigger logic, writeback, and traceable read models. The app should
+              show either a value, a status, a limitation, or the next step.
+            </div>
+          </div>
+        </section>
+      </section>
     </main>
 
     <script>
@@ -3937,6 +4614,30 @@
         `;
       }
 
+      function setupViewSwitcher() {
+        const buttons = Array.from(document.querySelectorAll("[data-view-button]"));
+        const panels = Array.from(document.querySelectorAll("[data-view-panel]"));
+
+        function showView(view) {
+          buttons.forEach((button) => {
+            button.setAttribute("aria-selected", String(button.dataset.viewButton === view));
+          });
+          panels.forEach((panel) => {
+            panel.hidden = panel.dataset.viewPanel !== view;
+          });
+          document.title = view === "frontend"
+            ? "AyuAware Frontend Walkthrough"
+            : "AyuAware Backend Architecture";
+        }
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            showView(button.dataset.viewButton);
+          });
+        });
+      }
+
+      setupViewSwitcher();
       renderStages();
       renderDetail();
     </script>
