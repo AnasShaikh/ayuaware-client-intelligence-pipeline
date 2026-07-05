@@ -914,41 +914,6 @@
         }
       };
 
-      const encodedInterpretationLibraries = [
-        {
-          label: "IC3 Pillar Matrix",
-          meta: "318 encoded rows",
-          note: "Wearables 52, Prakriti 55, Lab Reports 54, Tongue Scan 32, Daily Check-in 43, Meal 33, Exposure 34, Lifestyle 15."
-        },
-        {
-          label: "Wearable Ayurveda Rule Library",
-          meta: "52 mappings",
-          note: "Cardiovascular, respiratory, thermal, sleep, activity, dermatology, and cycle families are seeded into InterpretationHit rows."
-        },
-        {
-          label: "Vikriti Questionnaire Bridge",
-          meta: "23 questions",
-          note: "The current code has 79 answer-option attribution blocks that can create questionnaire-backed interpretation hits."
-        },
-        {
-          label: "Activation Source Handlers",
-          meta: "8 handlers",
-          note: "wearable_twin_insight_event, ic3_prakriti_raw_param, vikriti_questionnaire_answer, ic3_lab_report_raw_param, ic3_daily_checkin_window, ic3_nutrition_scan_raw_param, ic3_tongue_scan_raw_param, exposure_twin_insight_event."
-        }
-      ];
-
-      const interpretationGroups = [
-        "Wearables: 52 rows",
-        "Prakriti: 55 rows",
-        "Lab Reports: 54 rows",
-        "Tongue Scan: 32 rows",
-        "Daily Check-in: 43 rows",
-        "Meal: 33 rows",
-        "Exposure: 34 rows",
-        "Lifestyle: 15 rows"
-      ];
-
-
       // BEGIN code-derived inventory: generated from backend source files on 2026-07-05.
       const ic3RowsByGroup = [
         {
@@ -3388,19 +3353,7 @@
           <div>
             ${detailHeader(stage)}
             <div class="detail-stack">
-              ${drilldown("Encoded interpretation libraries", "live inventory", inventory(encodedInterpretationLibraries), true)}
-              ${drilldown("IC3 matrix input groups", "318 rows", inventory(interpretationGroups.map((label) => ({ label, meta: "encoded" }))))}
-              ${drilldown("All encoded IC3 interpretations", "grouped by input", groupedInventory(ic3RowsByGroup))}
-              ${drilldown(
-                "What gets written",
-                "InterpretationHit",
-                logicGrid([
-                  { title: "Matched row lineage", body: "Each hit carries mappingKey, source document/version, row number, input group, raw parameter group, and interpretation text." },
-                  { title: "Score-effective payload", body: "Pillar weights, severity, confidence, dosha axis, direction, and Agni implication are preserved for projection and scoring." },
-                  { title: "Unmatched boundary", body: "A received input can be stored and normalized even when no encoded row activates; the trace should show that boundary." },
-                  { title: "Daily windows", body: "Some daily check-in rows activate only after windowed thresholds are met, such as repeated patterns across days." }
-                ])
-              )}
+              ${drilldown("All encoded IC3 interpretations", "grouped by input", groupedInventory(ic3RowsByGroup), true)}
             </div>
           </div>
           ${codeRefs(
