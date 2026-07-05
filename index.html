@@ -556,6 +556,46 @@
         word-break: break-word;
       }
 
+      a.source-link,
+      a.code-link {
+        color: var(--teal);
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      a.source-link:hover,
+      a.code-link:hover {
+        text-decoration: underline;
+      }
+
+      .sub-drilldown {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.62);
+      }
+
+      .sub-drilldown summary {
+        min-height: 42px;
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      .sub-drilldown .inventory-list {
+        max-height: 420px;
+        padding: 0 10px 10px;
+      }
+
+      .source-links {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .source-links strong {
+        display: block;
+        margin-top: 4px;
+      }
+
       .runtime {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 280px;
@@ -726,7 +766,8 @@
           <p>
             AyuAware turns wearable signals, user-fed inputs, and exposure context
             into traceable health readings, Project decisions, NSL actions, and
-            timely nudges.
+            timely nudges. This is written for the build owner: plain English on
+            top, source docs and live code beneath each claim.
           </p>
         </div>
       </section>
@@ -800,6 +841,8 @@
     </main>
 
     <script>
+      const repoBase = "https://github.com/AnasShaikh/AyuAware/blob/main/";
+
       const codeAnchors = {
         interpretation: "services/api/src/modules/intelligence/interpretationRegistry.service.ts",
         ic3: "services/api/src/modules/intelligence/generated/ic3PillarMatrix.generated.ts",
@@ -812,6 +855,63 @@
         nslRules: "services/api/src/modules/intelligence/nslModificationReferenceData.ts",
         nslWriteback: "services/api/src/modules/intelligence/nslModificationWriteback.service.ts",
         ui: "apps/mobile/app/(tabs)"
+      };
+
+      const codeAnchorLabels = {
+        [codeAnchors.interpretation]: "Interpretation matcher service",
+        [codeAnchors.ic3]: "Generated IC3 matrix",
+        [codeAnchors.triangulation]: "Triangulation/current-state engine",
+        [codeAnchors.scoring]: "Score formula engine",
+        [codeAnchors.project]: "Project selection engine",
+        [codeAnchors.lifecycle]: "Project lifecycle service",
+        [codeAnchors.delivery]: "30-day delivery planner",
+        [codeAnchors.nsl]: "NSL plan engine",
+        [codeAnchors.nslRules]: "52-rule modification registry",
+        [codeAnchors.nslWriteback]: "NSL writeback service",
+        [codeAnchors.ui]: "Mobile UI read models"
+      };
+
+      const sourceDocs = {
+        pillarMatrix: {
+          label: "Pillar Matrix source sheet",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_User_Input_-__7_Pillars_Mapping_v3.xlsx"
+        },
+        healthScore: {
+          label: "Health Score Specification v2.1",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_Health_Score_Specification_v2_1.docx"
+        },
+        triangulationSpec: {
+          label: "Spec 02 Triangulation Rules",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_Spec_02_Triangulation_Rules_v1.docx"
+        },
+        baselineSpec: {
+          label: "Spec 03 Baseline Engine",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_Spec_03_Baseline_Engine_v1.docx"
+        },
+        pillarProjection: {
+          label: "Spec 06 Pillar Projection",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_Spec_06_Pillar_Projection_v1.docx"
+        },
+        triangulationClarification: {
+          label: "Nikhel Triangulation V2 clarification answers",
+          path: "docs/reference/ayu-intelligence-layer/2026-06-30-nikhel-triangulation-v2-clarification-answers-v3/AyuAware_Triangulation_V2_Clarification_Answers_v3.docx"
+        },
+        nslTriggerRegistry: {
+          label: "NSL Modification Trigger Registry",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_NSL_Modification_Trigger_Registry_v1.docx"
+        },
+        nslRuleSet: {
+          label: "NSL Modification Rule Set",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_NSL_Modification_Rule_Set_v1.docx"
+        },
+        spec8: {
+          label: "Spec8 NSL Project Engine v8.1",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-17-source-pack/AyuAware_Spec8_NSL_Project_Engine_v8.1.docx"
+        },
+        renderContract: {
+          label: "NSL Project Render Contract v1.1",
+          path: "docs/reference/ayu-intelligence-layer/2026-05-26-pillar-nsl-drill-down-source-pack/AyuAware_NSL_Project_Render_Contract_v1.1.docx"
+        }
       };
 
       const encodedInterpretationLibraries = [
@@ -848,6 +948,2027 @@
         "Lifestyle: 15 rows"
       ];
 
+
+      // BEGIN code-derived inventory: generated from backend source files on 2026-07-05.
+      const ic3RowsByGroup = [
+        {
+                "title": "Wearables",
+                "meta": "52 rows",
+                "items": [
+                        {
+                                "label": "Row 002 · cardiovascular / CV-01 / Resting HR trending up from baseline - Pitta context",
+                                "meta": "agni 3, manas 3, ojas 2, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pitta | srotas: raktavaha | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Resting heart rate is above baseline with heat or recovery corroboration, suggesting Pitta-type cardiac/metabolic load."
+                        },
+                        {
+                                "label": "Row 003 · cardiovascular / CV-02 / Resting HR trending up from baseline - Vata context",
+                                "meta": "agni 3, prana 2, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: vyana_vayu | srotas: rasavaha | guna: chala | agniImplication: vishama_tendency | explanation: Resting heart rate is elevated and unstable with sleep or HRV volatility, suggesting Vata-driven autonomic fluctuation."
+                        },
+                        {
+                                "label": "Row 004 · cardiovascular / CV-03 / Resting HR trending down from baseline - Kapha context",
+                                "meta": "agni 3, ojas 2, nidra 3, vikriti 2",
+                                "note": "dosha: kapha | subDosha: avalambaka_kapha | dhatu: rasa | guna: guru, manda | agniImplication: manda_tendency | explanation: Resting heart rate is below baseline with low activation and longer sleep, suggesting Kapha-type slowing."
+                        },
+                        {
+                                "label": "Row 005 · cardiovascular / CV-04 / Resting HR day-to-day variability elevated",
+                                "meta": "manas 3, prana 3, nidra 2, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manas_vaha | guna: chala | explanation: Resting heart rate variability is elevated with rhythm instability, suggesting Vata disturbance in autonomic regulation."
+                        },
+                        {
+                                "label": "Row 006 · cardiovascular / CV-05 / Resting HR chronically elevated",
+                                "meta": "agni 3, manas 2, ojas 3, prana 2, nidra 3, vikriti 2",
+                                "note": "dosha: pitta_vata | dhatu: rasa | guna: ushna, chala | agniImplication: ama_accumulation_risk | ojasImplication: ojas_depletion_trajectory | explanation: Resting heart rate appears chronically elevated with recovery or respiratory corroboration, suggesting sustained Pitta/Vata load."
+                        },
+                        {
+                                "label": "Row 007 · cardiovascular / CV-06 / Active HR ceiling elevated during comparable effort",
+                                "meta": "agni 2, manas 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pitta | srotas: raktavaha | guna: ushna, tikshna | explanation: Peak heart rate is elevated for comparable effort with heat or HRV corroboration, suggesting Pitta-linked exertional strain."
+                        },
+                        {
+                                "label": "Row 008 · cardiovascular / CV-07 / Active HR ceiling reduced / effort intolerance",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "dosha: vata_kapha | dhatu: mamsa_rasa | ojasImplication: ojas_depletion_trajectory | explanation: Exertion ceiling is reduced with recovery or VO2 corroboration, suggesting Dhatu/Ojas capacity pressure."
+                        },
+                        {
+                                "label": "Row 009 · cardiovascular / CV-08 / HR recovery rate slowed post-exertion",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "dosha: pitta_vata | subDosha: vyana_vayu | ojasImplication: ojas_depletion_trajectory | explanation: Heart-rate recovery is slower with recovery-score or HRV corroboration, suggesting reduced autonomic reserve."
+                        },
+                        {
+                                "label": "Row 010 · cardiovascular / CV-09 / HRV chronically suppressed",
+                                "meta": "agni 3, manas 2, ojas 3, prana 2, nidra 3, vikriti 2",
+                                "note": "dosha: pitta_vata | dhatu: rasa | guna: ruksha | agniImplication: vishama_or_tikshna_tendency | ojasImplication: ojas_depletion_trajectory | explanation: HRV is chronically below baseline with corroboration, suggesting reduced Ojas/recovery reserve."
+                        },
+                        {
+                                "label": "Row 011 · cardiovascular / CV-10 / HRV day-to-day erratic",
+                                "meta": "prana 3, nidra 2, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | guna: chala | explanation: HRV is unstable day to day with rhythm corroboration, suggesting Vata/Prana Vayu variability."
+                        },
+                        {
+                                "label": "Row 012 · cardiovascular / CV-11 / HRV drops pronounced post-exertion, slow to recover",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "subDosha: vyana_vayu | dhatu: mamsa_meda | ojasImplication: ojas_depletion_trajectory | explanation: Post-exertion HRV recovery is poor with heart-rate recovery corroboration, suggesting Vyana Vayu recovery weakness."
+                        },
+                        {
+                                "label": "Row 013 · cardiovascular / CV-12 / Nighttime HR elevated vs baseline",
+                                "meta": "manas 3, nidra 3, vikriti 2",
+                                "note": "dosha: pitta_vata | srotas: manas_vaha | explanation: Nighttime heart rate is elevated with heat or fragmentation corroboration, suggesting incomplete restorative settling."
+                        },
+                        {
+                                "label": "Row 014 · respiratory / RESP-01 / Respiratory rate baseline chronically elevated",
+                                "meta": "prana 3, nidra 2, vikriti 2",
+                                "note": "dosha: pitta_vata | subDosha: prana_vayu | srotas: pranavaha | explanation: Respiratory rate is elevated with HR or temperature corroboration, suggesting Prana Vayu demand."
+                        },
+                        {
+                                "label": "Row 015 · respiratory / RESP-02 / Respiratory rate variability increasing",
+                                "meta": "prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: pranavaha | guna: chala | explanation: Respiratory rhythm is becoming irregular with HRV/sleep corroboration, suggesting Prana Vayu instability."
+                        },
+                        {
+                                "label": "Row 016 · respiratory / RESP-03 / Nighttime respiratory pattern irregular",
+                                "meta": "prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: pranavaha | explanation: Night respiratory pattern is irregular with sleep fragmentation, suggesting Vata disturbance of Prana Vayu."
+                        },
+                        {
+                                "label": "Row 017 · respiratory / RESP-04 / SpO2 chronically suppressed below baseline",
+                                "meta": "ojas 2, prana 3, nidra 2, vikriti 2",
+                                "note": "subDosha: prana_vayu | srotas: pranavaha_raktavaha | dhatu: rakta | explanation: SpO2 is below baseline with recovery/VO2 corroboration, suggesting Rakta/Pranavaha capacity pressure."
+                        },
+                        {
+                                "label": "Row 018 · respiratory / RESP-05 / SpO2 nocturnal dips frequent",
+                                "meta": "prana 3, vikriti 2",
+                                "note": "dosha: kapha_vata | subDosha: prana_vayu | srotas: pranavaha | guna: sanga | explanation: Nocturnal oxygen dips are present with respiratory/heart-rate corroboration, suggesting Pranavaha obstruction or instability."
+                        },
+                        {
+                                "label": "Row 019 · respiratory / RESP-06 / SpO2 drops disproportionate to effort or altitude",
+                                "meta": "ojas 3, prana 3, vikriti 2",
+                                "note": "srotas: pranavaha | dhatu: rakta | ojasImplication: ojas_depletion_trajectory | explanation: SpO2 drops disproportionately with recovery/VO2 corroboration, suggesting reduced oxygen-carrying reserve."
+                        },
+                        {
+                                "label": "Row 020 · thermal / TH-01 / Skin temperature trending up - systemic pattern",
+                                "meta": "agni 3, manas 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pachaka_pitta | guna: ushna | agniImplication: tikshna_tendency | explanation: Skin temperature is elevated with HR/HRV corroboration, suggesting systemic Pitta heat."
+                        },
+                        {
+                                "label": "Row 021 · thermal / TH-02 / Skin temperature variability elevated",
+                                "meta": "nidra 3, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: vyana_vayu | guna: chala | explanation: Temperature variability is elevated with autonomic instability, suggesting Vyana Vayu disturbing heat distribution."
+                        },
+                        {
+                                "label": "Row 022 · thermal / TH-03 / Skin temperature trending down with sluggishness markers",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: kapha | dhatu: meda | guna: sheeta, guru | agniImplication: manda_tendency | explanation: Temperature is low with sluggishness markers, suggesting Kapha cold/heaviness and Manda Agni."
+                        },
+                        {
+                                "label": "Row 023 · thermal / TH-04 / Skin temperature trending down with irregularity markers",
+                                "meta": "nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: vyana_vayu | guna: sheeta, ruksha | explanation: Temperature is low and erratic with rhythm instability, suggesting Vata cold via Vyana Vayu."
+                        },
+                        {
+                                "label": "Row 024 · thermal / TH-05 / Diurnal skin temperature cycle flattened",
+                                "meta": "agni 3, manas 3, nidra 2, vikriti 2",
+                                "note": "srotas: manas_vaha | agniImplication: vishama_tendency | explanation: The temperature cycle is flattened with circadian corroboration, suggesting disturbed diurnal Agni rhythm."
+                        },
+                        {
+                                "label": "Row 025 · thermal / TH-06 / Nighttime skin temperature fails to drop",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | agniImplication: tikshna_tendency | explanation: Nighttime temperature fails to drop with elevated sleep HR or fragmentation, suggesting Pitta not quieting overnight."
+                        },
+                        {
+                                "label": "Row 026 · sleep / SLP-01 / Total sleep duration chronically reduced",
+                                "meta": "ojas 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: tarpaka_kapha | ojasImplication: ojas_depletion_trajectory | explanation: Sleep duration is below baseline with onset, awakening, or HRV corroboration, suggesting Vata/Tarpaka disruption."
+                        },
+                        {
+                                "label": "Row 027 · sleep / SLP-02 / Total sleep duration chronically elevated",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: kapha | subDosha: avalambaka_tarpaka_kapha | guna: guru, manda | agniImplication: manda_tendency | explanation: Sleep duration is above baseline with low activity markers, suggesting Kapha/Tamas heaviness."
+                        },
+                        {
+                                "label": "Row 028 · sleep / SLP-03 / Sleep onset latency increased",
+                                "meta": "manas 3, prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manas_vaha | explanation: Sleep latency is elevated with evening activation or rhythm variance, suggesting Prana Vayu difficulty settling."
+                        },
+                        {
+                                "label": "Row 029 · sleep / SLP-04 / WASO elevated",
+                                "meta": "agni 3, manas 3, prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: prana_or_pachaka | srotas: manas_vaha | explanation: Wake time after sleep onset is elevated with awakenings/HRV corroboration, indicating sleep continuity disturbance."
+                        },
+                        {
+                                "label": "Row 030 · sleep / SLP-05 / Mid-sleep awakenings clustered in Vata time",
+                                "meta": "manas 3, prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manas_vaha | explanation: Awakenings cluster in Vata time with HR/HRV corroboration, suggesting classical Vata sleep disturbance."
+                        },
+                        {
+                                "label": "Row 031 · sleep / SLP-06 / Mid-sleep awakenings clustered in Pitta time",
+                                "meta": "agni 3, manas 3, nidra 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_sadhaka_pitta | srotas: raktavaha | explanation: Awakenings cluster in Pitta time with heat or HR corroboration, suggesting Pitta sleep disruption."
+                        },
+                        {
+                                "label": "Row 032 · sleep / SLP-07 / REM sleep percentage suppressed",
+                                "meta": "manas 3, ojas 2, nidra 3, vikriti 2",
+                                "note": "subDosha: sadhaka_pitta | srotas: manas_vaha | dhatu: majja | explanation: REM sleep share is suppressed with recovery corroboration, suggesting weakened mental/emotional integration."
+                        },
+                        {
+                                "label": "Row 033 · sleep / SLP-08 / Deep sleep suppressed",
+                                "meta": "ojas 3, nidra 3, vikriti 2",
+                                "note": "subDosha: tarpaka_kapha | dhatu: majja | ojasImplication: ojas_depletion_trajectory | explanation: Deep sleep share is suppressed with HRV/readiness corroboration, suggesting Tarpaka Kapha/Ojas depletion."
+                        },
+                        {
+                                "label": "Row 034 · sleep / SLP-09 / Sleep efficiency reduced",
+                                "meta": "manas 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata_pitta | srotas: manas_vaha | explanation: Sleep efficiency is reduced with onset/WASO/awakening corroboration, indicating compromised sleep integrity."
+                        },
+                        {
+                                "label": "Row 035 · sleep / SLP-10 / Restlessness index during sleep elevated",
+                                "meta": "manas 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: vyana_vayu | srotas: manas_vaha | explanation: Sleep restlessness is elevated with fragmentation/HR corroboration, suggesting Vyana Vayu not quieting during sleep."
+                        },
+                        {
+                                "label": "Row 036 · sleep / SLP-11 / Bedtime variance elevated",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | guna: chala | agniImplication: vishama_tendency | explanation: Bedtime is inconsistent with wake/HRV corroboration, suggesting Dinacharya disruption and Vata aggravation."
+                        },
+                        {
+                                "label": "Row 037 · sleep / SLP-12 / Wake time variance elevated",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: kapha_vata | agniImplication: manda_or_vishama_tendency | explanation: Wake timing is irregular or late with morning-activation corroboration, suggesting Dinacharya disruption."
+                        },
+                        {
+                                "label": "Row 038 · activity / ACT-01 / Step count / activity chronically low",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: kapha | srotas: medovaha | dhatu: meda | agniImplication: manda_tendency | explanation: Activity is below baseline with thermal/sleep corroboration, suggesting Kapha stagnation."
+                        },
+                        {
+                                "label": "Row 039 · activity / ACT-02 / Activity pattern erratic day-to-day",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: vyana_vayu | agniImplication: vishama_tendency | explanation: Activity pattern is erratic with HRV and sleep rhythm corroboration, suggesting Vata variability."
+                        },
+                        {
+                                "label": "Row 040 · activity / ACT-03 / Sedentary time elevated",
+                                "meta": "nidra 3, vikriti 2",
+                                "note": "dosha: kapha | srotas: medovaha_mamsavaha | dhatu: meda | explanation: Sedentary time is elevated with low steps or long sleep, suggesting Kapha/Meda stagnation."
+                        },
+                        {
+                                "label": "Row 041 · activity / ACT-04 / Late evening exertion pattern",
+                                "meta": "prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | explanation: Late-evening exertion appears with sleep-onset or pre-sleep HR corroboration, suggesting evening Prana Vayu activation."
+                        },
+                        {
+                                "label": "Row 042 · activity / ACT-05 / Morning activation absent in Kapha window",
+                                "meta": "agni 3, nidra 3, vikriti 2",
+                                "note": "dosha: kapha | agniImplication: manda_tendency | explanation: Morning activation is low with late/long sleep corroboration, suggesting Kapha accumulation through the morning."
+                        },
+                        {
+                                "label": "Row 043 · activity / ACT-06 / VO2 max declining trend",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "dhatu: mamsa_rakta | ojasImplication: ojas_depletion_trajectory | explanation: VO2 max is declining with HRV/activity/recovery corroboration, suggesting Dhatu/Ojas capacity decline."
+                        },
+                        {
+                                "label": "Row 044 · activity / ACT-07 / Recovery response post-exertion slowed",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "subDosha: vyana_vayu | dhatu: mamsa_meda | ojasImplication: ojas_depletion_trajectory | explanation: Post-exertion recovery is slowed with HRV/night HR/readiness corroboration, suggesting recovery capacity pressure."
+                        },
+                        {
+                                "label": "Row 045 · derived_score / DER-01 / Readiness / recovery score chronically low",
+                                "meta": "ojas 3, nidra 3, vikriti 2",
+                                "note": "dosha: pitta_vata | dhatu: rasa_majja | ojasImplication: ojas_depletion | explanation: Readiness is chronically low with HRV/RHR/deep-sleep corroboration, suggesting reduced Ojas/autonomic reserve."
+                        },
+                        {
+                                "label": "Row 046 · derived_score / DER-02 / Stress score chronically elevated",
+                                "meta": "manas 3, ojas 3, prana 3, nidra 3, vikriti 2",
+                                "note": "dosha: pitta_vata | subDosha: sadhaka_pitta_prana_vayu | ojasImplication: ojas_declining_under_sympathetic_load | explanation: Stress score is high with HRV/RHR/sleep corroboration, suggesting Pitta-Vata sympathetic load."
+                        },
+                        {
+                                "label": "Row 047 · derived_score / DER-03 / Readiness score high day-to-day variability",
+                                "meta": "agni 3, ojas 2, prana 3, nidra 2, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | agniImplication: vishama_tendency | explanation: Readiness varies strongly with HRV/rhythm/activity corroboration, suggesting Vata-like capacity instability."
+                        },
+                        {
+                                "label": "Row 048 · menstrual_cycle / CYC-01 / Cycle length irregularity",
+                                "meta": "nidra 2, vikriti 2",
+                                "note": "subDosha: apana_vayu | dhatu: rakta_rasa | explanation: Cycle length is irregular with HRV/routine corroboration, suggesting Apana Vayu dysregulation."
+                        },
+                        {
+                                "label": "Row 049 · menstrual_cycle / CYC-02 / Cycle length shortened",
+                                "meta": "vikriti 2",
+                                "note": "dosha: pitta | subDosha: ranjaka_pitta | dhatu: rakta | explanation: Cycle length is short with luteal heat/HR corroboration, suggesting Pitta acceleration of Rakta turnover."
+                        },
+                        {
+                                "label": "Row 050 · menstrual_cycle / CYC-03 / Cycle length lengthened",
+                                "meta": "nidra 3, vikriti 2",
+                                "note": "dosha: kapha | subDosha: apana_vayu | srotas: artava_vaha | guna: sanga | explanation: Cycle length is long with Kapha composite corroboration, suggesting Artava Vaha stagnation."
+                        },
+                        {
+                                "label": "Row 051 · menstrual_cycle / CYC-04 / Mid-cycle HRV drop pronounced",
+                                "meta": "vikriti 2",
+                                "note": "dosha: pitta | subDosha: ranjaka_pitta_apana_vayu | explanation: Mid-cycle HRV drop is pronounced with temperature/HR corroboration, suggesting Pitta-dominant ovulatory load."
+                        },
+                        {
+                                "label": "Row 052 · menstrual_cycle / CYC-05 / Premenstrual HRV collapse severe or prolonged",
+                                "meta": "manas 2, nidra 3, vikriti 2",
+                                "note": "dosha: vata_pitta_kapha | subDosha: apana_vayu | explanation: Premenstrual HRV collapse appears with sleep/thermal/night-HR corroboration, suggesting cycle-linked doshic stress."
+                        },
+                        {
+                                "label": "Row 053 · menstrual_cycle / CYC-06 / Menstrual phase sleep disruption",
+                                "meta": "manas 2, nidra 3, vikriti 2",
+                                "note": "subDosha: apana_vayu | dhatu: rakta | explanation: Sleep quality degrades during menstrual phase with HR/restlessness/HRV corroboration, suggesting Apana Vayu strain."
+                        }
+                ]
+        },
+        {
+                "title": "Prakriti",
+                "meta": "55 rows",
+                "items": [
+                        {
+                                "label": "Row 054 · Q1 / Body Frame",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 055 · Q2 / Weight Tendency",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 056 · Q3 / Skin Texture",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 057 · Q4 / Hair Quality",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 058 · Q5 / Eye Shape and Gaze",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 059 · Q6 / Joints and Mobility",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 060 · Q7 / Appetite",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 061 · Q8 / Digestion and Bowels",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 062 · Q9 / Sleep Quality",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 063 · Q10 / Body Temperature",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 064 · Q11 / Energy Levels",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 065 · Q12 / Sweat Patterns",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 066 · Q13 / Learning Style",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 067 · Q14 / Response to Stress",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 068 · Q15 / Memory",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 069 · Q16 / Speech",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 070 · Q17 / Decision Making",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 071 · Q18 / Financial Habits",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 072 · Q19 / Appetite Pattern",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 073 · Q20 / Digestion Pattern",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 074 · Q21 / Thirst and Fluid Intake",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 075 · Q22 / Elimination Pattern",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 076 · Q23 / Food Preferences and Cravings",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 077 · Q24 / Hunger Timing",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 078 · Q25 / Response to Fasting",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 079 · Q26 / Urine Characteristics",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 080 · Q27 / Sleep Pattern",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 081 · Q28 / Temperature Preference",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 082 · Q29 / Daily Energy Pattern",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 083 · Q30 / Exercise Tolerance and Preference",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 084 · Q31 / Dream Characteristics",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 085 · Q32 / Pain Sensitivity",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 086 · Q33 / Recovery from Illness",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 087 · Q34 / Seasonal Reaction",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 088 · Q35 / Menstrual Pattern (Females)",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 089 · Q36 / Pulse Character (Practitioner-Assessed)",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 090 · Q37 / Mental Activity and Learning",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 091 · Q38 / Memory Type",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 092 · Q39 / Concentration and Focus",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 093 · Q40 / Decision Making",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 094 · Q41 / Problem-Solving Style",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 095 · Q42 / Work Style and Productivity",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 096 · Q43 / Emotional Nature",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 097 · Q44 / Response to Stress",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 098 · Q45 / Reaction to Criticism",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 099 · Q46 / Reaction to Grief or Loss",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 100 · Q47 / Relationship Style",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 101 · Q48 / Social Behavior",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 102 · Q49 / Communication Style",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 103 · Q50 / Lifestyle and Activity Preference",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 104 · Q51 / Motivational Style",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 105 · Q52 / Response to Change",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 106 · Q53 / Courage and Fear Response",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 107 · Q54 / Forgiveness and Resentment",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        },
+                        {
+                                "label": "Row 108 · Q55 / Attitude Toward Rules and Structure",
+                                "meta": "no pillar weight",
+                                "note": "A: vata | B: pitta | C: kapha"
+                        }
+                ]
+        },
+        {
+                "title": "Lab Reports",
+                "meta": "54 rows",
+                "items": [
+                        {
+                                "label": "Row 109 · Complete Blood Count / CBC-01",
+                                "meta": "vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu Kshaya (depletion) — direct and primary. Secondary: Rasa Dhatu Kshaya (precursor tissue). Sub-Dosha: Ranjaka Pitta functional weakening. Srotas: Raktavaha Srotas compromise."
+                        },
+                        {
+                                "label": "Row 110 · Complete Blood Count / CBC-02",
+                                "meta": "vikriti 2",
+                                "note": "Dosha: Pitta aggravation with Rakta Dhatu Vriddhi (excess). Sub-Dosha: Ranjaka Pitta in excess. Srotas: Raktavaha in state of Atipravritti (excess flow)."
+                        },
+                        {
+                                "label": "Row 111 · Complete Blood Count / CBC-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu Kshaya with specifically iron-related deficit. Secondary: Rasa Dhatu Kshaya antecedent. Agni: Jatharagni or Dhatwagni weakness in extracting the substrate."
+                        },
+                        {
+                                "label": "Row 112 · Complete Blood Count / CBC-04",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Majja Dhatu involvement (B12/folate as neural substrate) in addition to Rakta. Ojas: depletion trajectory. Dosha: Vata context particularly if neuropathy coexists."
+                        },
+                        {
+                                "label": "Row 113 · Complete Blood Count / CBC-05",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Ojas: depletion (primary Ayurvedic correlate). Dhatu: Rakta-Shukra reserve compromise. Bala: Vyadhikshamatwa (immune reserve) reduced."
+                        },
+                        {
+                                "label": "Row 114 · Complete Blood Count / CBC-06",
+                                "meta": "agni 3, ojas 2, vikriti 2",
+                                "note": "Ama: systemic (primary). Dosha: Pitta aggravation frequently accompanies. Srotas: multi-channel inflammation. Agni: disturbed."
+                        },
+                        {
+                                "label": "Row 115 · Complete Blood Count / CBC-07",
+                                "meta": "agni 3, manas 2, ojas 3, vikriti 2",
+                                "note": "Ama: chronic systemic. Ojas: declining under sustained immune stress. Dosha: Pitta-Vata composite."
+                        },
+                        {
+                                "label": "Row 116 · Complete Blood Count / CBC-08",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu integrity compromise. Sub-Dosha: Vyana Vayu role in hemostasis disrupted. Ojas: in severe cases, depletion context."
+                        },
+                        {
+                                "label": "Row 117 · Complete Blood Count / CBC-09",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama: reactive systemic context. Dhatu: Rakta Dhatu Vriddhi qualitative. Sub-Dosha: Ranjaka Pitta in excess production state."
+                        },
+                        {
+                                "label": "Row 118 · Complete Blood Count / CBC-10",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu iron-substrate depletion. Secondary: Rasa Dhatu Kshaya. Ojas: early depletion trajectory if sustained."
+                        },
+                        {
+                                "label": "Row 119 · Complete Blood Count / CBC-11",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu Vriddhi with iron overload interpretation OR Ama (inflammatory ferritin). Dosha: Pitta context in iron overload."
+                        },
+                        {
+                                "label": "Row 120 · Lipid Panel / LIP-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Meda Dhatu Vriddhi (excess). Dosha: Kapha aggravation primary; Pitta component if inflammatory. Srotas: Medovaha Srotas congestion. Agni: Medo Agni weakness."
+                        },
+                        {
+                                "label": "Row 121 · Lipid Panel / LIP-02",
+                                "meta": "vikriti 2",
+                                "note": "Dhatu: Meda Dhatu qualitative compromise — classical \"Dushti\" rather than merely quantitative excess. Srotas: Medovaha Srotas occlusion. Dosha: Kapha-Pitta composite."
+                        },
+                        {
+                                "label": "Row 122 · Lipid Panel / LIP-03",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Ojas: qualitative depletion. Dhatu: Meda Dhatu quality compromise. Dosha: Kapha-Vata composite in metabolic syndrome context. Agni: Medo Agni dysfunction."
+                        },
+                        {
+                                "label": "Row 123 · Lipid Panel / LIP-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Meda Dhatu qualitative excess. Dosha: Kapha primary; with insulin resistance context, Prameha precursor state. Agni: Medo Agni and Jatharagni dysfunction."
+                        },
+                        {
+                                "label": "Row 124 · Lipid Panel / LIP-05",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Dhatu: Meda Dhatu Kshaya. Ojas: depletion trajectory. Dosha: Vata aggravation. Agni: either Manda or Vishama disturbing Meda formation."
+                        },
+                        {
+                                "label": "Row 125 · Liver Function / LFT-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Sub-Dosha: Ranjaka Pitta aggravation (primary). Pitta overall. Dhatu: Rakta Dhatu qualitative compromise through hepatic dysfunction. Srotas: Raktavaha and Medovaha. Agni: Bhutagni disturbance."
+                        },
+                        {
+                                "label": "Row 126 · Liver Function / LFT-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Pitta aggravation with extension to Mamsa Dhatu (AST is also muscle-derived). Sub-Dosha: Ranjaka Pitta. Agni: Dhatwagni disturbance at Mamsa level."
+                        },
+                        {
+                                "label": "Row 127 · Liver Function / LFT-03",
+                                "meta": "vikriti 2",
+                                "note": "Sub-Dosha: Ranjaka Pitta with biliary involvement. Srotas: specific bile-channel dysfunction. Dosha: Pitta aggravation frequently with Kapha obstructive element."
+                        },
+                        {
+                                "label": "Row 128 · Liver Function / LFT-04",
+                                "meta": "vikriti 2",
+                                "note": "Cholestatic Pitta-Kapha composite. Srotas: bile channel Sanga (obstruction). Sub-Dosha: Ranjaka Pitta impeded."
+                        },
+                        {
+                                "label": "Row 129 · Liver Function / LFT-05",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu breakdown excess. Sub-Dosha: Ranjaka Pitta upstream overload from hemolysis. Agni: Bhutagni conjugation capacity overwhelmed."
+                        },
+                        {
+                                "label": "Row 130 · Liver Function / LFT-06",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Sub-Dosha: Ranjaka Pitta downstream obstruction. Dosha: Pitta with Kapha-obstructive element. Kamala classical correspondence."
+                        },
+                        {
+                                "label": "Row 131 · Liver Function / LFT-07",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Dhatu: Rasa Dhatu Kshaya primary; Ojas depletion trajectory. Agni: Jatharagni insufficient for substrate extraction OR hepatic synthesis compromised."
+                        },
+                        {
+                                "label": "Row 132 · Kidney Function / KFT-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Srotas: Mutravaha Srotas dysfunction (primary). Sub-Dosha: Apana Vayu role in elimination compromised. Dhatu: Majja and Asthi in advanced CKD. Ama: accumulating systemic."
+                        },
+                        {
+                                "label": "Row 133 · Kidney Function / KFT-02",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Srotas: Mutravaha Srotas dysfunction quantified. Ojas: depletion under chronic renal insufficiency. Dosha: multi-dosha involvement in advanced stages."
+                        },
+                        {
+                                "label": "Row 134 · Kidney Function / KFT-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Srotas: Mutravaha compromise with Ama accumulation marker. Agni: Jatharagni disturbed producing excess nitrogenous waste. Dosha: Pitta aggravation in metabolic forms."
+                        },
+                        {
+                                "label": "Row 135 · Kidney Function / KFT-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama: systemic (primary). Dosha: Vata aggravation with Ama (classical Vata-Rakta / Amavata spectrum). Srotas: multi-channel with particular Asthi-level crystallization risk."
+                        },
+                        {
+                                "label": "Row 136 · Kidney Function / KFT-05",
+                                "meta": "ojas 3, nidra 2, vikriti 2",
+                                "note": "Rasa Dhatu fluid-balance disturbance. Dosha: Vata aggravation with Apana-Vyana interplay dysregulated. Ojas: depletion if chronic."
+                        },
+                        {
+                                "label": "Row 137 · Kidney Function / KFT-06",
+                                "meta": "vikriti 2",
+                                "note": "Srotas: Mutravaha Srotas compromise. Vyana Vayu disturbance (cardiac risk)."
+                        },
+                        {
+                                "label": "Row 138 · Glycemic / GLY-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Kapha aggravation with Medo Agni dysfunction (primary). Sub-Dosha: Kledaka Kapha early disturbance. Agni: Jatharagni and Dhatwagni both compromised at carbohydrate handling. Prameha precursor stage."
+                        },
+                        {
+                                "label": "Row 139 · Glycemic / GLY-02",
+                                "meta": "agni 2, vikriti 2",
+                                "note": "Dosha: Kapha aggravation in early stages; Pitta and Vata composite in later stages. Prameha (classical) — specific subtype determined by dominant Dosha and Dushya. Kledaka Kapha severely disturbed."
+                        },
+                        {
+                                "label": "Row 140 · Glycemic / GLY-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Chronic glycemic state — Prameha progression indicator. Strong correlate of Ama accumulation in Rakta Dhatu over 90-day window. Dosha: Kapha-Pitta-Vata composite by severity."
+                        },
+                        {
+                                "label": "Row 141 · Glycemic / GLY-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Early Prameha physiology before glucose elevation. Kledaka Kapha disturbed. Agni at tissue level weakening. Medo Agni compromised."
+                        },
+                        {
+                                "label": "Row 142 · Glycemic / GLY-05",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Dhatu: Rasa Dhatu Kshaya. Agni: Vishama Agni. Ojas: trajectory of depletion if recurrent. Dosha: Vata aggravation."
+                        },
+                        {
+                                "label": "Row 143 · Thyroid / THY-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Agni: Manda Agni (primary). Dosha: Kapha aggravation with Vata in longstanding cases. Dhatwagni at Meda level compromised. Galaganda context classically."
+                        },
+                        {
+                                "label": "Row 144 · Thyroid / THY-02",
+                                "meta": "agni 3, manas 3, nidra 2, vikriti 2",
+                                "note": "Agni: Tikshna Agni. Dosha: Pitta-Vata aggravation primary. Sadhaka Pitta overactivity with Vata-driven restlessness."
+                        },
+                        {
+                                "label": "Row 145 · Thyroid / THY-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Agni: Manda Agni with metabolic consequences manifesting. Full Kapha-metabolic picture. Dhatu: Rasa Dhatu with hydration excess; Meda Dhatu accumulation."
+                        },
+                        {
+                                "label": "Row 146 · Thyroid / THY-04",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Autoimmune context — classical framework: Ama at Majja Dhatu level interfering with proper Dhatu-organ recognition. Vata-Pitta composite with Ojas depletion as antecedent."
+                        },
+                        {
+                                "label": "Row 147 · Inflammatory / INF-01",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Ama: systemic (primary and most direct modern correlate). Dosha: Pitta aggravation in inflammatory expression. Srotas: Raktavaha Ama circulation. Ojas: declining trajectory under chronic inflammation."
+                        },
+                        {
+                                "label": "Row 148 · Inflammatory / INF-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama severe-acute. Dosha: Pitta aggravation acute. Active Jwara or acute Pitta-Ama process."
+                        },
+                        {
+                                "label": "Row 149 · Inflammatory / INF-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama: systemic. Dhatu: Rakta Dhatu qualitative changes (protein profile shifts). Chronic Pitta-Ama state."
+                        },
+                        {
+                                "label": "Row 150 · Micronutrient / MIC-01",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Ojas: depletion trajectory. Dhatu: Asthi Dhatu substrate compromise. Sub-Dosha: Shleshaka Kapha weakness (joint component). Bone-Tejas insufficiency."
+                        },
+                        {
+                                "label": "Row 151 · Micronutrient / MIC-02",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Majja Dhatu substrate compromise. Rakta Dhatu formation compromised (macrocytosis). Ojas: depletion trajectory in chronic deficiency. Dosha: Vata aggravation with neurological expression."
+                        },
+                        {
+                                "label": "Row 152 · Micronutrient / MIC-03",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu formation substrate. Agni: Jatharagni poor extraction if dietary context. Ojas: depletion context if chronic."
+                        },
+                        {
+                                "label": "Row 153 · Micronutrient / MIC-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu substrate deficient. Sub-Dosha: Ranjaka Pitta substrate compromise. Agni: Jatharagni or Dhatwagni iron-extraction insufficient."
+                        },
+                        {
+                                "label": "Row 154 · Men's Hormonal / HRM-01",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Shukra Dhatu Kshaya (primary correlate). Ojas: depletion trajectory. Sub-Dosha: Shukradhara Kala compromise. Dosha: Vata aggravation in functional expression."
+                        },
+                        {
+                                "label": "Row 155 · Men's Hormonal / HRM-02",
+                                "meta": "ojas 2, vikriti 2",
+                                "note": "Dhatu: Shukra Dhatu Vriddhi qualitative. Dosha: Pitta aggravation with possible Raktavaha Srotas excess."
+                        },
+                        {
+                                "label": "Row 156 · Men's Hormonal / HRM-03",
+                                "meta": "agni 3, manas 3, ojas 3, vikriti 2",
+                                "note": "Sub-Dosha: Sadhaka Pitta sustained activation. Dosha: Pitta-Vata composite. Ojas: chronic depletion trajectory under sustained cortisol. Agni: Tikshna tendency."
+                        },
+                        {
+                                "label": "Row 157 · Men's Hormonal / HRM-04",
+                                "meta": "manas 3, ojas 3, vikriti 2",
+                                "note": "Ojas: severe depletion. Sub-Dosha: Sadhaka Pitta exhaustion. Dhatu: Shukra and Majja deep reserve compromise."
+                        },
+                        {
+                                "label": "Row 158 · Women's Hormonal / HRF-01",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Artava and Shukra (female reproductive substrate) Kshaya. Sub-Dosha: Apana Vayu; Ranjaka Pitta functional weakness. Ojas: depletion trajectory if chronic."
+                        },
+                        {
+                                "label": "Row 159 · Women's Hormonal / HRF-02",
+                                "meta": "vikriti 2",
+                                "note": "Dhatu: Artava Vriddhi qualitative. Dosha: Kapha-Pitta composite. Sub-Dosha: Ranjaka Pitta excess in cycle. Srotas: Artavavaha with Atipravritti tendency."
+                        },
+                        {
+                                "label": "Row 160 · Women's Hormonal / HRF-03",
+                                "meta": "vikriti 2",
+                                "note": "Sub-Dosha: Apana Vayu luteal function compromised. Dhatu: Artava quality in luteal phase. Shukra Dhatu substrate insufficiency at ovulation."
+                        },
+                        {
+                                "label": "Row 161 · Women's Hormonal / HRF-04",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Artava reserve compromise. Ojas: reproductive-axis depletion. Dosha: Vata aggravation (reproductive axis Vata-driven decline)."
+                        },
+                        {
+                                "label": "Row 162 · Women's Hormonal / HRF-05",
+                                "meta": "manas 3, ojas 3, vikriti 2",
+                                "note": "Sub-Dosha: Sadhaka Pitta sustained activation with secondary Apana Vayu disruption. Ojas: chronic depletion. Artava affected via HPA-HPG crosstalk."
+                        }
+                ]
+        },
+        {
+                "title": "Tongue Scan",
+                "meta": "32 rows",
+                "items": [
+                        {
+                                "label": "Row 163 · Body Colour / BC-01",
+                                "meta": "vikriti 2",
+                                "note": "Dhatu: Rakta Dhatu Kshaya (depletion) — primary and classical. Secondary: Rasa Dhatu Kshaya. Sub-Dosha: Ranjaka Pitta functional weakness. Dosha: Vata aggravation in chronic form."
+                        },
+                        {
+                                "label": "Row 164 · Body Colour / BC-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Pitta aggravation (systemic) — primary. Sub-Dosha: Pachaka + Ranjaka Pitta excess. Agni: Tikshna Agni tendency. Rakta Dhatu: Vriddhi qualitative (excess heat-quality)."
+                        },
+                        {
+                                "label": "Row 165 · Body Colour / BC-03",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dosha: Severe Pitta aggravation with Rakta Dhatu Dushti (qualitative compromise). Ojas: depletion trajectory. Pitta at the level of Rakta — the classical Rakta-Pitta pathology."
+                        },
+                        {
+                                "label": "Row 166 · Body Colour / BC-04",
+                                "meta": "manas 3, vikriti 2",
+                                "note": "Srotas: Raktavaha Srotas Sanga (stasis/obstruction) — primary. Sub-Dosha: Vyana Vayu compromise in circulation. Dosha: Vata-Kapha stagnation composite. In severe cases, cardiac compromise (Sadhaka Pitta / Avalambaka Kapha)."
+                        },
+                        {
+                                "label": "Row 167 · Body Colour / BC-05",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Sub-Dosha: Ranjaka Pitta dysfunction — primary. Classical Kamala (jaundice) correspondence. Srotas: biliary channels compromised. Agni: Bhutagni disturbance."
+                        },
+                        {
+                                "label": "Row 168 · Coating Colour / CC-01",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Agni: Sama Agni (balanced digestive fire). No Ama accumulation. Balanced Dosha state or mild, clinically insignificant variation."
+                        },
+                        {
+                                "label": "Row 169 · Coating Colour / CC-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama: digestive and systemic — primary. Dosha: Kapha aggravation when moist; Kapha + Vata when drier. Agni: Manda Agni. Srotas: early-stage multi-channel Ama."
+                        },
+                        {
+                                "label": "Row 170 · Coating Colour / CC-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Ama with Pitta — primary (pakwa or semi-digested Ama with heat quality). Sub-Dosha: Pachaka Pitta dysfunction. Agni: Tikshna Agni producing incomplete breakdown. Srotas: Annavaha + Raktavaha heat-Ama."
+                        },
+                        {
+                                "label": "Row 171 · Coating Colour / CC-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Chronic and deep Ama — primary. Dosha: Vata-Kapha Ama composite or Tridoshic complex. Dhatu: Rasa-Rakta level compromise. Srotas: multi-channel chronic Ama."
+                        },
+                        {
+                                "label": "Row 172 · Coating Colour / CC-05",
+                                "meta": "agni 3, ojas 3, nidra 2, vikriti 2",
+                                "note": "Vata aggravation with severe Ama burden — primary. Dhatu cascade compromise including Majja. Ojas: severe depletion. Dosha: Tridoshic crisis in extreme presentations."
+                        },
+                        {
+                                "label": "Row 173 · Coating Colour / CC-06",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Rakta-Majja Dhatu Kshaya — primary. Sub-Dosha: Ranjaka Pitta functional compromise at tissue level. Ojas: depletion trajectory. Dosha: Pitta-Vata depletion complex."
+                        },
+                        {
+                                "label": "Row 174 · Coating Location / CL-01",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Anatomical region: colon, kidneys, pelvic organs, deep digestive. Sub-Dosha: Apana Vayu dysfunction — primary. Srotas: Purishavaha + Mutravaha Ama. Dosha: Vata-Kapha at Apana seat."
+                        },
+                        {
+                                "label": "Row 175 · Coating Location / CL-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Anatomical region: stomach, duodenum, liver, spleen, pancreas. Sub-Dosha: Pachaka Pitta + Kledaka Kapha — primary. Agni: Jatharagni disturbed. Srotas: Annavaha primary."
+                        },
+                        {
+                                "label": "Row 176 · Coating Location / CL-03",
+                                "meta": "prana 3, vikriti 2",
+                                "note": "Anatomical region: heart, lungs, upper chest (Urdhva Kostha). Sub-Dosha: Udana Vayu + Avalambaka Kapha. Srotas: Pranavaha + early cardiac involvement."
+                        },
+                        {
+                                "label": "Row 177 · Coating Location / CL-04",
+                                "meta": "agni 3, ojas 2, vikriti 2",
+                                "note": "Sub-Dosha: Pachaka Pitta irregularity — primary. Agni: Vishama Agni (irregular). Dosha: Vata-Pitta composite. Possible autoimmune substrate (less classical but practically important)."
+                        },
+                        {
+                                "label": "Row 178 · Shape / SH-01",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Rasa-Rakta Dhatu Kshaya — primary. Dosha: Vata aggravation. Ojas: declining trajectory in chronic form. Agni: Vishama or Manda variants."
+                        },
+                        {
+                                "label": "Row 179 · Shape / SH-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Kapha aggravation — primary. Sub-Dosha: Kledaka Kapha excess. Rasa Dhatu Vriddhi (water excess). Agni: Manda Agni. Srotas: Udakavaha excess."
+                        },
+                        {
+                                "label": "Row 180 · Shape / SH-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Kapha aggravation with Rasa Dhatu Vriddhi — primary. Sub-Dosha: Kledaka Kapha + Vyana Vayu compromise in fluid distribution. Agni: Manda Agni."
+                        },
+                        {
+                                "label": "Row 181 · Shape / SH-04",
+                                "meta": "prana 2, vikriti 2",
+                                "note": "Sub-Dosha: Vyana Vayu + Udana Vayu dysfunction in neural control. Dhatu: Majja Dhatu involvement. Dosha: Vata aggravation at Majja level."
+                        },
+                        {
+                                "label": "Row 182 · Shape / SH-05",
+                                "meta": "agni 3, prana 3, nidra 2, vikriti 2",
+                                "note": "Sub-Dosha: Prana Vayu dysregulation — primary. Dosha: Vata aggravation (high-frequency). Dhatu: Majja Dhatu irritability. Possible Pitta-Vata (Tikshna Agni / hyperthyroid) composite."
+                        },
+                        {
+                                "label": "Row 183 · Surface Texture / TX-01",
+                                "meta": "ojas 3, vikriti 2",
+                                "note": "Dhatu: Rakta and Majja Dhatu Kshaya — primary. Sub-Dosha: Ranjaka Pitta and tissue-nourishment compromise. Ojas: depletion trajectory. Dosha: Pitta-Vata depletion."
+                        },
+                        {
+                                "label": "Row 184 · Surface Texture / TX-02",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Dosha: Pitta aggravation acute — primary. Sub-Dosha: Ranjaka Pitta excess. Rakta Dhatu Vriddhi qualitative. Agni: Tikshna Agni tendency."
+                        },
+                        {
+                                "label": "Row 185 · Surface Texture / TX-03",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Sub-Dosha: Pachaka Pitta at stomach level — classical regional mapping places central tongue at stomach. Dhatu: Mamsa Dhatu integrity compromise. Dosha: Pitta-Vata chronic aggravation."
+                        },
+                        {
+                                "label": "Row 186 · Surface Texture / TX-04",
+                                "meta": "agni 3, ojas 3, vikriti 2",
+                                "note": "Dhatu: Rasa-Rakta Dhatu Kshaya with Mamsa involvement. Dosha: Vata aggravation chronic — primary. Ojas: depletion. Agni: Vishama tendency."
+                        },
+                        {
+                                "label": "Row 187 · Surface Texture / TX-05",
+                                "meta": "manas 3, vikriti 2",
+                                "note": "Dosha: Pitta aggravation — primary, particularly at Rakta level. Sub-Dosha: Ranjaka Pitta excess; Sadhaka Pitta if stress-related. Srotas: local Rakta level disturbance."
+                        },
+                        {
+                                "label": "Row 188 · Surface Texture / TX-06",
+                                "meta": "vikriti 2",
+                                "note": "Dosha: Vata aggravation — primary. Sub-Dosha: any Vata location dominant depending on regional pattern. Dhatu: Rasa Dhatu Kshaya (fluid phase). Guna: Ruksha dominant."
+                        },
+                        {
+                                "label": "Row 189 · Surface Texture / TX-07",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Sub-Dosha: Bodhaka Kapha excess (the Kapha of the oral cavity/taste buds) — primary. Dosha: Kapha aggravation. Srotas: Udakavaha excess. Agni: Manda."
+                        },
+                        {
+                                "label": "Row 190 · Specific Regional Signs / SPC-01",
+                                "meta": "manas 3, vikriti 2",
+                                "note": "Anatomical region: heart. Sub-Dosha: Sadhaka Pitta excess — primary. Srotas: early cardiac Raktavaha involvement. Emotional-cognitive stress expression."
+                        },
+                        {
+                                "label": "Row 191 · Specific Regional Signs / SPC-02",
+                                "meta": "vikriti 2",
+                                "note": "Anatomical region: liver and gallbladder (bilateral), spleen on left. Sub-Dosha: Ranjaka Pitta excess — primary. Srotas: biliary channels Pitta-active. Dosha: Pitta aggravation."
+                        },
+                        {
+                                "label": "Row 192 · Specific Regional Signs / SPC-03",
+                                "meta": "vikriti 2",
+                                "note": "Anatomical region: kidneys, colon, pelvic organs. Sub-Dosha: Apana Vayu dysfunction. Srotas: Mutravaha and Purishavaha involvement. Possible Shukra-Artava-level concerns."
+                        },
+                        {
+                                "label": "Row 193 · Specific Regional Signs / SPC-04",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "Anatomical region: stomach and small intestine specifically. Sub-Dosha: Pachaka Pitta dysfunction with Kledaka Kapha — primary. Agni: Tikshna Agni or Manda-Tikshna oscillation."
+                        },
+                        {
+                                "label": "Row 194 · Specific Regional Signs / SPC-05",
+                                "meta": "vikriti 2",
+                                "note": "Srotas: Raktavaha Srotas Sanga (stasis) — primary. Sub-Dosha: Vyana Vayu compromise. Dhatu: Rakta Dhatu quality disturbance. Medovaha involvement if lipids elevated."
+                        }
+                ]
+        },
+        {
+                "title": "Daily Check-in",
+                "meta": "43 rows",
+                "items": [
+                        {
+                                "label": "Row 195 · Mood / DC-MOOD-01 / Anxious pattern",
+                                "meta": "manas 3, ojas 1, prana 2, nidra 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manovaha | guna: chala | manas: rajasic_tendency | explanation: Sustained anxious mood reports indicate Vata-Manas disturbance with Prana Vayu mobilisation."
+                        },
+                        {
+                                "label": "Row 196 · Mood / DC-MOOD-02 / Irritable pattern",
+                                "meta": "manas 3, ojas 1, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pitta | srotas: manovaha | guna: ushna, tikshna | manas: rajasic_tendency | explanation: Sustained irritable mood reports indicate Pitta-Manas disturbance, often Sadhaka Pitta correlate."
+                        },
+                        {
+                                "label": "Row 197 · Mood / DC-MOOD-03 / Heavy/low pattern",
+                                "meta": "manas 3, ojas 1, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: kapha | subDosha: tarpaka_kapha | srotas: manovaha | guna: guru, manda | manas: tamasic_tendency | explanation: Sustained heavy mood reports indicate Kapha-Manas pattern with Tamas tendency."
+                        },
+                        {
+                                "label": "Row 198 · Mood / DC-MOOD-04 / Foggy/scattered pattern",
+                                "meta": "manas 3, ojas 1, prana 2, nidra 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu, sadhaka_pitta_insufficiency | srotas: manovaha | guna: chala | manas: rajasic_tendency | explanation: Foggy cognition suggests Vata-Manas with Sadhaka Pitta insufficiency."
+                        },
+                        {
+                                "label": "Row 199 · Mood / DC-MOOD-05 / Calm/centered pattern",
+                                "meta": "manas 2, ojas 2, prana 1, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | guna: sattva | dhatu: ojas | explanation: Sustained calm mood reflects Sattvic Manas state supporting Ojas."
+                        },
+                        {
+                                "label": "Row 200 · Mood / DC-MOOD-06 / Overwhelmed pattern",
+                                "meta": "manas 3, ojas 2, prana 2, nidra 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu, sadhaka_pitta | srotas: manovaha | manas: rajasic_overload | explanation: Overwhelm pattern indicates combined Vata-Manas disturbance and Sadhaka Pitta overload."
+                        },
+                        {
+                                "label": "Row 201 · Energy / DC-ENERGY-01 / Low energy all-day",
+                                "meta": "agni 1, manas 1, ojas 3, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: vata_or_kapha | dhatu: ojas_depletion | srotas: rasavaha | guna: laghu, manda | explanation: Sustained low energy suggests Ojas depletion; Vata or Kapha context determines pattern."
+                        },
+                        {
+                                "label": "Row 202 · Energy / DC-ENERGY-02 / Mid-afternoon crash",
+                                "meta": "agni 2, manas 1, ojas 2, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta_depletion | dhatu: rasa | agniImplication: tikshna_or_manda_tendency | explanation: Afternoon energy crashes suggest Pitta-Agni depletion or post-prandial Manda."
+                        },
+                        {
+                                "label": "Row 203 · Energy / DC-ENERGY-03 / Stable good energy",
+                                "meta": "agni 1, manas 1, ojas 3, prana 1, nidra 1, vikriti 1",
+                                "note": "dhatu: ojas_supportive | manas: sattvic | explanation: Stable energy reflects Ojas-supportive state."
+                        },
+                        {
+                                "label": "Row 204 · Energy / DC-ENERGY-04 / Fatigued on waking",
+                                "meta": "agni 1, manas 1, ojas 2, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: kapha_or_vata | dhatu: ojas_kshaya_signal | guna: guru, manda | explanation: Unrefreshed waking despite sleep suggests Ojas issue, Nidra quality concern, or Kapha-time grogginess."
+                        },
+                        {
+                                "label": "Row 205 · Energy / DC-ENERGY-05 / Wired but tired",
+                                "meta": "agni 1, manas 2, ojas 2, prana 2, nidra 2, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: vyana_vayu, sadhaka_pitta | dhatu: ojas_depletion | explanation: Wired-tired indicates autonomic dysregulation with Ojas depletion."
+                        },
+                        {
+                                "label": "Row 206 · Digestion / DC-DIG-01 / Irregular pattern",
+                                "meta": "agni 3, ojas 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: samana_vayu | srotas: annavaha | guna: chala | agniImplication: vishama_tendency | explanation: Variable digestion reports indicate Vishama Agni driven by Vata."
+                        },
+                        {
+                                "label": "Row 207 · Digestion / DC-DIG-02 / Burning/heat",
+                                "meta": "agni 3, ojas 1, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: annavaha | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Post-meal burning indicates Tikshna Agni with Pachaka Pitta excess."
+                        },
+                        {
+                                "label": "Row 208 · Digestion / DC-DIG-03 / Heavy/sluggish",
+                                "meta": "agni 3, ojas 1, vikriti 2",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | srotas: annavaha | guna: guru, manda | agniImplication: manda_tendency | explanation: Post-meal heaviness indicates Manda Agni with Kledaka Kapha excess."
+                        },
+                        {
+                                "label": "Row 209 · Digestion / DC-DIG-04 / Bloating",
+                                "meta": "agni 3, ojas 1, vikriti 2",
+                                "note": "dosha: vata_or_kapha | subDosha: samana_vayu | srotas: annavaha | guna: chala_or_guru | agniImplication: ama_accumulation_risk | explanation: Bloating indicates Ama formation often with Manda or Vishama Agni."
+                        },
+                        {
+                                "label": "Row 210 · Digestion / DC-DIG-05 / Gas/discomfort",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: apana_vayu | srotas: annavaha, purishavaha | guna: chala | agniImplication: vishama_tendency | explanation: Gas patterns indicate Apana Vayu disturbance with Vishama Agni."
+                        },
+                        {
+                                "label": "Row 211 · Digestion / DC-DIG-06 / Loose stool",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: annavaha | guna: drava, ushna | agniImplication: tikshna_tendency | explanation: Loose stool indicates Tikshna Agni with over-fast transit (Pitta)."
+                        },
+                        {
+                                "label": "Row 212 · Digestion / DC-DIG-07 / Constipation",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: apana_vayu | srotas: purishavaha | guna: ruksha | agniImplication: vishama_or_manda_tendency | explanation: Constipation indicates Apana Vayu disturbance with Vata-Vishama or Manda Agni."
+                        },
+                        {
+                                "label": "Row 213 · Digestion / DC-DIG-08 / Acid reflux",
+                                "meta": "agni 3, ojas 1, prana 1, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta, udana_vayu_disturbance | srotas: annavaha | guna: ushna, drava | agniImplication: tikshna_tendency | explanation: Acid reflux indicates Tikshna Agni with Udana Vayu reversal."
+                        },
+                        {
+                                "label": "Row 214 · Digestion / DC-DIG-09 / No appetite",
+                                "meta": "agni 3, ojas 1, vikriti 2",
+                                "note": "dosha: kapha_or_ama | srotas: annavaha | guna: manda | agniImplication: manda_tendency | explanation: Absent appetite indicates Manda Agni, often with Ama burden."
+                        },
+                        {
+                                "label": "Row 215 · Digestion / DC-DIG-10 / Excessive appetite",
+                                "meta": "agni 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: annavaha | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Excessive appetite indicates Tikshna Agni with Pachaka Pitta excess."
+                        },
+                        {
+                                "label": "Row 216 · Digestion / DC-DIG-11 / Clear easy digestion",
+                                "meta": "agni 3, ojas 2, vikriti 1",
+                                "note": "agniImplication: sama_supportive | guna: sama | explanation: Clear digestion across check-ins indicates Sama Agni — the supportive baseline."
+                        },
+                        {
+                                "label": "Row 217 · Sleep / DC-SLP-01 / Slept well refreshed",
+                                "meta": "manas 1, ojas 2, prana 1, nidra 3, vikriti 1",
+                                "note": "nidra: supportive | dhatu: ojas_supportive | explanation: Refreshed waking indicates supportive Nidra and Ojas replenishment."
+                        },
+                        {
+                                "label": "Row 218 · Sleep / DC-SLP-02 / Poor sleep unrefreshed",
+                                "meta": "manas 2, ojas 2, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: vata_or_pitta | srotas: manovaha | dhatu: ojas_compromise | explanation: Poor sleep across check-ins indicates Nidra compromise; dosha context varies."
+                        },
+                        {
+                                "label": "Row 219 · Sleep / DC-SLP-03 / Difficulty falling asleep",
+                                "meta": "manas 2, ojas 1, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manovaha | guna: chala | explanation: Difficulty initiating sleep indicates Vata-Manas activation at sleep time."
+                        },
+                        {
+                                "label": "Row 220 · Sleep / DC-SLP-04 / Pitta-time awakening (1-3am)",
+                                "meta": "manas 2, ojas 1, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pitta | srotas: manovaha | guna: ushna | explanation: 1-3am awakening pattern indicates Pitta-time disturbance with Sadhaka Pitta surfacing."
+                        },
+                        {
+                                "label": "Row 221 · Sleep / DC-SLP-05 / Vata-time awakening (3-5am)",
+                                "meta": "manas 1, ojas 1, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manovaha | guna: chala | explanation: 3-5am awakening pattern indicates Vata-time disturbance."
+                        },
+                        {
+                                "label": "Row 222 · Sleep / DC-SLP-06 / Vivid disturbing dreams",
+                                "meta": "manas 3, ojas 1, prana 1, nidra 2, vikriti 2",
+                                "note": "dosha: pitta | subDosha: sadhaka_pitta | srotas: manovaha | guna: ushna | explanation: Vivid or disturbing dreams indicate Sadhaka Pitta excess affecting Manas."
+                        },
+                        {
+                                "label": "Row 223 · Sleep / DC-SLP-07 / Heavy groggy waking",
+                                "meta": "agni 1, manas 1, ojas 1, nidra 2, vikriti 2",
+                                "note": "dosha: kapha | guna: guru, manda | agniImplication: manda_tendency | explanation: Heavy groggy waking indicates Kapha pattern in Kapha-time (6-10am) with Manda morning Agni."
+                        },
+                        {
+                                "label": "Row 224 · Breath / DC-BREATH-01 / Short of breath",
+                                "meta": "manas 2, ojas 1, prana 3, vikriti 2",
+                                "note": "dosha: vata_or_pitta | subDosha: prana_vayu | srotas: pranavaha | guna: chala | explanation: Short of breath indicates Prana Vayu disturbance, often Vata-driven."
+                        },
+                        {
+                                "label": "Row 225 · Breath / DC-BREATH-02 / Calm grounded",
+                                "meta": "manas 2, ojas 1, prana 3, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu_settled | explanation: Calm grounded state indicates settled Prana with Sattvic Manas."
+                        },
+                        {
+                                "label": "Row 226 · Breath / DC-BREATH-03 / Rushed scattered",
+                                "meta": "manas 2, ojas 1, prana 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: pranavaha, manovaha | guna: chala | manas: rajasic_overload | explanation: Rushed scattered state indicates Vata-Prana disturbance affecting Manas."
+                        },
+                        {
+                                "label": "Row 227 · Skin / DC-SKIN-01 / Breakouts rash",
+                                "meta": "ojas 1, vikriti 3",
+                                "note": "dosha: pitta | subDosha: bhrajaka_pitta | dhatu: rakta | srotas: raktavaha | guna: ushna | explanation: Skin breakouts indicate Bhrajaka Pitta excess in Rakta and skin Mamsa."
+                        },
+                        {
+                                "label": "Row 228 · Skin / DC-SKIN-02 / Dry flaky skin",
+                                "meta": "ojas 1, vikriti 3",
+                                "note": "dosha: vata | dhatu: rasa_kshaya, rakta | guna: ruksha | explanation: Dry skin indicates Vata excess with Rasa Dhatu insufficiency."
+                        },
+                        {
+                                "label": "Row 229 · Skin / DC-SKIN-03 / Oily heavy skin",
+                                "meta": "vikriti 2",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | dhatu: meda | guna: snigdha, guru | explanation: Oily skin indicates Kapha excess with Meda involvement."
+                        },
+                        {
+                                "label": "Row 230 · Body / DC-BODY-01 / Joint pain stiffness",
+                                "meta": "ojas 1, vikriti 3",
+                                "note": "dosha: vata | dhatu: asthi | srotas: asthivaha | guna: ruksha | explanation: Joint pain or stiffness indicates Vata in Asthi Dhatu with Asthivaha Srotas involvement."
+                        },
+                        {
+                                "label": "Row 231 · Body / DC-BODY-02 / Muscle tension cramps",
+                                "meta": "manas 1, ojas 1, prana 1, vikriti 2",
+                                "note": "dosha: vata | dhatu: mamsa | guna: chala | explanation: Muscle tension or cramps indicate Vata in Mamsa Dhatu."
+                        },
+                        {
+                                "label": "Row 232 · Body / DC-BODY-03 / Heavy puffy",
+                                "meta": "agni 1, vikriti 2",
+                                "note": "dosha: kapha | dhatu: rasa, meda | guna: guru, snigdha | agniImplication: ama_accumulation_risk | explanation: Heavy puffy body suggests Kapha-Meda excess often with Ama."
+                        },
+                        {
+                                "label": "Row 233 · Practice / DC-PRAC-01 / Morning routine completed",
+                                "meta": "agni 2, manas 1, ojas 1, prana 1, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | explanation: Consistent Dinacharya adherence is supportive across all pillars."
+                        },
+                        {
+                                "label": "Row 234 · Practice / DC-PRAC-02 / Meditation practice",
+                                "meta": "manas 3, ojas 1, prana 2, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu_settled | explanation: Meditation supports Sattvic Manas and settles Prana."
+                        },
+                        {
+                                "label": "Row 235 · Practice / DC-PRAC-03 / Pranayama practice",
+                                "meta": "manas 2, ojas 1, prana 3, nidra 1, vikriti 1",
+                                "note": "subDosha: prana_vayu_settled | manas: sattvic_supportive | explanation: Pranayama supports Prana Vayu balance and Sattvic Manas."
+                        },
+                        {
+                                "label": "Row 236 · Practice / DC-PRAC-04 / Walked outdoors",
+                                "meta": "agni 1, manas 1, ojas 1, prana 1, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | dhatu: rasa_supportive | explanation: Outdoor walking supports multiple pillars (movement, Prana, Manas)."
+                        },
+                        {
+                                "label": "Row 237 · Practice / DC-PRAC-05 / Yoga practice",
+                                "meta": "agni 1, manas 2, ojas 1, prana 2, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu, vyana_vayu_supportive | explanation: Yoga practice supports Prana, Manas, and tissue integrity."
+                        }
+                ]
+        },
+        {
+                "title": "Meal",
+                "meta": "33 rows",
+                "items": [
+                        {
+                                "label": "Row 238 · Meal Library / ML-01 / Cold-temp meal",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: vata | subDosha: samana_vayu | srotas: annavaha | guna: sheeta, ruksha | agniImplication: manda_tendency | explanation: Cold temperature meal cools Agni and aggravates Vata."
+                        },
+                        {
+                                "label": "Row 239 · Meal Library / ML-02 / Hot-temp pungent meal",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: annavaha | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Hot pungent meal intensifies Pitta heat."
+                        },
+                        {
+                                "label": "Row 240 · Meal Library / ML-03 / Heavy meal",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | srotas: annavaha | dhatu: meda | guna: guru, snigdha | agniImplication: manda_tendency | explanation: Heavy meal burdens Agni and supports Kapha."
+                        },
+                        {
+                                "label": "Row 241 · Meal Library / ML-04 / Ultra-processed meal",
+                                "meta": "agni 2, manas 1, ojas 2, vikriti 1",
+                                "note": "dosha: tridoshic | srotas: annavaha, rasavaha | dhatu: rasa | guna: tamasic | agniImplication: ama_accumulation_risk | explanation: Ultra-processed food carries low Prana and promotes Ama across doshas."
+                        },
+                        {
+                                "label": "Row 242 · Meal Library / ML-05 / Pungent-dominant meal",
+                                "meta": "agni 2, ojas 1, vikriti 1",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: annavaha | dhatu: rakta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Pungent dominance heats Pitta."
+                        },
+                        {
+                                "label": "Row 243 · Meal Library / ML-06 / Sweet-heavy meal",
+                                "meta": "agni 2, ojas 1, vikriti 1",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | dhatu: meda | guna: guru, snigdha | agniImplication: manda_tendency | explanation: Sweet heavy meal supports Kapha and slows Agni."
+                        },
+                        {
+                                "label": "Row 244 · Meal Library / ML-07 / Sour-heavy meal",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: pitta | dhatu: rakta | guna: ushna, snigdha | agniImplication: tikshna_tendency | explanation: Sour-heavy meal intensifies Pitta and may promote Ama if fermented."
+                        },
+                        {
+                                "label": "Row 245 · Meal Library / ML-08 / Bitter-astringent dry meal",
+                                "meta": "vikriti 1",
+                                "note": "dosha: vata | subDosha: apana_vayu | guna: sheeta, ruksha, khara | explanation: Bitter astringent dry meal aggravates Vata."
+                        },
+                        {
+                                "label": "Row 246 · Meal Library / ML-09 / Six-taste balanced cooked",
+                                "meta": "agni 2, ojas 2, vikriti 1",
+                                "note": "dosha: tridoshic_supportive | srotas: annavaha | dhatu: rasa, ojas | guna: sama | agniImplication: sama_supportive | explanation: Six-taste balanced warm cooked meal is Ojas-supportive."
+                        },
+                        {
+                                "label": "Row 247 · Meal Library / ML-10 / Late-night meal",
+                                "meta": "agni 2, ojas 1, nidra 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: samana_vayu | srotas: annavaha | guna: chala | agniImplication: vishama_tendency | explanation: Eating in Vata-time disrupts Agni rhythm."
+                        },
+                        {
+                                "label": "Row 248 · Meal Library / ML-11 / Skipped meal",
+                                "meta": "agni 2, ojas 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: samana_vayu | srotas: annavaha | guna: ruksha | agniImplication: vishama_tendency | explanation: Skipped meals destabilise Agni rhythm."
+                        },
+                        {
+                                "label": "Row 249 · Meal Library / ML-12 / High-oil meal",
+                                "meta": "agni 1, ojas 1, vikriti 1",
+                                "note": "dosha: context_dependent | dhatu: meda | guna: snigdha, guru | agniImplication: manda_tendency | explanation: High oil meal is Brimhana — supportive for Vata, problematic for Kapha or Ama states."
+                        },
+                        {
+                                "label": "Row 250 · Meal Library / ML-13 / Difficult-digestion meal",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: context_dependent | srotas: annavaha | guna: guru | agniImplication: manda_tendency | explanation: Difficult-digestion meals indicate Agni weakness."
+                        },
+                        {
+                                "label": "Row 251 · Meal Library / ML-14 / Vata-aggravating tagged",
+                                "meta": "agni 1, vikriti 2",
+                                "note": "dosha: vata | guna: sheeta, ruksha, laghu, chala | explanation: Direct Vata aggravation tag."
+                        },
+                        {
+                                "label": "Row 252 · Meal Library / ML-15 / Pitta-aggravating tagged",
+                                "meta": "agni 1, vikriti 2",
+                                "note": "dosha: pitta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Direct Pitta aggravation tag."
+                        },
+                        {
+                                "label": "Row 253 · Meal Library / ML-16 / Kapha-aggravating tagged",
+                                "meta": "agni 1, vikriti 2",
+                                "note": "dosha: kapha | dhatu: meda | guna: guru, snigdha | agniImplication: manda_tendency | explanation: Direct Kapha aggravation tag."
+                        },
+                        {
+                                "label": "Row 254 · Meal Library / ML-17 / Cold raw light combo",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: samana_vayu | guna: sheeta, ruksha, laghu | agniImplication: manda_tendency | explanation: Three Vata-aggravating qualities stacked — strong Vata signal."
+                        },
+                        {
+                                "label": "Row 255 · Meal Library / ML-18 / Hot spicy sour combo",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | dhatu: rakta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Three Pitta-aggravating qualities stacked."
+                        },
+                        {
+                                "label": "Row 256 · Meal Library / ML-19 / Sweet heavy oily combo",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: kapha | dhatu: meda | guna: guru, snigdha, sheeta | agniImplication: manda_tendency | explanation: Three Kapha-aggravating qualities stacked."
+                        },
+                        {
+                                "label": "Row 257 · Meal Library / ML-20 / Supportive quality meal",
+                                "meta": "agni 1, ojas 2, vikriti 1",
+                                "note": "dhatu: rasa, ojas | guna: sattvic | agniImplication: sama_supportive | explanation: Supportive quality meal builds Ojas."
+                        },
+                        {
+                                "label": "Row 258 · Meal Library / ML-21 / Snack between meals",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: kapha | srotas: annavaha | agniImplication: ama_accumulation_risk | explanation: Snacking interrupts Agni clearance and promotes Ama."
+                        },
+                        {
+                                "label": "Row 259 · Meal Library / ML-22 / High-stimulant drink",
+                                "meta": "agni 1, manas 1, ojas 1, prana 1, vikriti 1",
+                                "note": "dosha: vata_pitta | subDosha: vyana_vayu, sadhaka_pitta | guna: ushna, laghu | agniImplication: tikshna_tendency | explanation: Stimulants aggravate Vata and Pitta."
+                        },
+                        {
+                                "label": "Row 260 · Meal Library / ML-23 / Warm cooked moderate",
+                                "meta": "agni 2, ojas 2, vikriti 1",
+                                "note": "dosha: tridoshic_supportive | dhatu: rasa | guna: sama | agniImplication: sama_supportive | explanation: Classical Pathya principle — warm cooked moderate meal."
+                        },
+                        {
+                                "label": "Row 261 · Meal Library / ML-24 / Heavy breakfast",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | guna: guru | agniImplication: manda_tendency | explanation: Heavy breakfast in Kapha-time burdens early-day Agni."
+                        },
+                        {
+                                "label": "Row 262 · Meal Library / ML-25 / Late breakfast skipped",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: vata | subDosha: samana_vayu | guna: ruksha | agniImplication: vishama_tendency | explanation: Late breakfast pushes first meal into Pitta-time, destabilising Agni."
+                        },
+                        {
+                                "label": "Row 263 · Meal Library / PA-01 / Cold-meal pattern (5 days)",
+                                "meta": "agni 3, ojas 2, vikriti 3",
+                                "note": "dosha: vata | srotas: annavaha | guna: sheeta, ruksha | agniImplication: manda_tendency | explanation: Sustained cold-meal pattern indicates persistent Vata aggravation and Agni weakening."
+                        },
+                        {
+                                "label": "Row 264 · Meal Library / PA-02 / Pitta-aggravating meal pattern",
+                                "meta": "agni 3, ojas 2, vikriti 3",
+                                "note": "dosha: pitta | dhatu: rakta | guna: ushna | agniImplication: tikshna_tendency | explanation: Sustained Pitta-aggravating eating in elevated Pitta context."
+                        },
+                        {
+                                "label": "Row 265 · Meal Library / PA-03 / Late-night meal pattern",
+                                "meta": "agni 3, ojas 2, nidra 2, vikriti 3",
+                                "note": "dosha: vata | srotas: annavaha | guna: chala | agniImplication: vishama_tendency | explanation: Sustained late-night eating disrupts Agni rhythm."
+                        },
+                        {
+                                "label": "Row 266 · Meal Library / PA-04 / Ultra-processed pattern",
+                                "meta": "agni 3, manas 1, ojas 3, prana 1, vikriti 3",
+                                "note": "dosha: tridoshic | dhatu: rasa | guna: tamasic | agniImplication: ama_accumulation_risk | explanation: Sustained ultra-processed intake builds systemic Ama."
+                        },
+                        {
+                                "label": "Row 267 · Meal Library / PA-05 / Dosha-mismatched pattern",
+                                "meta": "agni 2, manas 1, ojas 3, vikriti 3",
+                                "note": "dosha: context_dependent | dhatu: ojas_depletion_chronic | explanation: Chronic mismatch depletes Ojas over time."
+                        },
+                        {
+                                "label": "Row 268 · Meal Library / PA-06 / Six-taste balanced pattern",
+                                "meta": "agni 2, manas 1, ojas 3, prana 1, vikriti 1",
+                                "note": "dhatu: rasa, ojas | guna: sattvic | agniImplication: sama_supportive | explanation: Sustained classical-pathway eating reinforces protocol direction."
+                        },
+                        {
+                                "label": "Row 269 · Meal Library / PA-07 / Skipped meal pattern",
+                                "meta": "agni 3, manas 1, ojas 3, vikriti 3",
+                                "note": "dosha: vata | srotas: annavaha | guna: ruksha | agniImplication: vishama_tendency | dhatu: ojas_depletion | explanation: Frequent meal-skipping destabilises Agni rhythm and depletes Ojas."
+                        },
+                        {
+                                "label": "Row 270 · Meal Library / PA-08 / High-stimulant pattern",
+                                "meta": "agni 2, manas 2, ojas 3, prana 2, vikriti 3",
+                                "note": "dosha: vata_pitta | subDosha: vyana_vayu | dhatu: ojas_depletion | guna: ushna, laghu | agniImplication: tikshna_tendency | explanation: Sustained stimulant intake correlates with HRV degradation and Ojas depletion."
+                        }
+                ]
+        },
+        {
+                "title": "Exposure",
+                "meta": "34 rows",
+                "items": [
+                        {
+                                "label": "Row 271 · Climate / CL-01 / High temperature day",
+                                "meta": "agni 1, manas 1, vikriti 1",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta, sadhaka_pitta | srotas: raktavaha | dhatu: rakta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: High temperature directly amplifies Pitta."
+                        },
+                        {
+                                "label": "Row 272 · Climate / CL-02 / Cold dry day",
+                                "meta": "agni 1, manas 1, prana 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: vyana_vayu, prana_vayu | guna: sheeta, ruksha, khara | explanation: Cold dry air strips moisture and warmth — Vata signature."
+                        },
+                        {
+                                "label": "Row 273 · Climate / CL-03 / High humidity warm",
+                                "meta": "agni 2, vikriti 1",
+                                "note": "dosha: kapha | subDosha: kledaka_kapha | srotas: rasavaha | guna: guru, snigdha | agniImplication: manda_tendency | explanation: Humid warm air loads Kapha and slows digestion."
+                        },
+                        {
+                                "label": "Row 274 · Climate / CL-04 / Elevated AQI",
+                                "meta": "manas 1, ojas 2, prana 3, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: prana_vayu | srotas: pranavaha | guna: ruksha, khara | explanation: Air pollution stresses Pranavaha — Vata in respiratory channels, Pitta inflammation."
+                        },
+                        {
+                                "label": "Row 275 · Climate / CL-05 / Severe AQI",
+                                "meta": "manas 2, ojas 3, prana 3, vikriti 3",
+                                "note": "dosha: vata_pitta_high | subDosha: prana_vayu | srotas: pranavaha | dhatu: rakta | explanation: Hazardous air quality — Pranavaha emergency."
+                        },
+                        {
+                                "label": "Row 276 · Climate / CL-06 / High UV index",
+                                "meta": "vikriti 1",
+                                "note": "dosha: pitta | subDosha: bhrajaka_pitta, alochaka_pitta | srotas: raktavaha | dhatu: rakta, mamsa | guna: ushna, tikshna | explanation: High UV heats Bhrajaka and Alochaka Pitta."
+                        },
+                        {
+                                "label": "Row 277 · Climate / CL-07 / Strong wind dry air",
+                                "meta": "prana 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: vyana_vayu, prana_vayu | srotas: pranavaha | guna: ruksha, chala, khara | explanation: Wind is classical Vata environmental signature."
+                        },
+                        {
+                                "label": "Row 278 · Climate / CL-08 / Rapid temp change",
+                                "meta": "agni 1, manas 1, prana 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: samana_vayu, vyana_vayu | guna: chala | agniImplication: vishama_tendency | explanation: Rapid environmental swings strain autonomic thermoregulation."
+                        },
+                        {
+                                "label": "Row 279 · Climate / CL-09 / Pre-monsoon humidity rise",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: pitta_kapha | subDosha: pachaka_pitta, kledaka_kapha | guna: snigdha, ushna | agniImplication: manda_tendency | explanation: Heat-monsoon junction — Pitta meets rising Kapha humidity."
+                        },
+                        {
+                                "label": "Row 280 · Climate / CL-10 / Sustained heat wave",
+                                "meta": "agni 2, manas 1, ojas 1, vikriti 2",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta, ranjaka_pitta, sadhaka_pitta | srotas: raktavaha, pittavaha | dhatu: rakta, mamsa | guna: ushna sustained | agniImplication: tikshna_tendency | explanation: Sustained heat builds Pitta in Rakta and Mamsa."
+                        },
+                        {
+                                "label": "Row 281 · Climate / CL-11 / Sustained cold spell",
+                                "meta": "agni 2, ojas 1, vikriti 2",
+                                "note": "dosha: vata_kapha | subDosha: samana_vayu, kledaka_kapha | dhatu: meda, asthi | guna: sheeta, guru | agniImplication: manda_tendency | explanation: Sustained cold — classical Hemanta/Shishira pattern."
+                        },
+                        {
+                                "label": "Row 282 · Climate / CL-12 / Storm low pressure",
+                                "meta": "manas 1, prana 2, vikriti 1",
+                                "note": "dosha: vata | subDosha: vyana_vayu, prana_vayu | srotas: pranavaha | guna: chala | explanation: Low-pressure storm systems correlate with autonomic disruption."
+                        },
+                        {
+                                "label": "Row 283 · Climate / CL-13 / Pollen high",
+                                "meta": "agni 1, ojas 1, prana 2, vikriti 1",
+                                "note": "dosha: pitta_kapha | subDosha: prana_vayu | srotas: pranavaha | dhatu: rakta | guna: ruksha | agniImplication: ama_accumulation_risk | explanation: Allergic load — allergen as Ama via Pranavaha entry."
+                        },
+                        {
+                                "label": "Row 284 · Climate / CL-14 / Stable balanced weather",
+                                "meta": "agni 1, manas 1, ojas 1, prana 1, vikriti 1",
+                                "note": "dosha: tridoshic_supportive | dhatu: ojas | guna: sama | agniImplication: sama_supportive | explanation: Environmental conditions classically considered supportive of Ojas-building."
+                        },
+                        {
+                                "label": "Row 285 · Lunar / LU-01 / Ekadashi",
+                                "meta": "agni 1, ojas 1",
+                                "note": "dosha: tridoshic_langhana | srotas: annavaha | guna: laghu | agniImplication: sama_supportive | explanation: Classical Ekadashi observance favours lighter eating."
+                        },
+                        {
+                                "label": "Row 286 · Lunar / LU-02 / Purnima",
+                                "meta": "agni 1, manas 1, nidra 1, vikriti 1",
+                                "note": "dosha: pitta_rasa | subDosha: sadhaka_pitta, ranjaka_pitta | srotas: rasavaha | dhatu: rasa | guna: snigdha | agniImplication: tikshna_tendency | explanation: Full moon associated with Pitta peak and Rasa amplification."
+                        },
+                        {
+                                "label": "Row 287 · Lunar / LU-03 / Amavasya",
+                                "meta": "manas 1, prana 1, nidra 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: rasavaha | guna: ruksha, chala | explanation: New moon treated as Vata-peak day requiring grounding."
+                        },
+                        {
+                                "label": "Row 288 · Lunar / LU-04 / Chaturdashi",
+                                "meta": "vikriti 1",
+                                "note": "dosha: pitta | subDosha: ranjaka_pitta | srotas: raktavaha | dhatu: rakta | guna: snigdha | explanation: Eve of Purnima — Pitta build-up."
+                        },
+                        {
+                                "label": "Row 289 · Lunar / LU-05 / Krittika nakshatra",
+                                "meta": "agni 1, vikriti 1",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta | srotas: raktavaha | dhatu: rakta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Krittika classically associated with fire and Surya."
+                        },
+                        {
+                                "label": "Row 290 · Lunar / LU-06 / Pushya nakshatra",
+                                "meta": "agni 1, manas 1, ojas 1",
+                                "note": "dosha: tridoshic_supportive | subDosha: sadhaka_pitta | srotas: rasavaha, manovaha | dhatu: rasa, ojas | guna: sattvic | agniImplication: sama_supportive | explanation: Pushya classically most auspicious nakshatra."
+                        },
+                        {
+                                "label": "Row 291 · Lunar / LU-07 / Ashlesha gandanta",
+                                "meta": "agni 1, manas 1, prana 1, nidra 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: prana_vayu, sadhaka_pitta | srotas: manovaha | guna: chala | agniImplication: vishama_tendency | explanation: Ashlesha and gandanta crossings treated as emotionally turbulent."
+                        },
+                        {
+                                "label": "Row 292 · Lunar / LU-08 / Eclipse window",
+                                "meta": "agni 1, manas 1, prana 1, vikriti 1",
+                                "note": "dosha: vata_pitta | subDosha: prana_vayu, sadhaka_pitta | srotas: manovaha | guna: chala, ushna | explanation: Tradition counsels restraint in eclipse windows."
+                        },
+                        {
+                                "label": "Row 293 · Lunar / LU-09 / Bhadra karana",
+                                "meta": "manas 1",
+                                "note": "guna: tamasic_association | explanation: Classically considered unfavourable for important beginnings."
+                        },
+                        {
+                                "label": "Row 294 · Lunar / LU-10 / Auspicious yoga periods",
+                                "meta": "agni 1, manas 1, ojas 1",
+                                "note": "dosha: tridoshic_supportive | dhatu: ojas | guna: sattvic | agniImplication: sama_supportive | explanation: Auspicious yoga periods classically favoured for healing protocols."
+                        },
+                        {
+                                "label": "Row 295 · Astro / AS-01 / Saturn aspecting Lagna",
+                                "meta": "manas 1, ojas 1, prana 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: vyana_vayu, prana_vayu | srotas: asthivaha | dhatu: asthi | guna: ruksha, sheeta, manda | explanation: Saturn-Lagna aspect classically associated with Vata-anchoring needs."
+                        },
+                        {
+                                "label": "Row 296 · Astro / AS-02 / Sade Sati phase",
+                                "meta": "manas 2, ojas 2, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: vata | subDosha: sadhaka_pitta_affected, prana_vayu | srotas: manovaha, rasavaha | dhatu: rasa | guna: ruksha | explanation: Multi-year Saturn transit; sustained Vata and Rasa context."
+                        },
+                        {
+                                "label": "Row 297 · Astro / AS-03 / Mars aspecting Lagna or 7H",
+                                "meta": "agni 1, manas 1, vikriti 1",
+                                "note": "dosha: pitta | subDosha: pachaka_pitta, ranjaka_pitta | srotas: raktavaha | dhatu: rakta | guna: ushna, tikshna | agniImplication: tikshna_tendency | explanation: Mars-Lagna/7H aspects classically associated with heat."
+                        },
+                        {
+                                "label": "Row 298 · Astro / AS-04 / Mars Mahadasha",
+                                "meta": "agni 1, manas 1, ojas 2, vikriti 2",
+                                "note": "dosha: pitta_vata | subDosha: pachaka_pitta, ranjaka_pitta | srotas: raktavaha | dhatu: rakta, mamsa | guna: ushna sustained | agniImplication: tikshna_tendency | explanation: Mars Mahadasha — sustained Pitta-pacifying lifestyle direction classically favoured."
+                        },
+                        {
+                                "label": "Row 299 · Astro / AS-05 / Mercury retrograde",
+                                "meta": "manas 2, prana 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: prana_vayu, sadhaka_pitta | srotas: manovaha | guna: chala | agniImplication: vishama_tendency | explanation: Tradition-grounded autonomic and communicative disruption period."
+                        },
+                        {
+                                "label": "Row 300 · Astro / AS-06 / Jupiter favourable transit",
+                                "meta": "agni 1, manas 1, ojas 2",
+                                "note": "dosha: tridoshic_supportive | subDosha: sadhaka_pitta | srotas: rasavaha | dhatu: rasa, ojas | guna: sattvic, snigdha | agniImplication: sama_supportive | explanation: Jupiter in favourable houses — sattvic and Rasa-supportive context."
+                        },
+                        {
+                                "label": "Row 301 · Astro / AS-07 / Venus active in chart",
+                                "meta": "agni 1, manas 1, vikriti 1",
+                                "note": "dosha: kapha_indulgence | subDosha: kledaka_kapha, sadhaka_pitta | srotas: rasavaha, medovaha | dhatu: meda | guna: snigdha, guru | agniImplication: manda_tendency | explanation: Venus emphasis classically associated with comfort/indulgence tendencies."
+                        },
+                        {
+                                "label": "Row 302 · Astro / AS-08 / Rahu in dusthana house",
+                                "meta": "agni 1, manas 2, ojas 1, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: vata_tamasic | subDosha: vyana_vayu | srotas: manovaha | guna: tamasic, chala | agniImplication: vishama_tendency | explanation: Rahu in dusthana houses classically disrupts."
+                        },
+                        {
+                                "label": "Row 303 · Astro / AS-09 / New Mahadasha entry",
+                                "meta": "manas 1, ojas 1, vikriti 1",
+                                "note": "guna: transitional | explanation: Mahadasha entries are significant life-context events; Twin acknowledges and applies new period lord as context."
+                        },
+                        {
+                                "label": "Row 304 · Astro / AS-10 / Eclipse on natal sensitive points",
+                                "meta": "manas 2, ojas 1, prana 1, nidra 1, vikriti 1",
+                                "note": "dosha: vata | subDosha: prana_vayu, sadhaka_pitta | srotas: manovaha | guna: chala | agniImplication: vishama_tendency | explanation: Eclipses on natal sensitive points classically more impactful."
+                        }
+                ]
+        },
+        {
+                "title": "Lifestyle",
+                "meta": "15 rows",
+                "items": [
+                        {
+                                "label": "Row 305 · Lifestyle / LI-01 / Late bedtime pattern",
+                                "meta": "manas 2, ojas 1, prana 1, nidra 3, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | srotas: manovaha | guna: chala | explanation: Late bedtime pattern aggravates Vata-Manas."
+                        },
+                        {
+                                "label": "Row 306 · Lifestyle / LI-02 / Early consistent rising",
+                                "meta": "agni 1, manas 1, ojas 1, prana 1, nidra 2, vikriti 1",
+                                "note": "guna: sattvic | explanation: Early consistent rising supports Dinacharya across pillars."
+                        },
+                        {
+                                "label": "Row 307 · Lifestyle / LI-03 / Inconsistent sleep timing",
+                                "meta": "agni 2, manas 1, ojas 1, prana 1, nidra 2, vikriti 2",
+                                "note": "dosha: vata | subDosha: prana_vayu | guna: chala | agniImplication: vishama_tendency | explanation: Inconsistent sleep timing destabilises Dinacharya and Agni rhythm."
+                        },
+                        {
+                                "label": "Row 308 · Lifestyle / LI-04 / Overexercise pattern",
+                                "meta": "agni 1, manas 1, ojas 3, prana 2, nidra 1, vikriti 2",
+                                "note": "dosha: pitta_vata | subDosha: vyana_vayu | dhatu: ojas_depletion | guna: ushna, ruksha | agniImplication: tikshna_tendency | explanation: Overexercise pattern depletes Ojas via Pitta-Vata aggravation."
+                        },
+                        {
+                                "label": "Row 309 · Lifestyle / LI-05 / Underexercise sustained",
+                                "meta": "agni 2, manas 1, ojas 1, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: kapha | dhatu: meda | guna: guru, manda | agniImplication: manda_tendency | explanation: Sustained sedentary pattern aggravates Kapha and slows Agni."
+                        },
+                        {
+                                "label": "Row 310 · Lifestyle / LI-06 / Regular yoga practice",
+                                "meta": "agni 1, manas 2, ojas 2, prana 2, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu_supportive | dhatu: ojas | guna: sattvic | explanation: Regular yoga supports tissue integrity, Prana, Manas."
+                        },
+                        {
+                                "label": "Row 311 · Lifestyle / LI-07 / Regular pranayama practice",
+                                "meta": "agni 1, manas 2, ojas 2, prana 3, nidra 1, vikriti 1",
+                                "note": "subDosha: prana_vayu_settled | dhatu: ojas | manas: sattvic_supportive | guna: sattvic | explanation: Regular pranayama directly supports Prana Vayu balance."
+                        },
+                        {
+                                "label": "Row 312 · Lifestyle / LI-08 / Regular meditation",
+                                "meta": "manas 3, ojas 2, prana 2, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu_settled | guna: sattvic | dhatu: ojas | explanation: Regular meditation supports Sattvic Manas and Ojas."
+                        },
+                        {
+                                "label": "Row 313 · Lifestyle / LI-09 / High work stress sustained",
+                                "meta": "agni 1, manas 3, ojas 3, prana 2, nidra 2, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: sadhaka_pitta, vyana_vayu | srotas: manovaha | dhatu: ojas_depletion | explanation: Sustained work stress combines Vata-Pitta aggravation with Ojas depletion."
+                        },
+                        {
+                                "label": "Row 314 · Lifestyle / LI-10 / Recent travel disruption",
+                                "meta": "agni 2, manas 1, ojas 1, prana 1, nidra 2, vikriti 2",
+                                "note": "dosha: vata | subDosha: samana_vayu, prana_vayu | srotas: annavaha | guna: chala | agniImplication: vishama_tendency | explanation: Travel disruption destabilises Dinacharya and Agni."
+                        },
+                        {
+                                "label": "Row 315 · Lifestyle / LI-11 / Social isolation pattern",
+                                "meta": "manas 3, ojas 2, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: vata | manas: tamasic_tendency | srotas: manovaha | explanation: Social isolation pattern indicates Vata-Manas with Tamas tendency."
+                        },
+                        {
+                                "label": "Row 316 · Lifestyle / LI-12 / Caffeine high consumption",
+                                "meta": "agni 1, manas 2, ojas 2, prana 2, nidra 2, vikriti 2",
+                                "note": "dosha: vata_pitta | subDosha: sadhaka_pitta, vyana_vayu | guna: ushna, laghu, tikshna | agniImplication: tikshna_tendency | dhatu: ojas_depletion | explanation: High caffeine intake aggravates Vata-Pitta."
+                        },
+                        {
+                                "label": "Row 317 · Lifestyle / LI-13 / Regular alcohol consumption",
+                                "meta": "agni 2, manas 1, ojas 3, prana 1, nidra 1, vikriti 2",
+                                "note": "dosha: pitta | dhatu: ojas_depletion, rasa_compromise | srotas: raktavaha | guna: ushna, tikshna, snigdha | agniImplication: ama_accumulation_risk | explanation: Regular alcohol consumption aggravates Pitta and depletes Ojas."
+                        },
+                        {
+                                "label": "Row 318 · Lifestyle / LI-14 / Late screen time pattern",
+                                "meta": "manas 2, ojas 1, prana 1, nidra 3, vikriti 1",
+                                "note": "dosha: vata_pitta | subDosha: sadhaka_pitta, prana_vayu | srotas: manovaha | guna: chala, ushna | explanation: Late screen time aggravates Sadhaka Pitta and disrupts Nidra onset."
+                        },
+                        {
+                                "label": "Row 319 · Lifestyle / LI-15 / Outdoor activity regular",
+                                "meta": "agni 1, manas 1, ojas 2, prana 2, nidra 1, vikriti 1",
+                                "note": "manas: sattvic_supportive | subDosha: prana_vayu_supportive | guna: sattvic | explanation: Outdoor activity supports tridoshic balance."
+                        }
+                ]
+        }
+];
+
+      const nslModificationRulesBySection = [
+        {
+                "title": "4.1 Climate Overlay",
+                "meta": "4 rules",
+                "items": [
+                        {
+                                "label": "mod_climate_hot_pitta · Hot day with Pitta context",
+                                "meta": "climate_overlay · overlay",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 24h (one climate overlay per day). Action: overlay.bias_pillar(nutrition, direction=cooling, weight=+2); overlay.suppress_category(intense_activity, lifestyle); overlay.boost_category(cooling_beverages); overlay.boost_category(pranayama_sheetali, lifestyle)"
+                        },
+                        {
+                                "label": "mod_climate_cold_vata · Cold dry day with Vata context",
+                                "meta": "climate_overlay · overlay",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 24h. Action: overlay.bias_pillar(nutrition, direction=warming_grounding, weight=+2); overlay.boost_category(snehana_lifestyle); overlay.boost_category(warm_oily_foods); overlay.boost_category(abhyanga, lifestyle)"
+                        },
+                        {
+                                "label": "mod_climate_humid_kapha · High humidity with Kapha context",
+                                "meta": "climate_overlay · overlay",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 24h. Action: overlay.bias_pillar(nutrition, direction=light_dry, weight=+2); overlay.boost_category(deepana_herbs); overlay.suppress_category(heavy_dairy); overlay.boost_category(brisk_movement, lifestyle)"
+                        },
+                        {
+                                "label": "mod_climate_high_aqi · High AQI day (any persona)",
+                                "meta": "climate_overlay · overlay, safety",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 24h. Action: overlay.boost_category(pranavaha_support); overlay.boost_category(turmeric_ginger_warming); overlay.suppress_category(outdoor_intense_practice, lifestyle); IF aqi > 250 -> escalate_twin(template=high_aqi_caution)"
+                        }
+                ]
+        },
+        {
+                "title": "4.2 Lunar Overlay (Jyotish)",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_lunar_ekadashi · Ekadashi (11th tithi)",
+                                "meta": "lunar_overlay · overlay, narration_only",
+                                "note": "Affects: nutrition. Cooldown: Cycles naturally (twice per lunar month). Action: overlay.bias_pillar(nutrition, direction=langhana, weight=+2); overlay.boost_category(light_easily_digested); overlay.suppress_category(heavy_oily); narration_only.frame_as_tradition"
+                        },
+                        {
+                                "label": "mod_lunar_purnima · Purnima (full moon)",
+                                "meta": "lunar_overlay · overlay",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: Cycles naturally (monthly). Action: overlay.bias_pillar(nutrition, direction=cooling_watery, weight=+1); overlay.boost_category(cooling_foods); overlay.boost_category(moonlight_walk, lifestyle); IF persona.pitta_state elevated -> overlay.boost_category(brahmi)"
+                        },
+                        {
+                                "label": "mod_lunar_amavasya · Amavasya (new moon)",
+                                "meta": "lunar_overlay · overlay, narration_only",
+                                "note": "Affects: lifestyle. Cooldown: Cycles naturally (monthly). Action: overlay.bias_pillar(lifestyle, direction=vata_anchoring, weight=+2); overlay.boost_category(grounding_practices); overlay.boost_category(early_bedtime); narration_only.frame_as_tradition"
+                        }
+                ]
+        },
+        {
+                "title": "4.3 Astro Overlay (Jyotish-first)",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_astro_saturn_active · Saturn active in user chart (transit or Mahadasha)",
+                                "meta": "astro_overlay · overlay, narration_only",
+                                "note": "Affects: lifestyle. Cooldown: 24h. Action: overlay.bias_pillar(lifestyle, direction=vata_anchoring, weight=+1); overlay.boost_category(routine_consistency); overlay.boost_category(abhyanga); narration_only.frame_as_tradition_no_clinical_claim"
+                        },
+                        {
+                                "label": "mod_astro_mars_active · Mars active in user chart",
+                                "meta": "astro_overlay · overlay, narration_only",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 24h. Action: overlay.bias_pillar(nutrition, direction=pitta_pacifying, weight=+1); overlay.suppress_category(spicy_heating); overlay.boost_category(brahmi, cooling_practices); narration_only.frame_as_tradition_no_clinical_claim"
+                        },
+                        {
+                                "label": "mod_astro_eclipse_window · Eclipse window (solar or lunar)",
+                                "meta": "astro_overlay · overlay, narration_only",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: Eclipse-cycle natural. Action: overlay.bias_pillar(nutrition, direction=light_clean, weight=+1); overlay.suppress_category(rich_heavy); overlay.boost_category(introspective_practice); narration_only.frame_as_tradition_no_clinical_claim"
+                        }
+                ]
+        },
+        {
+                "title": "4.4 Meal Signal",
+                "meta": "4 rules",
+                "items": [
+                        {
+                                "label": "mod_meal_cold_raw_pattern · Cold/raw meal pattern (Vata or Ama-promoting)",
+                                "meta": "meal_signal · overlay, regenerate",
+                                "note": "Affects: nutrition. Cooldown: Pattern triggers fire at most once per 5-day window. Action: overlay.bias_pillar(nutrition, direction=warm_cooked, weight=+2) for next 2 days; IF pattern persists 7+ days -> regenerate.pillar(nutrition) with warming_cooked emphasis"
+                        },
+                        {
+                                "label": "mod_meal_pitta_aggravating_pattern · Pitta-aggravating meal pattern (Pitta context)",
+                                "meta": "meal_signal · overlay, regenerate",
+                                "note": "Affects: nutrition. Cooldown: 5-day window. Action: overlay.bias_pillar(nutrition, direction=pitta_pacifying, weight=+2); overlay.suppress_category(spicy_sour); IF pattern persists 7+ days -> regenerate.pillar(nutrition)"
+                        },
+                        {
+                                "label": "mod_meal_late_dining_pattern · Late dining pattern (Vata-mobilising, Ama-promoting)",
+                                "meta": "meal_signal · overlay, regenerate",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 7-day window. Action: overlay.bias_pillar(lifestyle, direction=earlier_dinner, weight=+2); overlay.boost_category(light_evening_dinner); IF pattern persists -> regenerate.pillar(lifestyle) + regenerate.pillar(nutrition)"
+                        },
+                        {
+                                "label": "mod_meal_safety_event · Single-meal safety event",
+                                "meta": "meal_signal · safety",
+                                "note": "Affects: nutrition. Cooldown: No cooldown. Action: safety.surface_alternative(disliked_item, catalog_substitute); safety.escalate_twin(template=meal_safety_event); IF severe -> safety.surface_professional_care()"
+                        }
+                ]
+        },
+        {
+                "title": "4.5 Lifestyle Signal",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_lifestyle_practice_drop · Practice adherence drop",
+                                "meta": "lifestyle_signal · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: 7-day window. Action: overlay.surface_alternative(longer_practice, shorter_practice_alternative); overlay.boost_category(micro_practice_options); IF persists 14+ days -> regenerate.pillar(lifestyle) with simpler practice load"
+                        },
+                        {
+                                "label": "mod_lifestyle_late_bedtime · Late bedtime pattern",
+                                "meta": "lifestyle_signal · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: 7-day window. Action: overlay.bias_pillar(lifestyle, direction=vata_anchoring_evening, weight=+2); overlay.boost_category(yoga_nidra_pre_bed); IF persists -> regenerate.pillar(lifestyle) with stronger evening protocol"
+                        },
+                        {
+                                "label": "mod_lifestyle_overexercise · Exercise intensity disconnect from recovery",
+                                "meta": "lifestyle_signal · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: 7-day window. Action: overlay.bias_pillar(lifestyle, direction=recovery_emphasis, weight=+2); overlay.suppress_category(intense_practice); overlay.boost_category(yin_restorative); IF persists -> regenerate.pillar(lifestyle) with rebalanced training load"
+                        }
+                ]
+        },
+        {
+                "title": "4.6 Adherence Gap",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_adherence_single_supplement_skipped · Single supplement skipped repeatedly",
+                                "meta": "adherence_gap · overlay, regenerate",
+                                "note": "Affects: supplement. Cooldown: Per supplement, 7-day window. Action: overlay.surface_alternative(supplement, food_form_alternative) for next 7 days; IF persists 5+ more days -> regenerate.pillar(supplement) swapping for alternative"
+                        },
+                        {
+                                "label": "mod_adherence_full_protocol_gap · Full protocol non-adherence",
+                                "meta": "adherence_gap · regenerate, safety",
+                                "note": "Affects: supplement. Cooldown: 14-day window. Action: regenerate.pillar(supplement) with simpler protocol (fewer items, simpler dosing); safety.escalate_twin(template=protocol_simplification_offer)"
+                        },
+                        {
+                                "label": "mod_adherence_weekday_pattern · Weekday-specific skip pattern",
+                                "meta": "adherence_gap · overlay, narration_only",
+                                "note": "Affects: supplement. Cooldown: 14-day window. Action: overlay.add_temporary(weekend_simpler_routine_reminder); narration_only.acknowledge_pattern; no regenerate (this is user pattern, not protocol failure)"
+                        }
+                ]
+        },
+        {
+                "title": "4.7 Acute Flare",
+                "meta": "4 rules",
+                "items": [
+                        {
+                                "label": "mod_flare_headache_pitta · Headache with Pitta context",
+                                "meta": "acute_flare · overlay, safety",
+                                "note": "Affects: nutrition. Cooldown: Per symptom, 4h between Twin acknowledgments. Action: overlay.bias_pillar(nutrition, direction=cooling, weight=+2); overlay.suppress_category(spicy_sour_today); overlay.boost_category(coconut_water, sweet_fruits); safety.escalate_twin(template=acute_pitta_headache)"
+                        },
+                        {
+                                "label": "mod_flare_insomnia_vata · Insomnia with Vata context",
+                                "meta": "acute_flare · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: Per symptom, 4h. Action: overlay.bias_pillar(lifestyle, direction=vata_anchoring, weight=+2); overlay.boost_category(yoga_nidra, abhyanga_feet); overlay.add_temporary(warm_milk_with_nutmeg_if_dairy_tolerated); IF persists 3+ nights -> regenerate.pillar(lifestyle)"
+                        },
+                        {
+                                "label": "mod_flare_digestive_acute · Acute digestive flare",
+                                "meta": "acute_flare · overlay, safety",
+                                "note": "Affects: nutrition. Cooldown: 4h. Action: overlay.bias_pillar(nutrition, direction=langhana_warm, weight=+3); overlay.suppress_category(all_heavy); overlay.boost_category(ginger_tea, kanji); safety.escalate_twin(template=digestive_flare_check); IF severe or persistent -> safety.surface_professional_care"
+                        },
+                        {
+                                "label": "mod_flare_severe_safety · Severe symptom requiring professional care",
+                                "meta": "acute_flare · safety",
+                                "note": "Affects: none - escalate out of NSL surface. Cooldown: No cooldown. Action: safety.surface_professional_care(emergency=true); safety.escalate_twin(template=professional_care_required); NO NSL modification - this is not an NSL situation"
+                        }
+                ]
+        },
+        {
+                "title": "4.8 Repeated Symptom Trend",
+                "meta": "4 rules",
+                "items": [
+                        {
+                                "label": "mod_trend_bloating_ama · Repeated bloating - Ama concern",
+                                "meta": "repeated_symptom_trend · regenerate, safety",
+                                "note": "Affects: nutrition, supplement. Cooldown: 14-day window. Action: regenerate.pillar(nutrition) with Ama-clearing emphasis; activate Ama gate per IC2 (blocks rasayana/brimhana); regenerate.pillar(supplement) within Ama gate constraints"
+                        },
+                        {
+                                "label": "mod_trend_anxiety_vata · Repeated anxiety - Vata escalation",
+                                "meta": "repeated_symptom_trend · overlay, regenerate",
+                                "note": "Affects: nutrition, lifestyle, supplement (if Ama clear). Cooldown: 14-day window. Action: regenerate.pillar(lifestyle) with stronger Vata-anchoring; regenerate.pillar(nutrition) toward warming grounding; overlay.boost_category(brahmi, ashwagandha_if_ama_clear)"
+                        },
+                        {
+                                "label": "mod_trend_low_energy_ojas · Persistent low energy - Ojas concern",
+                                "meta": "repeated_symptom_trend · regenerate",
+                                "note": "Affects: nutrition, supplement. Cooldown: 14-day window. Action: regenerate.pillar(nutrition) toward Ojas-building (with Ama check); IF ama_gate active -> regenerate without rasayana, focus on Ama clearance first; IF ama_gate clear -> regenerate with Ojas-rasayanas (Chyawanprash, Ashwagandha)"
+                        },
+                        {
+                                "label": "mod_trend_skin_pitta_rakta · Repeated skin issues - Pitta/Rakta",
+                                "meta": "repeated_symptom_trend · overlay, regenerate",
+                                "note": "Affects: nutrition, supplement. Cooldown: 21-day window. Action: regenerate.pillar(nutrition) with Pitta-pacifying emphasis; overlay.boost_category(manjishtha, neem_if_appropriate); regenerate.pillar(supplement) with rakta-shodhana category"
+                        }
+                ]
+        },
+        {
+                "title": "4.9 Lab Signal",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_lab_metabolic_markers · Elevated lipids / fasting glucose / HbA1c",
+                                "meta": "lab_signal · regenerate, safety",
+                                "note": "Affects: nutrition. Cooldown: Per lab result. Action: regenerate.pillar(nutrition) with lekhana / Kapha-clearing emphasis; safety.escalate_twin(template=metabolic_markers_note); recommend medical consultation in parallel"
+                        },
+                        {
+                                "label": "mod_lab_inflammation_markers · Elevated inflammation (CRP / ESR / ferritin)",
+                                "meta": "lab_signal · overlay, regenerate, safety",
+                                "note": "Affects: nutrition, supplement, lifestyle. Cooldown: Per lab result. Action: regenerate all three pillars with systemic_ama emphasis; activate Ama gate per IC2; overlay.boost_category(turmeric, manjishtha, guduchi); safety.escalate_twin(template=inflammation_note)"
+                        },
+                        {
+                                "label": "mod_lab_anemia_rakta_kshaya · Low hemoglobin / ferritin - Rakta Kshaya",
+                                "meta": "lab_signal · regenerate",
+                                "note": "Affects: nutrition, supplement. Cooldown: Per lab result. Action: IF ama_gate clear -> regenerate.pillar(nutrition) with rakta-building emphasis (pomegranate, dates, beets); regenerate.pillar(supplement) with rakta-supportive options. IF ama_gate active -> clear Ama first"
+                        }
+                ]
+        },
+        {
+                "title": "4.10 Tongue Scan Signal",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_tongue_heavy_coating_ama_active · Heavy coating detected - Ama gate active",
+                                "meta": "tongue_scan_signal · regenerate, safety",
+                                "note": "Affects: nutrition, supplement. Cooldown: 7-day window. Action: activate Ama gate via IC2; regenerate.pillar(supplement) within Ama gate (blocks rasayana/brimhana); regenerate.pillar(nutrition) with Ama-pachana emphasis"
+                        },
+                        {
+                                "label": "mod_tongue_coating_clearing · Coating clearing - Ama gate release",
+                                "meta": "tongue_scan_signal · regenerate, safety",
+                                "note": "Affects: nutrition, supplement. Cooldown: 7-day window. Action: release Ama gate via IC2; regenerate.pillar(supplement) - rasayana/brimhana categories now permitted; regenerate.pillar(nutrition) toward Shamana/Rasayana phase"
+                        },
+                        {
+                                "label": "mod_tongue_red_cracks_pitta · Red tongue with cracks - Pitta heat with Rasa Kshaya",
+                                "meta": "tongue_scan_signal · regenerate",
+                                "note": "Affects: nutrition, supplement. Cooldown: 14-day window. Action: regenerate.pillar(nutrition) toward Pitta-pacifying AND Rasa-building (cooling, sweet, oily-only-if-Ama-clear); IF Ama clear -> regenerate.pillar(supplement) with Shatavari, Yashtimadhu"
+                        }
+                ]
+        },
+        {
+                "title": "4.11 Wearable Signal",
+                "meta": "4 rules",
+                "items": [
+                        {
+                                "label": "mod_wearable_hrv_drop_sustained · Sustained HRV drop - autonomic strain",
+                                "meta": "wearable_signal · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: 14-day window. Action: overlay.bias_pillar(lifestyle, direction=parasympathetic, weight=+2); overlay.boost_category(yoga_nidra_daily); IF persists 14+ days -> regenerate.pillar(lifestyle) with recovery focus"
+                        },
+                        {
+                                "label": "mod_wearable_resting_hr_elevated_pitta · Resting HR trending up - Pitta context",
+                                "meta": "wearable_signal · overlay, regenerate",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 14-day window. Action: regenerate.pillar(nutrition) with Pitta-pacifying emphasis; overlay.suppress_category(coffee, alcohol, spicy); overlay.boost_category(cooling_practices)"
+                        },
+                        {
+                                "label": "mod_wearable_short_sleep_pattern · Sleep duration short - sustained",
+                                "meta": "wearable_signal · regenerate, safety",
+                                "note": "Affects: lifestyle. Cooldown: 14-day window. Action: regenerate.pillar(lifestyle) prioritising Yoga Nidra, evening protocol, earlier bedtime; safety.escalate_twin(template=sleep_concern)"
+                        },
+                        {
+                                "label": "mod_wearable_low_activity_kapha · Low activity sustained - Kapha context",
+                                "meta": "wearable_signal · overlay, regenerate",
+                                "note": "Affects: lifestyle. Cooldown: 14-day window. Action: regenerate.pillar(lifestyle) with movement emphasis; overlay.boost_category(brisk_morning_movement); overlay.suppress_category(daytime_nap)"
+                        }
+                ]
+        },
+        {
+                "title": "4.12 Current State Shift",
+                "meta": "3 rules",
+                "items": [
+                        {
+                                "label": "mod_state_ama_gate_activated · Ama gate newly activated",
+                                "meta": "current_state_shift · regenerate, safety",
+                                "note": "Affects: nutrition, supplement. Cooldown: 7-day window. Action: activate Ama gate per IC2; regenerate.pillar(supplement) blocking rasayana/brimhana; regenerate.pillar(nutrition) toward Ama-clearance"
+                        },
+                        {
+                                "label": "mod_state_ama_gate_released · Ama gate newly released",
+                                "meta": "current_state_shift · regenerate, safety",
+                                "note": "Affects: nutrition, supplement. Cooldown: 7-day window. Action: release Ama gate per IC2; regenerate.pillar(supplement) with rasayana/brimhana now permitted; regenerate.pillar(nutrition) toward Shamana phase"
+                        },
+                        {
+                                "label": "mod_state_dominant_vikriti_change · Dominant Vikriti dosha changed",
+                                "meta": "current_state_shift · regenerate",
+                                "note": "Affects: nutrition, supplement, lifestyle. Cooldown: 7-day window. Action: regenerate all three pillars with new dominant Vikriti pattern as primary modulator"
+                        }
+                ]
+        },
+        {
+                "title": "4.13 Seasonal Context Change (Ritu)",
+                "meta": "2 rules",
+                "items": [
+                        {
+                                "label": "mod_ritu_sandhi_pre_transition · Ritu Sandhi - 15-day window before transition",
+                                "meta": "seasonal_context_change · overlay, narration_only",
+                                "note": "Affects: nutrition, lifestyle. Cooldown: 6x per year (one per Ritu). Action: overlay.bias_pillar(nutrition, direction=incoming_ritu, weight=+1); overlay.bias_pillar(lifestyle, direction=incoming_ritu, weight=+1); narration_only.frame_as_transition"
+                        },
+                        {
+                                "label": "mod_ritu_full_transition · Full Ritu transition",
+                                "meta": "seasonal_context_change · regenerate",
+                                "note": "Affects: nutrition, supplement, lifestyle. Cooldown: 6x per year. Action: regenerate all three pillars with new Ritu as seasonal modulator on top of base persona logic"
+                        }
+                ]
+        },
+        {
+                "title": "4.14 Protocol Completion",
+                "meta": "2 rules",
+                "items": [
+                        {
+                                "label": "mod_completion_outcomes_positive · Completion with positive outcomes",
+                                "meta": "protocol_completion · regenerate",
+                                "note": "Affects: whichever pillar completed. Cooldown: Per completion. Action: regenerate.extend or regenerate Phase 2 of plan with refinements; preserve what worked"
+                        },
+                        {
+                                "label": "mod_completion_outcomes_mixed · Completion with mixed or poor outcomes",
+                                "meta": "protocol_completion · regenerate",
+                                "note": "Affects: whichever pillar completed. Cooldown: Per completion. Action: regenerate.pillar with different approach (lower intensity, different category emphasis, simpler structure); review what did not work"
+                        }
+                ]
+        },
+        {
+                "title": "4.15 Goal Change",
+                "meta": "2 rules",
+                "items": [
+                        {
+                                "label": "mod_goal_added · New health goal added",
+                                "meta": "goal_change · regenerate",
+                                "note": "Affects: nutrition, supplement, lifestyle. Cooldown: No cooldown. Action: regenerate all three pillars with new goal as additional emphasis layer alongside existing persona logic"
+                        },
+                        {
+                                "label": "mod_goal_removed · Health goal removed",
+                                "meta": "goal_change · regenerate",
+                                "note": "Affects: nutrition, supplement, lifestyle. Cooldown: No cooldown. Action: regenerate all three pillars de-emphasising the removed goal; rebalance toward remaining goals"
+                        }
+                ]
+        },
+        {
+                "title": "4.16 User Preference Change",
+                "meta": "2 rules",
+                "items": [
+                        {
+                                "label": "mod_preference_dislike · User dislikes a specific item or category",
+                                "meta": "user_preference_change · overlay",
+                                "note": "Affects: whichever pillar contains the item. Cooldown: No cooldown. Action: overlay.suppress_category(disliked_item) in current plan; flag for next regeneration; surface alternative from catalog"
+                        },
+                        {
+                                "label": "mod_preference_intensity · Intensity preference change",
+                                "meta": "user_preference_change · regenerate",
+                                "note": "Affects: as requested. Cooldown: No cooldown. Action: regenerate all relevant pillars with new intensity setting"
+                        }
+                ]
+        },
+        {
+                "title": "4.17 Medication / Condition Update",
+                "meta": "1 rules",
+                "items": [
+                        {
+                                "label": "mod_medication_new · New medication or condition reported",
+                                "meta": "medication_condition_update · regenerate, safety",
+                                "note": "Affects: supplement (paused), nutrition and lifestyle (conservative regenerate). Cooldown: No cooldown. Action: safety.pause(supplement pillar) per existing safety-review path; IC2 re-evaluates full supplement protocol against new medication/condition; regenerate.pillar(nutrition) and regenerate.pillar(lifestyle) conservatively avoiding known conflicts; safety.escalate_twin(template=medication_review_required)"
+                        }
+                ]
+        },
+        {
+                "title": "4.18 Side Effect / Intolerance",
+                "meta": "1 rules",
+                "items": [
+                        {
+                                "label": "mod_side_effect_specific_item · Specific item causing intolerance or side effect",
+                                "meta": "side_effect_intolerance · overlay, safety",
+                                "note": "Affects: specific item's pillar. Cooldown: No cooldown. Action: safety.pause(specific_item); IC2 logs intolerance against item for future filtering; overlay.surface_alternative(item, catalog_substitute); safety.escalate_twin(template=intolerance_acknowledged)"
+                        }
+                ]
+        },
+        {
+                "title": "4.19 Safety Contraindication",
+                "meta": "1 rules",
+                "items": [
+                        {
+                                "label": "mod_safety_ic2_blocked · IC2 blocks a previously-approved item",
+                                "meta": "safety_contraindication · overlay, safety",
+                                "note": "Affects: specific item's pillar. Cooldown: No cooldown. Action: safety.pause(specific_item); overlay.surface_alternative(item, IC2-cleared catalog substitute); safety.escalate_twin(template=safety_review_completed)"
+                        }
+                ]
+        }
+];
+      // END code-derived inventory.
+
       const triangulationLogic = {
         thresholds: [
           "Active finding floor: effectiveConfidence >= 0.15.",
@@ -874,6 +2995,25 @@
           "conflict: opposing directions are recorded or resolved by authority rules.",
           "solo: one source can remain evidence-only if below threshold or authority.",
           "no_evidence: no active finding after decay, baseline, and replacement checks."
+        ],
+        authority: [
+          "Fresh evidence can resolve conflict by deprioritizing stale or decaying contradictory findings.",
+          "Ama conflict authority is tongue or blood_lab; systemic blood/inflammation Ama prefers blood_lab.",
+          "Agni conflict authority is tongue.",
+          "Prakriti/dosha constitutional findings can be questionnaire-only source authority.",
+          "Quantifiable dhatu authority is blood_lab; functional dhatu authority uses sustained daily_checkin/questionnaire patterns.",
+          "Sub-dosha authority can be wearable for prana/vyana/samana and daily_checkin for apana.",
+          "Ojas conflict authority is wearable; Manas conflict authority is daily_checkin with sustained recent pattern.",
+          "Safety-relevant findings are retained even when another source resolves the ordinary conflict."
+        ],
+        writeEligibility: [
+          "chat_derived is always evidence-only and never writes current state.",
+          "exposure writes through overlay/context paths, not direct current-state writes.",
+          "single or sparse meal evidence stays pattern-only until it qualifies as a sustained recent pattern.",
+          "two or more independent write-eligible source groups can write when confidence crosses the domain threshold.",
+          "solo writes are allowed only for documented source/domain authority pairs, such as tongue Agni/Ama, blood systemic Ama, wearable Vayu, questionnaire constitutional context, and supportive practice signals.",
+          "hierarchy findings and meta-pattern findings can write current state when their source rules qualify.",
+          "same-source replacement keeps the fresher or stronger finding and suppresses older duplicates."
         ],
         metaPatterns: [
           "dhatu + srotas -> tissue_channel_pattern when roots match.",
@@ -1103,12 +3243,45 @@
       const detail = document.getElementById("detail-panel");
       let selected = 0;
 
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function hrefForRepoPath(path) {
+        return `${repoBase}${encodeURI(path)}`;
+      }
+
+      function sourceLink(source) {
+        return `<a class="source-link" href="${hrefForRepoPath(source.path)}" target="_blank" rel="noreferrer">${escapeHtml(source.label)}</a>`;
+      }
+
+      function codeLink(path) {
+        const label = codeAnchorLabels[path] ?? path;
+        return `<a class="code-link" href="${hrefForRepoPath(path)}" title="${escapeHtml(path)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+      }
+
+      function sourceLinks(sources) {
+        return `
+          <div class="source-links">
+            <strong>Source docs</strong>
+            ${sources.map((source) => sourceLink(source)).join("")}
+          </div>
+        `;
+      }
+
       function list(items) {
-        return items.map((item) => `<li>${item}</li>`).join("");
+        return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
       }
 
       function laneList(items) {
-        return items.map((item) => `<li><span>${item.name}</span><small>${item.format}</small></li>`).join("");
+        return items
+          .map((item) => `<li><span>${escapeHtml(item.name)}</span><small>${escapeHtml(item.format)}</small></li>`)
+          .join("");
       }
 
       function inventory(items) {
@@ -1116,16 +3289,25 @@
           <ul class="inventory-list">
             ${items.map((item) => {
               const entry = typeof item === "string" ? { label: item, meta: "", note: "" } : item;
-              return `<li><span><b>${entry.label}</b>${entry.note ? `<br>${entry.note}` : ""}</span><small>${entry.meta ?? ""}</small></li>`;
+              return `<li><span><b>${escapeHtml(entry.label)}</b>${entry.note ? `<br>${escapeHtml(entry.note)}` : ""}</span><small>${escapeHtml(entry.meta ?? "")}</small></li>`;
             }).join("")}
           </ul>
         `;
       }
 
+      function groupedInventory(groups) {
+        return groups.map((group) => `
+          <details class="sub-drilldown">
+            <summary>${escapeHtml(group.title)}<span>${escapeHtml(group.meta)}</span></summary>
+            ${inventory(group.items)}
+          </details>
+        `).join("");
+      }
+
       function drilldown(title, meta, content, open = false) {
         return `
           <details class="drilldown" ${open ? "open" : ""}>
-            <summary>${title}<span>${meta}</span></summary>
+            <summary>${escapeHtml(title)}<span>${escapeHtml(meta)}</span></summary>
             <div class="drilldown-body">${content}</div>
           </details>
         `;
@@ -1136,8 +3318,8 @@
           <div class="logic-grid">
             ${items.map((item) => `
               <article class="logic-box">
-                <strong>${item.title}</strong>
-                <p>${item.body}</p>
+                <strong>${escapeHtml(item.title)}</strong>
+                <p>${escapeHtml(item.body)}</p>
               </article>
             `).join("")}
           </div>
@@ -1145,15 +3327,16 @@
       }
 
       function formulaList(items) {
-        return items.map((item) => `<div class="formula-line">${item}</div>`).join("");
+        return items.map((item) => `<div class="formula-line">${escapeHtml(item)}</div>`).join("");
       }
 
-      function codeRefs(refs) {
+      function codeRefs(refs, sources = []) {
         return `
           <aside class="trace-card">
             <strong>Live code anchors</strong>
             <p>This page is describing current repo implementation, not an aspirational diagram.</p>
-            <ul>${refs.map((ref) => `<li class="code-ref">${ref}</li>`).join("")}</ul>
+            <ul>${refs.map((ref) => `<li class="code-ref">${codeLink(ref)}</li>`).join("")}</ul>
+            ${sources.length > 0 ? sourceLinks(sources) : ""}
           </aside>
         `;
       }
@@ -1194,7 +3377,7 @@
               <li>Wearables are passive and trend-oriented.</li>
               <li>User-fed inputs are explicit and context-rich.</li>
               <li>Exposure is environmental context acting on the Twin.</li>
-              <li class="code-ref">${codeAnchors.interpretation}</li>
+              <li class="code-ref">${codeLink(codeAnchors.interpretation)}</li>
             </ul>
           </aside>
         `;
@@ -1207,6 +3390,7 @@
             <div class="detail-stack">
               ${drilldown("Encoded interpretation libraries", "live inventory", inventory(encodedInterpretationLibraries), true)}
               ${drilldown("IC3 matrix input groups", "318 rows", inventory(interpretationGroups.map((label) => ({ label, meta: "encoded" }))))}
+              ${drilldown("All encoded IC3 interpretations", "grouped by input", groupedInventory(ic3RowsByGroup))}
               ${drilldown(
                 "What gets written",
                 "InterpretationHit",
@@ -1219,7 +3403,10 @@
               )}
             </div>
           </div>
-          ${codeRefs([codeAnchors.interpretation, codeAnchors.ic3])}
+          ${codeRefs(
+            [codeAnchors.interpretation, codeAnchors.ic3],
+            [sourceDocs.pillarMatrix, sourceDocs.pillarProjection, sourceDocs.healthScore]
+          )}
         `;
       }
 
@@ -1231,11 +3418,16 @@
               ${drilldown("Current-state write logic", "thresholds", formulaList(triangulationLogic.thresholds), true)}
               ${drilldown("Recency decay windows", "source groups", inventory(triangulationLogic.decay.map((label) => ({ label, meta: "decay" }))))}
               ${drilldown("Triangulation patterns", "all actions", inventory(triangulationLogic.patterns.map((label) => ({ label, meta: "pattern" }))))}
+              ${drilldown("Source authority and conflict resolution", "implemented tables", inventory(triangulationLogic.authority.map((label) => ({ label, meta: "authority" }))))}
               ${drilldown("Derived meta-patterns", "implemented", inventory(triangulationLogic.metaPatterns.map((label) => ({ label, meta: "derived" }))))}
+              ${drilldown("State write eligibility", "current-state gate", inventory(triangulationLogic.writeEligibility.map((label) => ({ label, meta: "gate" }))))}
               ${drilldown("MyTwin current-state payload", "written fields", inventory(triangulationLogic.outputs.map((label) => ({ label, meta: "field" }))))}
             </div>
           </div>
-          ${codeRefs([codeAnchors.triangulation])}
+          ${codeRefs(
+            [codeAnchors.triangulation],
+            [sourceDocs.triangulationSpec, sourceDocs.baselineSpec, sourceDocs.triangulationClarification]
+          )}
         `;
       }
 
@@ -1260,7 +3452,10 @@
               )}
             </div>
           </div>
-          ${codeRefs([codeAnchors.scoring])}
+          ${codeRefs(
+            [codeAnchors.scoring],
+            [sourceDocs.healthScore, sourceDocs.pillarMatrix, sourceDocs.pillarProjection]
+          )}
         `;
       }
 
@@ -1272,6 +3467,7 @@
               ${drilldown("Project generation sequence", "backend-owned", inventory(nslGenerationSteps.map((label, index) => ({ label, meta: `step ${index + 1}` }))), true)}
               ${drilldown("Project archetypes", "9 active", inventory(projectArchetypes.map((label) => ({ label, meta: "archetype" }))))}
               ${drilldown("NSL modification rule sections", "52 rules", inventory(nslModificationSections.map((label) => ({ label, meta: "encoded" }))))}
+              ${drilldown("All encoded NSL modification rules", "52 rules", groupedInventory(nslModificationRulesBySection))}
               ${drilldown("Modification writeback sequence", "overlay/regenerate/no-op", inventory(nslModificationSteps.map((label, index) => ({ label, meta: `step ${index + 1}` }))))}
               ${drilldown(
                 "Catalog and delivery",
@@ -1285,7 +3481,10 @@
               )}
             </div>
           </div>
-          ${codeRefs([codeAnchors.project, codeAnchors.lifecycle, codeAnchors.nsl, codeAnchors.delivery, codeAnchors.nslRules, codeAnchors.nslWriteback])}
+          ${codeRefs(
+            [codeAnchors.project, codeAnchors.lifecycle, codeAnchors.nsl, codeAnchors.delivery, codeAnchors.nslRules, codeAnchors.nslWriteback],
+            [sourceDocs.spec8, sourceDocs.nslTriggerRegistry, sourceDocs.nslRuleSet, sourceDocs.renderContract]
+          )}
         `;
       }
 
