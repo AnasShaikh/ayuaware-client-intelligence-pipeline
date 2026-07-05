@@ -721,13 +721,16 @@
         line-height: 1.42;
       }
 
-      .frontend-overview {
+      .frontend-overview,
+      .infra-overview {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
       }
 
       .frontend-overview article,
+      .infra-overview article,
+      .infra-card,
       .frontend-screen,
       .screenshot-card {
         border: 1px solid var(--line);
@@ -736,21 +739,195 @@
         box-shadow: 0 12px 34px rgba(16, 21, 47, 0.05);
       }
 
-      .frontend-overview article {
+      .frontend-overview article,
+      .infra-overview article {
         padding: 16px;
       }
 
-      .frontend-overview strong {
+      .frontend-overview strong,
+      .infra-overview strong {
         display: block;
         margin-bottom: 7px;
         font-size: 17px;
       }
 
-      .frontend-overview p {
+      .frontend-overview p,
+      .infra-overview p {
         margin: 0;
         color: var(--muted);
         font-size: 14px;
         line-height: 1.4;
+      }
+
+      .infra-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .infra-card {
+        padding: 18px;
+      }
+
+      .infra-card h2,
+      .infra-card h3 {
+        margin: 0 0 10px;
+      }
+
+      .infra-card p {
+        margin: 0 0 14px;
+        color: var(--muted);
+        line-height: 1.48;
+      }
+
+      .infra-flow {
+        display: grid;
+        gap: 10px;
+      }
+
+      .infra-step {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--soft);
+      }
+
+      .infra-step b {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .infra-step span {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--teal);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .infra-step p {
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .infra-detail-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .infra-detail {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--surface);
+        overflow: hidden;
+      }
+
+      .infra-detail summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .infra-detail summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .infra-detail summary b {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .infra-detail summary em {
+        color: var(--muted);
+        font-style: normal;
+        font-size: 13px;
+        font-weight: 750;
+        text-align: right;
+      }
+
+      .infra-detail-body {
+        display: grid;
+        gap: 14px;
+        padding: 0 18px 18px;
+      }
+
+      .infra-facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .infra-fact {
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--soft);
+      }
+
+      .infra-fact strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        color: var(--quiet);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .infra-fact span {
+        display: block;
+        color: var(--ink);
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .infra-detail-body ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .infra-source-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .infra-source-list a,
+      .infra-source-list span {
+        display: inline-flex;
+        min-height: 30px;
+        align-items: center;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--teal);
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .infra-safe-note {
+        padding: 14px;
+        border: 1px solid rgba(231, 131, 44, 0.24);
+        border-radius: 12px;
+        background: var(--orange-soft);
+        color: #7a4518;
+        font-size: 14px;
+        line-height: 1.45;
       }
 
       .frontend-layout {
@@ -934,6 +1111,7 @@
         .detail-panel,
         .runtime,
         .frontend-hero,
+        .infra-layout,
         .frontend-layout,
         .screen-body {
           grid-template-columns: 1fr;
@@ -943,7 +1121,8 @@
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        .frontend-overview {
+        .frontend-overview,
+        .infra-overview {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
@@ -1003,8 +1182,10 @@
         }
 
         .frontend-overview,
+        .infra-overview,
         .screen-gallery,
-        .screen-index {
+        .screen-index,
+        .infra-facts {
           grid-template-columns: 1fr;
         }
 
@@ -1020,6 +1201,7 @@
         <nav class="view-switcher" aria-label="Architecture guide sections">
           <button class="view-tab" type="button" data-view-button="backend" aria-selected="true">Backend</button>
           <button class="view-tab" type="button" data-view-button="frontend" aria-selected="false">Frontend</button>
+          <button class="view-tab" type="button" data-view-button="infrastructure" aria-selected="false">Infrastructure</button>
         </nav>
       </header>
 
@@ -1484,6 +1666,297 @@
               responsibility is interpretation, scoring, Project/NSL decisions,
               trigger logic, writeback, and traceable read models. The app should
               show either a value, a status, a limitation, or the next step.
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view-shell infrastructure-view" id="infrastructure-view" data-view-panel="infrastructure" hidden>
+        <section class="frontend-hero">
+          <div>
+            <h1>AyuAware Infrastructure</h1>
+            <p>
+              A public-safe map of where AyuAware runs: backend hosting,
+              database and storage, mobile releases, automation runtime,
+              and this documentation page.
+            </p>
+          </div>
+          <aside class="frontend-meta">
+            <span>No secrets exposed</span>
+            <p>
+              This page names providers and responsibilities. Access paths,
+              credentials, secret values, and SSH details remain in private ops
+              docs only.
+            </p>
+          </aside>
+        </section>
+
+        <section class="section">
+          <div class="infra-overview">
+            <article>
+              <strong>Backend runtime</strong>
+              <p>AWS App Runner serves the production API in the Mumbai region.</p>
+            </article>
+            <article>
+              <strong>Data layer</strong>
+              <p>AWS RDS stores structured app data; S3 stores uploads and build artifacts.</p>
+            </article>
+            <article>
+              <strong>Mobile release</strong>
+              <p>EAS, TestFlight, and OTA updates deliver the iOS app experience.</p>
+            </article>
+            <article>
+              <strong>Automation</strong>
+              <p>Hostinger hosts OpenClaw/AyuBot runtime pieces that talk to the backend.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section infra-layout">
+          <article class="infra-card">
+            <h2>How the hosted system fits together</h2>
+            <p>
+              Think of the app as three hosted surfaces: the iOS app, the AWS
+              backend, and the automation/docs layer around it. The backend is
+              the source of truth for user data and decisions.
+            </p>
+            <div class="infra-flow" aria-label="AyuAware infrastructure flow">
+              <div class="infra-step">
+                <span>1</span>
+                <div>
+                  <b>iOS app</b>
+                  <p>Users interact through the Expo iOS app distributed by TestFlight and updated by EAS OTA when the change is JS/UI-safe.</p>
+                </div>
+              </div>
+              <div class="infra-step">
+                <span>2</span>
+                <div>
+                  <b>AWS App Runner API</b>
+                  <p>The mobile app calls the production backend API. App Runner owns API execution, schedulers, auth checks, pipeline jobs, and read models.</p>
+                </div>
+              </div>
+              <div class="infra-step">
+                <span>3</span>
+                <div>
+                  <b>RDS, S3, and Secrets Manager</b>
+                  <p>RDS keeps structured records, S3 keeps uploads/artifacts, and Secrets Manager provides runtime secrets without exposing their values.</p>
+                </div>
+              </div>
+              <div class="infra-step">
+                <span>4</span>
+                <div>
+                  <b>Automation and docs</b>
+                  <p>Hostinger runs OpenClaw/AyuBot automation; GitHub Pages serves this sanitized client architecture page from a public mirror.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="infra-detail-stack">
+            <details class="infra-detail" open>
+              <summary>
+                <span>
+                  <b>Production backend</b>
+                  AWS App Runner is the active API host.
+                </span>
+                <em>AWS</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Provider</strong>
+                    <span>AWS</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Region</strong>
+                    <span>ap-south-1</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>API service</strong>
+                    <span>App Runner / ayuaware-backend</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Public API URL</strong>
+                    <span>dnzwwj2cjt.ap-south-1.awsapprunner.com</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>App Runner runs the NestJS backend, background schedulers, intelligence jobs, mobile read models, and protected internal routes.</li>
+                  <li>The service uses private VPC egress with NAT so it can reach public provider endpoints while still reaching the private database path.</li>
+                  <li>Backend deploys follow the source package -> CodeBuild -> ECR image -> App Runner update path.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>Database, storage, and secrets</b>
+                  Persistent data and uploads live in AWS-managed services.
+                </span>
+                <em>Data layer</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Database</strong>
+                    <span>RDS PostgreSQL / ayuaware-prod-pg</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Upload storage</strong>
+                    <span>S3 production uploads bucket</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Build artifacts</strong>
+                    <span>S3 build artifact bucket</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Secrets</strong>
+                    <span>AWS Secrets Manager prefix, values hidden</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>RDS stores users, sessions, raw evidence, raw params, interpretation hits, score snapshots, Projects, NSL deliveries, decisions, and notifications.</li>
+                  <li>S3 stores uploaded evidence such as reports, scans, and meal images. Public access is blocked in the documented production bucket.</li>
+                  <li>Secret values are not published here. The public page only states where secrets are managed.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>Mobile release lane</b>
+                  EAS and TestFlight deliver the iOS app.
+                </span>
+                <em>iOS</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Build system</strong>
+                    <span>EAS Build</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Distribution</strong>
+                    <span>TestFlight / ad hoc testers</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>OTA lane</strong>
+                    <span>testflight branch</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Runtime boundary</strong>
+                    <span>OTA only when native runtime matches</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>JS, TypeScript, copy, and many UI changes can ship through EAS Update when they match the installed runtime version.</li>
+                  <li>Native changes, entitlements, new native modules, or runtime-version shifts require a new iOS build.</li>
+                  <li>Release evidence belongs in runtime baseline and live target docs, not just in chat memory.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>Automation host</b>
+                  Hostinger runs OpenClaw/AyuBot support infrastructure.
+                </span>
+                <em>Hostinger</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Provider</strong>
+                    <span>Hostinger VPS</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Role</strong>
+                    <span>OpenClaw / AyuBot automation runtime</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Talks to</strong>
+                    <span>AWS backend protected APIs</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Access details</strong>
+                    <span>Private ops docs only</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>Hostinger is not the production API database host. It supports automation and agent/messaging operations around the backend.</li>
+                  <li>Runtime env and access coordinates are deliberately omitted from this public page.</li>
+                  <li>Future agents should use the private repo runbooks for operational access instead of relying on this client page.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>Client documentation hosting</b>
+                  This page is served from a public GitHub Pages mirror.
+                </span>
+                <em>Docs</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Private source</strong>
+                    <span>docs/client-intelligence-pipeline/</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Public mirror</strong>
+                    <span>ayuaware-client-intelligence-pipeline</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Hosting</strong>
+                    <span>GitHub Pages</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Rule</strong>
+                    <span>Only sanitized standalone files are copied</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>The private repo remains the source of truth for editing this page.</li>
+                  <li>The public mirror exists because GitHub Pages is not enabled for the private AyuAware repo under the current plan.</li>
+                  <li>Future updates must follow the README runbook: edit privately, verify, commit, copy sanitized files to the mirror, push, and verify live.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>Operational verification</b>
+                  Every hosting change should leave evidence.
+                </span>
+                <em>Ops loop</em>
+              </summary>
+              <div class="infra-detail-body">
+                <ul>
+                  <li>Backend changes verify hosted health, auth boundary, critical route behavior, and App Runner image readback.</li>
+                  <li>Mobile changes verify EAS readback, bundle environment, installed runtime/channel eligibility, and phone launch where possible.</li>
+                  <li>Docs changes verify local render, mirror commit, cache-busted GitHub Pages URL, and desktop/mobile visual sanity.</li>
+                  <li>Each material rollout updates task logs, status notes when applicable, wiki log, sources, and runtime baseline.</li>
+                </ul>
+                <div class="infra-source-list" aria-label="Infrastructure source documents">
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/docs/wiki/infrastructure/runtime-baseline.md">Runtime baseline</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/infra/aws/README.md">AWS production note</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/docs/reference/frontend/2026-07-04-client-intelligence-pipeline-page/README.md">Page handoff runbook</a>
+                  <span>Private ops docs hold access details</span>
+                </div>
+              </div>
+            </details>
+
+            <div class="infra-safe-note">
+              Public-safe boundary: this page may show provider names, service
+              roles, regions, public URLs, and deployment sequence. It must not
+              publish credentials, secret values, private keys, bearer tokens,
+              database passwords, raw env files, or SSH access coordinates.
             </div>
           </div>
         </section>
@@ -4621,9 +5094,12 @@
           panels.forEach((panel) => {
             panel.hidden = panel.dataset.viewPanel !== view;
           });
-          document.title = view === "frontend"
-            ? "AyuAware Frontend Walkthrough"
-            : "AyuAware Backend Architecture";
+          const titles = {
+            backend: "AyuAware Backend Architecture",
+            frontend: "AyuAware Frontend Walkthrough",
+            infrastructure: "AyuAware Infrastructure"
+          };
+          document.title = titles[view] ?? "AyuAware Architecture Guide";
         }
 
         buttons.forEach((button) => {
