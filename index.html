@@ -3158,6 +3158,108 @@
         }
       ];
 
+      const scorePlainEnglish = [
+        {
+          title: "What this block decides",
+          body: "This block turns source-backed interpretation evidence into six pillar readings and, when coverage is strong enough, a total WellnessIndex."
+        },
+        {
+          title: "Why score and estimate are separate",
+          body: "The official ScoreSnapshot waits for score-effective confidence coverage. The Today UI can still show a best available estimate with limitations so the app does not look blank."
+        },
+        {
+          title: "What counts as score-effective",
+          body: "A signal has to carry pillar weight, severity, confidence, freshness, and source lineage. Qualitative projections can explain the user state without always becoming a numeric score."
+        },
+        {
+          title: "What the user sees",
+          body: "The app should show a number, estimate, readiness reason, evidence list, or next step. It should not silently hide an incomplete score."
+        }
+      ];
+
+      const scoreRuleGroups = [
+        {
+          title: "Engine and policy versions",
+          meta: "score contract",
+          items: [
+            { label: "SCORE_POLICY_VERSION", meta: "score_policy_v5_health_score_spec_2_1_formula_bridge", note: "Current scoring policy identifier written with ScoreSnapshot and score ledger output." },
+            { label: "Score source scope", meta: "interpretation/projection lineage", note: "Scores read source-backed projection signals and contribution rows, not arbitrary UI text." },
+            { label: "Six scored pillars", meta: "vikriti, agni, ojas, manas, nidra, prana", note: "Prakriti is baseline context; it is not one of the six dynamic scored pillars." },
+            { label: "Score ledger", meta: "health readback", note: "The ledger exposes included evidence, formula reasons, confidence coverage, and blocked/ready status for UI drilldowns." }
+          ]
+        },
+        {
+          title: "Contribution math",
+          meta: "per signal",
+          items: [
+            { label: "Contribution value", meta: "severity * pillarWeight * confidence * freshness", note: "Every score-effective IC3-style signal is converted into a comparable numeric load." },
+            { label: "Confidence value", meta: "high 0.9, medium 0.7, mixed 0.6, preview 0.7, else 0.4", note: "Confidence tiers become multipliers in the contribution formula." },
+            { label: "Freshness", meta: "1 - ageDays / halfLifeDays", note: "Questionnaire evidence stays at 1. Other evidence decays by modality half-life." },
+            { label: "Positive evidence", meta: "net load reducer", note: "Supportive evidence reduces negative load using the positive boost factor before a subscore is calculated." }
+          ]
+        },
+        {
+          title: "Freshness windows",
+          meta: "current code",
+          items: [
+            { label: "Wearable", meta: "7 days", note: "Fast-moving device signals decay quickly." },
+            { label: "Daily check-in", meta: "14 days", note: "Daily subjective inputs stay useful for roughly two weeks." },
+            { label: "Tongue scan", meta: "30 days", note: "Tongue evidence decays more slowly than a daily log." },
+            { label: "Meal and lifestyle", meta: "14 days", note: "Behavior signals stay active long enough to detect recent patterns." },
+            { label: "Lab report", meta: "90 days", note: "Lab evidence remains relevant for a longer clinical window." },
+            { label: "Exposure", meta: "1 day", note: "Climate/environment evidence is treated as a day-level context." }
+          ]
+        },
+        {
+          title: "Pillar subscore formula",
+          meta: "shared math",
+          items: [
+            { label: "netLoad", meta: "max(0, negativeLoad - positiveLoad * boost)", note: "The engine first decides how much unresolved load remains for a modality." },
+            { label: "normalizedLoad", meta: "clip(100 * netLoad / loadCeiling, 0, 100)", note: "The load is scaled to a 0-100 disturbance range." },
+            { label: "modalitySubScore", meta: "100 - normalizedLoad", note: "Lower load gives a higher score; heavier load lowers the score." },
+            { label: "rawPillarScore", meta: "weighted average", note: "The score averages modality subscores using naturalWeight * modalityConfidence." },
+            { label: "Minimum pillar coverage", meta: "confidenceWeight >= 0.3", note: "If weighted confidence is below the threshold, the official pillar score remains null and a readiness/estimate path explains why." }
+          ]
+        },
+        {
+          title: "Six pillar recipes",
+          meta: "current formulas",
+          items: pillarDrilldowns
+        },
+        {
+          title: "Natural modality weights",
+          meta: "source-effective blend",
+          items: [
+            { label: "Agni", meta: "tongue 0.30, daily 0.22, lab 0.16, meal 0.13, wearable 0.08, exposure 0.05, lifestyle 0.04, questionnaire 0.02", note: "Tongue and daily digestion evidence lead Agni." },
+            { label: "Vikriti", meta: "wearable 0.25, tongue 0.18, lab 0.14, daily 0.15, questionnaire 0.08, meal 0.08, lifestyle 0.07, exposure 0.05", note: "Vikriti blends passive trend, visible signs, labs, and user state." },
+            { label: "Ojas", meta: "lab 0.40, wearable 0.22, daily 0.18, tongue 0.10, lifestyle 0.03, meal 0.03, exposure 0.02, questionnaire 0.02", note: "Reserve is weighted toward slow-moving lab/wearable evidence." },
+            { label: "Manas", meta: "daily 0.25, wearable 0.35, questionnaire 0.18, lab 0.10, lifestyle 0.07, tongue 0.05", note: "Mind state uses subjective, autonomic, and constitutional evidence together." },
+            { label: "Nidra", meta: "wearable 0.77, daily 0.10, lifestyle 0.06, tongue 0.03, lab 0.02, exposure 0.02", note: "Sleep is mostly driven by wearable sleep architecture." },
+            { label: "Prana", meta: "wearable 0.77, daily 0.08, exposure 0.06, lifestyle 0.04, tongue 0.03, lab 0.02", note: "Prana is mostly autonomic/respiratory wearable evidence with supporting context." }
+          ]
+        },
+        {
+          title: "Total Health / WellnessIndex",
+          meta: "aggregation",
+          items: [
+            { label: "Included pillars", meta: "numericForAggregation != null and confidence > 0", note: "Only pillars with aggregation-ready numeric output participate in the official total." },
+            { label: "Coverage gate", meta: "sum(pillarConfidence) >= 2", note: "The total score stays null until enough confidence-weighted pillar coverage exists." },
+            { label: "Formula", meta: "sum(pillarScore * confidence) / sum(confidence)", note: "The official total is confidence-weighted, not a simple average of visible cards." },
+            { label: "Estimate fallback", meta: "Today read model only", note: "When the official total is null, Today can show the average/best available estimate with readiness labels." }
+          ]
+        },
+        {
+          title: "Readiness and UI outputs",
+          meta: "what gets exposed",
+          items: [
+            { label: "calculationGates", meta: "why official score is pending", note: "The backend names the exact gate, such as numeric pillar score coverage or confidence-weighted coverage." },
+            { label: "presentInputs", meta: "what evidence exists", note: "The UI can show that interpretations, projections, wearable observations, or current state are present." },
+            { label: "missingInputs", meta: "what would improve confidence", note: "The backend supplies next-step actions when the user can provide missing context." },
+            { label: "provisionalEstimate", meta: "score with limitation", note: "For pillar pages, estimates can be shown below official score gates with a trace key and limitation text." }
+          ]
+        }
+      ];
+
       const projectArchetypes = [
         "Clear the Fog: Ama-first project.",
         "Restore Agni: weak, irregular, sharp, or mixed digestion.",
@@ -3208,8 +3310,185 @@
         "Persist an NslModificationCandidate with matched rule, trigger key, safety/IC2 status, and mutation boundary.",
         "Gate writeback: blocked, suppressed, review_required, observed-only, schema-deferred, or safety-blocked candidates do not mutate the plan.",
         "If regeneration is enabled and actionable, write a new ProtocolVersion and refresh the bounded Project delivery window.",
-        "Otherwise, eligible overlay-class rules write or retain an active ProtocolOverlay for today's visible plan.",
+        "Otherwise, eligible overlay-class rules write or retain an active ProtocolOverlay for today's visible plan when protocol overlays are enabled.",
         "Every mutation path records a durable DecisionRecord and WritebackRecord, so the UI can explain changed, retained, or no-op behavior."
+      ];
+
+      const projectPlainEnglish = [
+        {
+          title: "Project",
+          body: "A Project is the current 30-day healing focus the backend chooses from the Twin state and score context. It is not a UI tab choice."
+        },
+        {
+          title: "NSL plan",
+          body: "NSL is the daily nutrition, supplement, and lifestyle delivery produced from the active Project, catalog matches, gates, preferences, and markers."
+        },
+        {
+          title: "Modification",
+          body: "When fresh evidence arrives, trigger rules decide whether the existing plan should stay, receive an overlay, regenerate part of the plan, pause for review, or only record a no-op."
+        },
+        {
+          title: "Traceability",
+          body: "Every create, keep, overlay, regenerate, pause, or no-op decision should leave a DecisionRecord so the app can explain what changed and why."
+        }
+      ];
+
+      const projectRuleGroups = [
+        {
+          title: "Project lifecycle",
+          meta: "backend-owned",
+          items: [
+            { label: "No active Project", meta: "create_initial_project", note: "The lifecycle service asks the Project engine for the first Project and persists its plan." },
+            { label: "Valid active Project", meta: "keep_project", note: "The backend refreshes day/week and records a keep decision while retaining delivery." },
+            { label: "Expired Project window", meta: "create_next_project", note: "When day exceeds the 30-day window, the old Project graduates and a new one can be created." },
+            { label: "Duplicate active Projects", meta: "supersede extras", note: "The service keeps one current Project and marks duplicate active Projects superseded." }
+          ]
+        },
+        {
+          title: "Project selection priority",
+          meta: "source-backed order",
+          items: [
+            { label: "1. Ama high", meta: "proj_ama_clear", note: "High Ama takes priority over downstream building or modulation." },
+            { label: "2. Agni weak or irregular", meta: "proj_agni_restore", note: "Manda, Vishama, Tikshna, mixed Agni, or Agni severity routes to Agni restoration." },
+            { label: "3. Dominant dosha", meta: "Vata/Pitta/Kapha Project", note: "If a dosha load crosses the primary threshold, the matching dosha project is selected." },
+            { label: "4. Ojas low with Agni adequate", meta: "proj_ojas_rebuild", note: "Ojas rebuilding only wins when upstream Ama/Agni gates are not blocking." },
+            { label: "5. Highest downstream disturbance", meta: "Nidra/Manas/Prana", note: "If no upstream block dominates, the strongest downstream wellness load can become the Project." },
+            { label: "No selected archetype", meta: "maintenance fallback", note: "If no branch crosses the threshold, the backend can fall back to balanced maintenance rather than leaving NSL blank." }
+          ]
+        },
+        {
+          title: "Project archetypes",
+          meta: "9 active",
+          items: projectArchetypes.map((label) => ({ label, meta: "archetype", note: "Encoded Project target available to the selection engine." }))
+        },
+        {
+          title: "30-day delivery plan",
+          meta: "Spec8 delivery",
+          items: [
+            { label: "Week 1", meta: "settle, factor 0.4", note: "Small, low-friction actions and gentle setup." },
+            { label: "Week 2", meta: "engage, factor 0.8", note: "Primary roles become stronger while safety/adherence checks remain active." },
+            { label: "Week 3", meta: "deepen, factor 1.0", note: "The Project expresses its fullest safe intensity if markers and adherence support it." },
+            { label: "Week 4", meta: "integrate, factor 0.6", note: "Novelty reduces and the Project prepares graduation or next review." },
+            { label: "Daily actions", meta: "2 or 3 per morning", note: "The delivery planner chooses a compact daily set rather than rendering every possible recommendation." },
+            { label: "Markers", meta: "daily/weekly/trend", note: "Project markers define what the user should track to know whether the Project is helping." }
+          ]
+        },
+        {
+          title: "Catalog and ranking",
+          meta: "nutrition/supplement/lifestyle",
+          items: [
+            { label: "Catalog v2", meta: "150 entries", note: "Current encoded inventory is 53 nutrition, 53 supplement, and 44 lifestyle entries." },
+            { label: "Role fit", meta: "Project role IDs", note: "Items are matched against Project roles such as digestive kindler, calming practice, cooling meal, or respiratory support." },
+            { label: "IC2 and safety gates", meta: "block or allow", note: "Safety categories and Ama gates can block or defer substances/actions before they reach the user." },
+            { label: "Preference fit", meta: "personalization", note: "NSL personalization can bias item selection without changing the source-backed Project target." }
+          ]
+        },
+        {
+          title: "NSL generation sequence",
+          meta: "plan creation",
+          items: nslGenerationSteps.map((label, index) => ({ label, meta: `step ${index + 1}`, note: "Generation step in the current Project/NSL path." }))
+        },
+        {
+          title: "Modification inventory",
+          meta: "20 triggers, 52 rules, 19 sections",
+          items: nslModificationSections.map((label) => ({ label, meta: "encoded", note: "Canonical NSL modification section encoded in the rule registry." }))
+        },
+        {
+          title: "Writeback outcomes",
+          meta: "candidate -> decision -> mutation",
+          items: [
+            { label: "monitor_no_op", meta: "trace only", note: "The evidence is observed and recorded, but the visible plan does not change." },
+            { label: "pause_block / review_required", meta: "no mutation", note: "Safety or review gates stop automatic plan changes." },
+            { label: "overlay", meta: "ProtocolOverlay", note: "When the protocol-overlay feature flag is enabled, an eligible rule can temporarily bias or suppress categories in today's visible plan." },
+            { label: "regenerate", meta: "ProtocolVersion + delivery window", note: "When regeneration writeback is enabled, eligible regenerate-class rules can write a new protocol version and refresh a bounded Project delivery window." },
+            { label: "keep", meta: "DecisionRecord", note: "A valid active Project can be retained with a durable reason instead of being recreated." }
+          ]
+        }
+      ];
+
+      const uiPlainEnglish = [
+        {
+          title: "Read model",
+          body: "A read model is the backend-shaped packet the app screen reads. It exists so the UI does not invent health logic locally."
+        },
+        {
+          title: "No silent blanks",
+          body: "If a value is missing, the backend should still provide a status, limitation, trace, no-op reason, or next step."
+        },
+        {
+          title: "Processing visibility",
+          body: "After input submission, the UI can show which backend stage is saved, queued, running, completed, blocked, or failed."
+        },
+        {
+          title: "Nudges",
+          body: "Notifications are backend-authored intents with source metadata, delivery status, and tap routes to the relevant app surface."
+        }
+      ];
+
+      const uiRuleGroups = [
+        {
+          title: "Today/Home read model",
+          meta: "GET /api/v1/today",
+          items: [
+            { label: "Domains", meta: "health, exposure, nsl", note: "The home page receives one row for each major user-facing domain." },
+            { label: "Health row", meta: "score/estimate/readiness", note: "Includes officialTotalHealthScore, bestAvailableHealthEstimate, scoreStatus, readiness gates, and latest decision summary." },
+            { label: "Exposure row", meta: "context read", note: "Shows the current environmental read and whether the exposure signal is leading today." },
+            { label: "NSL row", meta: "project/plan summary", note: "Shows active Project/NSL state and latest plan decision context." }
+          ]
+        },
+        {
+          title: "Processing trace contract",
+          meta: "today_processing_status_v1",
+          items: [
+            { label: "Status values", meta: "idle, queued, running, partial, completed, blocked, failed", note: "The backend names the overall processing state." },
+            { label: "Stage values", meta: "pending, running, completed, failed, blocked, skipped", note: "Each stage has its own readable status and detail message." },
+            { label: "Trace subject", meta: "type + id", note: "The UI can link a processing receipt back to the input or run that triggered it." },
+            { label: "User-visible purpose", meta: "after processing", note: "The app can explain that score, Project, trigger, and NSL outcomes are decided by the linked trace." }
+          ]
+        },
+        {
+          title: "Health and pillar screens",
+          meta: "score ledger",
+          items: [
+            { label: "Pillar strip", meta: "six pillars", note: "The UI reads each pillar's score/estimate, state, insight, confidence, and source labels." },
+            { label: "How calculated", meta: "ledger drilldown", note: "The score ledger exposes formula, modality subscores, contribution rows, and blocked reasons." },
+            { label: "View evidence", meta: "source lineage", note: "Users and client reviewers can inspect the source-backed evidence feeding a pillar." },
+            { label: "Estimate state", meta: "below official gate", note: "Pillar pages can show a cautious estimate when official numeric coverage is not ready." }
+          ]
+        },
+        {
+          title: "NSL screen",
+          meta: "Project + delivery + decision",
+          items: [
+            { label: "Active Project", meta: "NslProject", note: "Shows Project name, goal, day/week, phase, markers, and source boundary." },
+            { label: "Today's actions", meta: "NslProjectDelivery", note: "Renders the compact daily morning action set, markers, and adherence prompts." },
+            { label: "Personalization", meta: "preference profile", note: "Shows whether plan personalization is complete or still improving." },
+            { label: "Plan decision", meta: "DecisionRecord", note: "Shows keep, overlay, regenerate, pause/review, or no-op outcome with a user-readable reason." }
+          ]
+        },
+        {
+          title: "Exposure screen",
+          meta: "climate/lunar/astro",
+          items: [
+            { label: "Climate", meta: "weather/AQI/UV/wind", note: "Displays current environment and confidence/source metadata." },
+            { label: "Lunar", meta: "computed context", note: "Can feed overlay/narration logic while staying separate from clinical scoring." },
+            { label: "Astro/Panchang", meta: "context overlay", note: "Can provide Jyotish-first context and plan overlays without pretending to be a medical signal." }
+          ]
+        },
+        {
+          title: "Notifications and nudges",
+          meta: "source-backed intent",
+          items: [
+            { label: "NotificationIntent", meta: "backend-authored", note: "Stores the source-backed notification decision before delivery." },
+            { label: "daily_morning_guidance", meta: "WhatsApp default", note: "Scheduled daily guidance surface." },
+            { label: "daily_evening_log_reminder", meta: "WhatsApp default", note: "Scheduled daily log reminder surface." },
+            { label: "predictive_health_alert", meta: "push + in_app", note: "Higher-priority source-backed health alert from current intelligence context." },
+            { label: "responsive_project_marker_shift", meta: "push + in_app", note: "Nudge when Project markers shift." },
+            { label: "responsive_project_adherence_drop", meta: "push + in_app", note: "Nudge when adherence falls enough to matter." },
+            { label: "responsive_project_safety_review", meta: "push + in_app", note: "High-priority safety/review nudge." },
+            { label: "NotificationDelivery", meta: "provider trace", note: "Delivery rows preserve Expo/OpenClaw/in-app delivery status and receipt evidence." }
+          ]
+        }
       ];
 
       const stages = [
@@ -3499,20 +3778,9 @@
           <div>
             ${detailHeader(stage)}
             <div class="detail-stack">
+              ${drilldown("Plain-English meaning", "score/estimate/readiness", logicGrid(scorePlainEnglish), true)}
               ${drilldown("Shared score math", "exact code formulas", formulaList(scoringFormulas), true)}
-              ${drilldown("Six pillar drilldowns", "current formulas", inventory(pillarDrilldowns))}
-              ${drilldown(
-                "Modality weights",
-                "source-effective blend",
-                logicGrid([
-                  { title: "Agni", body: "tongue 0.30, daily 0.22, lab 0.16, meal 0.13, wearable 0.08, exposure 0.05, lifestyle 0.04, questionnaire 0.02." },
-                  { title: "Vikriti", body: "wearable 0.25, tongue 0.18, lab 0.14, daily 0.15, questionnaire 0.08, meal 0.08, lifestyle 0.07, exposure 0.05." },
-                  { title: "Ojas", body: "lab 0.40, wearable 0.22, daily 0.18, tongue 0.10, lifestyle 0.03, meal 0.03, exposure 0.02, questionnaire 0.02." },
-                  { title: "Manas", body: "daily 0.25, wearable 0.35, questionnaire 0.18, lab 0.10, lifestyle 0.07, tongue 0.05." },
-                  { title: "Nidra", body: "wearable 0.77, daily 0.10, lifestyle 0.06, tongue 0.03, lab 0.02, exposure 0.02." },
-                  { title: "Prana", body: "wearable 0.77, daily 0.08, exposure 0.06, lifestyle 0.04, tongue 0.03, lab 0.02." }
-                ])
-              )}
+              ${drilldown("All encoded score rules", "grouped by scoring boundary", groupedInventory(scoreRuleGroups.map((group) => ({ ...group, open: true }))), true)}
             </div>
           </div>
           ${codeRefs(
@@ -3527,10 +3795,9 @@
           <div>
             ${detailHeader(stage)}
             <div class="detail-stack">
-              ${drilldown("Project generation sequence", "backend-owned", inventory(nslGenerationSteps.map((label, index) => ({ label, meta: `step ${index + 1}` }))), true)}
-              ${drilldown("Project archetypes", "9 active", inventory(projectArchetypes.map((label) => ({ label, meta: "archetype" }))))}
-              ${drilldown("NSL modification rule sections", "52 rules", inventory(nslModificationSections.map((label) => ({ label, meta: "encoded" }))))}
-              ${drilldown("All encoded NSL modification rules", "52 rules", groupedInventory(nslModificationRulesBySection))}
+              ${drilldown("Plain-English meaning", "Project/NSL/modification", logicGrid(projectPlainEnglish), true)}
+              ${drilldown("All encoded Project + NSL rules", "lifecycle/generation/writeback", groupedInventory(projectRuleGroups.map((group) => ({ ...group, open: true }))), true)}
+              ${drilldown("All encoded NSL modification rules", "52 rules", groupedInventory(nslModificationRulesBySection), true)}
               ${drilldown("Modification writeback sequence", "overlay/regenerate/no-op", inventory(nslModificationSteps.map((label, index) => ({ label, meta: `step ${index + 1}` }))))}
               ${drilldown(
                 "Catalog and delivery",
@@ -3538,8 +3805,8 @@
                 logicGrid([
                   { title: "Catalog v2", body: "150 encoded entries: nutrition 53, supplement 53, lifestyle 44. The matcher ranks by rule requirement, karma, IC2 category, Project fit, preference, and safety gates." },
                   { title: "Daily delivery", body: "Project delivery writes a 30-day plan. Spec8 delivery currently limits visible daily items to 2 or 3 per morning plan." },
-                  { title: "Overlay path", body: "Eligible overlay-class rules mutate today's visible plan with a ProtocolOverlay after DecisionRecord creation." },
-                  { title: "Regeneration path", body: "Eligible regenerate-class rules write a new ProtocolVersion and refresh a bounded delivery window for the active Project." }
+                  { title: "Overlay path", body: "Eligible overlay-class rules can mutate today's visible plan with a ProtocolOverlay after DecisionRecord creation when the overlay feature flag is enabled." },
+                  { title: "Regeneration path", body: "Eligible regenerate-class rules can write a new ProtocolVersion and refresh a bounded delivery window when regeneration writeback is enabled." }
                 ])
               )}
             </div>
@@ -3556,17 +3823,8 @@
           <div>
             ${detailHeader(stage)}
             <div class="detail-stack">
-              ${drilldown(
-                "UI contract",
-                "no silent blanks",
-                logicGrid([
-                  { title: "Home", body: "Shows readiness, backend status, health estimate/score, exposure, NSL, and traceable reasons when values are limited." },
-                  { title: "Health", body: "Shows pillar reading, evidence, formula ledger, estimate/readiness state, and score-effective contributors." },
-                  { title: "NSL", body: "Shows active Project, today's actions, personalization status, decision state, modification traces, and plan logic." },
-                  { title: "Transparency", body: "Shows saved, queued, processing, completed, no-op, or blocked processing stages instead of hiding backend work." }
-                ]),
-                true
-              )}
+              ${drilldown("Plain-English meaning", "UI/read model/nudges", logicGrid(uiPlainEnglish), true)}
+              ${drilldown("All encoded UI/read-model rules", "screens/contracts/notifications", groupedInventory(uiRuleGroups.map((group) => ({ ...group, open: true }))), true)}
               ${drilldown(
                 "Notification and nudge path",
                 "read model",
