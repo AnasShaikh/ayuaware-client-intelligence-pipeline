@@ -728,6 +728,10 @@
         gap: 12px;
       }
 
+      .infra-overview {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
       .frontend-overview article,
       .infra-overview article,
       .infra-card,
@@ -1709,6 +1713,10 @@
               <strong>Automation</strong>
               <p>Hostinger hosts OpenClaw/AyuBot runtime pieces that talk to the backend.</p>
             </article>
+            <article>
+              <strong>External providers</strong>
+              <p>Spike, Open-Meteo, Panchang, Gemini, Expo push, and auth providers feed bounded backend lanes.</p>
+            </article>
           </div>
         </section>
 
@@ -1744,6 +1752,13 @@
               </div>
               <div class="infra-step">
                 <span>4</span>
+                <div>
+                  <b>External provider boundaries</b>
+                  <p>Spike parses provider data; Open-Meteo and Panchang feed exposure; Gemini, Expo push, and auth providers support AI replies, nudges, and login.</p>
+                </div>
+              </div>
+              <div class="infra-step">
+                <span>5</span>
                 <div>
                   <b>Automation and docs</b>
                   <p>Hostinger runs OpenClaw/AyuBot automation; GitHub Pages serves this sanitized client architecture page from a public mirror.</p>
@@ -1925,6 +1940,61 @@
                   <li>The public mirror exists because GitHub Pages is not enabled for the private AyuAware repo under the current plan.</li>
                   <li>Future updates must follow the README runbook: edit privately, verify, commit, copy sanitized files to the mirror, push, and verify live.</li>
                 </ul>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
+                  <b>External integrations and data providers</b>
+                  Provider APIs feed specific lanes; backend owns the decisions.
+                </span>
+                <em>Provider boundaries</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>Spike</strong>
+                    <span>Wearable OAuth/data, meal image parsing, and lab/report parsing</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Open-Meteo</strong>
+                    <span>Climate snapshot fields such as weather, AQI, humidity, wind, UV, and rain</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Panchang</strong>
+                    <span>Local-day lunar/timing context: tithi, nakshatra, paksha, yoga, karana, and ritu</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Gemini</strong>
+                    <span>Rule/context-bound model gateway for Twin replies and selected AI extraction surfaces</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Expo push</strong>
+                    <span>iOS push delivery tickets and receipt audits after backend NotificationDelivery rows exist</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Apple / Google auth</strong>
+                    <span>Identity-token verification and mobile-session login boundaries</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>Provider APIs do not own final health decisions. The backend stores source/provider evidence first, then turns it into raw params, interpretations, scores, Project/NSL decisions, notifications, or no-op receipts.</li>
+                  <li>Spike is the provider/parser boundary for Fitbit/Garmin-style wearable data, nutrition image analysis, and lab report parsing. The backend still persists the evidence, normalizes it, and decides what it means.</li>
+                  <li>Open-Meteo and Panchang power the Exposure screen and exposure-trigger context. Climate can show weather/AQI-style context; Panchang supports lunar/timing reads and overlays.</li>
+                  <li>Astro is deliberately shown as current Panchang/context support, not a finished personalized astrology scoring engine. The backend can store profile/birth context, but current code says personalized astrology scoring is not active yet.</li>
+                  <li>Gemini is used through the backend model gateway with bounded prompts and fallbacks. It may help phrase Twin/chat or extraction outputs, but it must not invent source rules, formulas, thresholds, or clinical decisions.</li>
+                  <li>Expo push is the delivery provider after AyuAware has created a NotificationIntent and NotificationDelivery. The backend records tickets and audits receipts; iOS permission/display state remains a separate device boundary.</li>
+                  <li>Secrets for all provider integrations stay in AWS Secrets Manager or private runtime env. This page names providers and responsibilities only.</li>
+                </ul>
+                <div class="infra-source-list" aria-label="External integration implementation anchors">
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/modules/wearables/wearables.service.ts">Wearables / Spike</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/modules/nutrition/nutrition.service.ts">Nutrition image / Spike</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/modules/labs/labs.service.ts">Labs / Spike</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/modules/exposure/exposure.service.ts">Exposure providers</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/infrastructure/ai/modelGateway.ts">Gemini model gateway</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/services/api/src/modules/notifications/notifications.service.ts">Expo push delivery</a>
+                </div>
               </div>
             </details>
 
