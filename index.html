@@ -1945,6 +1945,54 @@
             <details class="infra-detail">
               <summary>
                 <span>
+                  <b>Account ownership map</b>
+                  Which account or organization appears to own each major service.
+                </span>
+                <em>Public-safe</em>
+              </summary>
+              <div class="infra-detail-body">
+                <div class="infra-facts">
+                  <div class="infra-fact">
+                    <strong>AWS production</strong>
+                    <span>Account ID 256309399568; billing contact masked as a***@atlancer.com</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>GitHub / Pages</strong>
+                    <span>GitHub user or org: AnasShaikh; public mirror: ayuaware-client-intelligence-pipeline</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Expo / EAS</strong>
+                    <span>Expo account slug: consciousinnertainment; project: ayuaware</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Apple Developer</strong>
+                    <span>Team D648T3TM58; Anas Shaikh (Individual)</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Hostinger / OpenClaw</strong>
+                    <span>Hostinger VPS account details stay in private ops docs</span>
+                  </div>
+                  <div class="infra-fact">
+                    <strong>Provider API accounts</strong>
+                    <span>Spike, Gemini, and push credentials are managed through private runtime secrets</span>
+                  </div>
+                </div>
+                <ul>
+                  <li>This public page names account owners only where that helps the client understand who controls a surface.</li>
+                  <li>Full login emails, billing-console access, account recovery details, invite state, and secret-manager paths stay private.</li>
+                  <li>If ownership changes, update the private runtime/ops docs first, then revise this public-safe account map.</li>
+                </ul>
+                <div class="infra-source-list" aria-label="Account ownership source documents">
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/infra/aws/README.md">AWS production note</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/docs/wiki/infrastructure/runtime-baseline.md">Runtime baseline</a>
+                  <a href="https://github.com/AnasShaikh/AyuAware/blob/main/docs/ops/task-logs/2026-07-05__frontend-ios-app__shiv-adhoc-device-build.md">Apple/EAS build note</a>
+                </div>
+              </div>
+            </details>
+
+            <details class="infra-detail">
+              <summary>
+                <span>
                   <b>External integrations and data providers</b>
                   Provider APIs feed specific lanes; backend owns the decisions.
                 </span>
